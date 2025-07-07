@@ -13,3 +13,12 @@ TEST(NandReader, readTestWithSuccessResult) {
 	int expected = 0x12345678;
 	EXPECT_EQ(expected, actual);
 };
+
+TEST(NandReader, readTestWithOutRangedLBA) {
+	NandFlashMemoryMock memory;
+	NandReader nand_reader(&memory);
+	EXPECT_CALL(memory, read(_)).WillRepeatedly(Return(0x12345678));
+	int lba = 105;
+
+	EXPECT_THROW(nand_reader.read(lba), std::runtime_error);
+};
