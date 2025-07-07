@@ -129,7 +129,13 @@
   <ItemGroup>
     <ClCompile Include="command_parser.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="test_with_mock.cpp" />
+    <ClCompile Include="test_testshell_command_parser.cpp" />
+    <ClCompile Include="test_with_mock.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
