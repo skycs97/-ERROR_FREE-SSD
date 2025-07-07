@@ -1,15 +1,29 @@
 #include "gmock/gmock.h"
 #include "nand_reader.h"
 #include "nand_flash_memory_mock.h"
-
+using std::string;
 using namespace testing;
 
-TEST(NandReader, readTestWithSuccessResult) {
+class NandReaderFixture : public Test {
+public:
+	static constexpr int LBA_IN_RANGE = 10;
+	static constexpr int LBA_OVER_99 = 105;
+	static constexpr int LBA_UNDER_0 = -1;
+	const string NAND_WRITTEN_VALUE = string{ "0x12345678" };
+
 	NandFlashMemoryMock memory;
-	NandReader nand_reader(&memory);
-	EXPECT_CALL(memory, read(_)).WillRepeatedly(Return(0x12345678));
-	int lba = 10;
-	int actual = nand_reader.read(lba);
-	int expected = 0x12345678;
+	NandReader nand_reader{ &memory };
+};
+
+TEST_F(NandReaderFixture, readTestWithSuccessResult) {
+	EXPECT_CALL(memory, read(_)).WillRepeatedly(Return(NAND_WRITTEN_VALUE));
+	string actual = nand_reader.read(LBA_IN_RANGE);
+	string expected = NAND_WRITTEN_VALUE;
+
 	EXPECT_EQ(expected, actual);
+};
+
+TEST_F(NandReaderFixture, readTestWithOutRangedLBA) {
+	EXPECT_THROW(nand_reader.read(LBA_OVER_99), std::runtime_error);
+	EXPECT_THROW(nand_reader.read(LBA_UNDER_0), std::runtime_error);
 };

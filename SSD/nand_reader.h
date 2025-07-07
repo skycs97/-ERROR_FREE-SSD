@@ -1,11 +1,14 @@
 #pragma once
 
+#include <string>
 #include "nand_flash_memory.h"
+
+using std::string;
 class NandReader {
 public:
 	NandReader(NandFlashMemory* nandFlashMemory) : nandFlashMemory{ nandFlashMemory } {}
 
-	int read(int LBA);
+	string read(int LBA);
 private:
 	NandFlashMemory* nandFlashMemory;
 };
