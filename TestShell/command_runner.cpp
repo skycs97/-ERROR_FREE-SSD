@@ -1,9 +1,6 @@
 #include "command_runner.h"
 
-CommandRunner::CommandRunner(Storage* storage)
-	: storage(storage)
-{
-}
+
 
 string CommandRunner::runCommand(vector<string> cmd) {
 	string result = "";
@@ -15,5 +12,10 @@ string CommandRunner::runCommand(vector<string> cmd) {
 	}
 
 	return result;
+}
+
+void CommandRunner::setStorage(Storage* storage)
+{
+	this->storage = storage;
 }
 

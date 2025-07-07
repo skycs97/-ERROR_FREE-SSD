@@ -7,9 +7,9 @@ using std::vector;
 
 class CommandRunner {
 public:
-	CommandRunner(Storage* storage);
-
 	string runCommand(vector<string> cmd);
+
+	void setStorage(Storage* storage);
 private:
 	Storage* storage;
 };

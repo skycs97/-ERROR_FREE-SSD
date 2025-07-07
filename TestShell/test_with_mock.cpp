@@ -12,76 +12,72 @@ public:
 	MOCK_METHOD(string, write, (int, int), (override));
 };
 
+class TestShellFixtureWithMock : public Test {
+protected:
+	void SetUp() {
+		runner.setStorage(&mockStorage);
+	}
+public:
+	MockStorage mockStorage;
+	CommandRunner runner;
+	
+};
 
-TEST(TestShell, ReadMock) {
-	int LBA = 30;
-	string expected = "0x12341234";
-
-	MockStorage storage;
-	EXPECT_CALL(storage, read)
+TEST_F(TestShellFixtureWithMock, ReadMock) {
+	int LBA = 99;
+	string expected = "0xFFFFFFFF";
+	EXPECT_CALL(mockStorage, read)
 		.WillOnce(Return(expected));
 
-	string actual = storage.read(LBA);
+	string actual = mockStorage.read(LBA);
 
 	EXPECT_EQ(expected, actual);
 }
 
-TEST(TestShell, ReadFailMock) {
+TEST_F(TestShellFixtureWithMock, ReadFailMock) {
 	int LBA = 100;
 	string expected = "ERROR";
-
-	MockStorage storage;
-	EXPECT_CALL(storage, read)
+	EXPECT_CALL(mockStorage, read)
 		.WillOnce(Return(expected));
 
-	string actual = storage.read(LBA);
+	string actual = mockStorage.read(LBA);
 
 	EXPECT_EQ(expected, actual);
 }
 
-TEST(SSD, WriteExceedIndex) {
-	MockStorage mock;
-
+TEST_F(TestShellFixtureWithMock, WriteExceedIndex) {
 	string expected = "ERROR";
-	EXPECT_CALL(mock, write(Ge(100), _))
+	EXPECT_CALL(mockStorage, write(Ge(100), _))
 		.WillRepeatedly(Return("ERROR"));
-	EXPECT_CALL(mock, write(Le(-1), _))
+	EXPECT_CALL(mockStorage, write(Le(-1), _))
 		.WillRepeatedly(Return("ERROR"));
 
-	EXPECT_EQ(string(expected), string(mock.write(100, 0xFFFF)));
-	EXPECT_EQ(string(expected), string(mock.write(-1, 0xFFFF)));
+	EXPECT_EQ(string(expected), string(mockStorage.write(100, 0xFFFF)));
+	EXPECT_EQ(string(expected), string(mockStorage.write(-1, 0xFFFF)));
 }
 
-TEST(SSD, WriteSuccess) {
-	MockStorage mock;
-
+TEST_F(TestShellFixtureWithMock, WriteSuccess) {
 	string expected = "";
-	EXPECT_CALL(mock, write(Le(99), _))
+	EXPECT_CALL(mockStorage, write(Le(99), _))
 		.WillRepeatedly(Return(""));
 
-	EXPECT_EQ(string(expected), string(mock.write(4, 0xFFFF)));
+	EXPECT_EQ(string(expected), string(mockStorage.write(4, 0xFFFF)));
 }
 
-TEST(TestShell, CmdRunnerRead) {
-	MockStorage mock;
-	CommandRunner runner{&mock};
-
+TEST_F(TestShellFixtureWithMock, CmdRunnerRead) {
 	vector<string> command = { "\SSD.exe", "R", "1" };
 
-	EXPECT_CALL(mock, read)
+	EXPECT_CALL(mockStorage, read)
 		.Times(1)
 		.WillRepeatedly(Return("0x0000FFFF"));
 	
 	EXPECT_EQ("0x0000FFFF", runner.runCommand(command));
 }
 
-TEST(TestShell, CmdRunnerWrite) {
-	MockStorage mock;
-	CommandRunner runner{ &mock };
-
+TEST_F(TestShellFixtureWithMock, CmdRunnerWrite) {
 	vector<string> command = { "\SSD.exe", "W", "2", "0xAAAABBBB"};
 
-	EXPECT_CALL(mock, write)
+	EXPECT_CALL(mockStorage, write)
 		.Times(1)
 		.WillRepeatedly(Return(""));
 
