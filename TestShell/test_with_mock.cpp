@@ -1,6 +1,7 @@
 #include "gmock/gmock.h"
 #include "storage.h"
 #include <string>
+#include "command_runner.h"
 
 using std::string;
 using namespace testing;
@@ -59,4 +60,30 @@ TEST(SSD, WriteSuccess) {
 		.WillRepeatedly(Return(""));
 
 	EXPECT_EQ(string(expected), string(mock.write(4, 0xFFFF)));
+}
+
+TEST(TestShell, CmdRunnerRead) {
+	MockStorage mock;
+	CommandRunner runner{&mock};
+
+	vector<string> command = { "\SSD.exe", "R", "1" };
+
+	EXPECT_CALL(mock, read)
+		.Times(1)
+		.WillRepeatedly(Return("0x0000FFFF"));
+	
+	EXPECT_EQ("0x0000FFFF", runner.runCommand(command));
+}
+
+TEST(TestShell, CmdRunnerWrite) {
+	MockStorage mock;
+	CommandRunner runner{ &mock };
+
+	vector<string> command = { "\SSD.exe", "W", "2", "0xAAAABBBB"};
+
+	EXPECT_CALL(mock, write)
+		.Times(1)
+		.WillRepeatedly(Return(""));
+
+	EXPECT_EQ("", runner.runCommand(command));
 }

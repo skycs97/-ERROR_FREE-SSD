@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="command_runner.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="test_with_mock.cpp" />
   </ItemGroup>
@@ -134,6 +135,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="command_runner.h" />
     <ClInclude Include="storage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
