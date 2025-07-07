@@ -5,7 +5,7 @@
 using std::string;
 using namespace testing;
 
-class MockStroage : public Storage {
+class MockStorage : public Storage {
 public:
 	MOCK_METHOD(string, read, (int), (override));
 	MOCK_METHOD(string, write, (int, int), (override));
@@ -14,21 +14,27 @@ public:
 
 
 TEST(TestShell, ReadMock) {
-	MockStroage storage;
+	int LBA = 30;
+	string expected = "0x12341234";
+
+	MockStorage storage;
 	EXPECT_CALL(storage, read)
-		.WillOnce(Return("0x12341234"));
+		.WillOnce(Return(expected));
 
-	string actual = storage.read(30);
+	string actual = storage.read(LBA);
 
-	EXPECT_EQ("0x12341234", actual);
+	EXPECT_EQ(expected, actual);
 }
 
 TEST(TestShell, ReadFailMock) {
-	MockStroage storage;
+	int LBA = 100;
+	string expected = "ERROR";
+
+	MockStorage storage;
 	EXPECT_CALL(storage, read)
-		.WillOnce(Return("Error"));
+		.WillOnce(Return(expected));
 
-	string actual = storage.read(100);
+	string actual = storage.read(LBA);
 
-	EXPECT_EQ("Error", actual);
+	EXPECT_EQ(expected, actual);
 }
