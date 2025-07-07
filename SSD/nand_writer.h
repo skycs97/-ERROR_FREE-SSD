@@ -1,0 +1,17 @@
+#pragma once
+#include <string>
+#include "nand_flash_memory.h"
+
+using std::string;
+
+class NandWriter
+{
+public:
+	NandWriter(NandFlashMemory* nandFlashMemory)
+		: nandFlashMemory{ nandFlashMemory } {}
+
+	string write(int lba, int data);
+
+private:
+	NandFlashMemory* nandFlashMemory;
+};
