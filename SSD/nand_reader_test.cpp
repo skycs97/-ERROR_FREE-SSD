@@ -7,7 +7,8 @@ using namespace testing;
 class NandReaderFixture : public Test {
 public:
 	static constexpr int LBA_IN_RANGE = 10;
-	static constexpr int LBA_OUT_RANGE = 105;
+	static constexpr int LBA_OVER_99 = 105;
+	static constexpr int LBA_UNDER_0 = -1;
 	const string NAND_WRITTEN_VALUE = string{ "0x12345678" };
 
 	NandFlashMemoryMock memory;
@@ -23,5 +24,6 @@ TEST_F(NandReaderFixture, readTestWithSuccessResult) {
 };
 
 TEST_F(NandReaderFixture, readTestWithOutRangedLBA) {
-	EXPECT_THROW(nand_reader.read(LBA_OUT_RANGE), std::runtime_error);
+	EXPECT_THROW(nand_reader.read(LBA_OVER_99), std::runtime_error);
+	EXPECT_THROW(nand_reader.read(LBA_UNDER_0), std::runtime_error);
 };
