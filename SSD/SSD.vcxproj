@@ -134,7 +134,14 @@
     <ClCompile Include="nand_reader_test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="FileHandler.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="OutputHandler.cpp" />
+    <ClCompile Include="OutputHandler_test.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FileHandler.h" />
+    <ClInclude Include="OutputHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="nand_flash_memory.h" />
