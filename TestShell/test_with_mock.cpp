@@ -15,8 +15,18 @@ TEST(SSD, WriteExccedIndex) {
 	MockStroage mock;
 
 	string expected = "ERROR";
-	EXPECT_CALL(mock, write(Gt(99), _))
+	EXPECT_CALL(mock, write(Ge(100), _))
 		.WillRepeatedly(Return("ERROR"));
 
 	EXPECT_EQ(string(expected), string(mock.write(100, 0xFFFF)));
+}
+
+TEST(SSD, WriteSuccess) {
+	MockStroage mock;
+
+	string expected = "";
+	EXPECT_CALL(mock, write(Le(99), _))
+		.WillRepeatedly(Return(""));
+
+	EXPECT_EQ(string(expected), string(mock.write(4, 0xFFFF)));
 }
