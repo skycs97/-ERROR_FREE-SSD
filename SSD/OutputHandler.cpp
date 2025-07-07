@@ -1,16 +1,14 @@
 #include "gmock/gmock.h"
+#include "FileHandler.h"
 #include "OutputHandler.h"
 
 #include <string>
-#include <fstream>
-
-using std::string;
-using std::ofstream;
-
 
 void OutputHandler::output(const string& output_string) {
-	file.open(OUTPUT_FILENAME);
-	file << output_string;
-	file.close();
+	fileHandler->write(output_string);
+}
+
+string OutputHandler::read(void) {
+	return fileHandler->read();
 }
 

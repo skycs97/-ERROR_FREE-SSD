@@ -1,20 +1,27 @@
 #include "gmock/gmock.h"
 #include "OutputHandler.h"
+#include "FileHandler.h"
 
-class OutputHandlerMock : public OutputHandler {
+using namespace testing;
+
+class FileHandlerMock : public FileHandler {
 public:
-	//virtual unsigned char read(long address) = 0;
-	//virtual void write(long address, unsigned char data) = 0;
-
-	MOCK_METHOD(void, output, (const string&), (override));
+	MOCK_METHOD(void, write, (const std::string&), (override));
+	MOCK_METHOD(std::string, read, (), (override));
 };
 
+TEST(Output, mock_file_test) {
+	NiceMock<FileHandlerMock> fhMock;
+	OutputHandler oh(&fhMock);
 
-TEST(Output, mock_output_test) {
-	OutputHandlerMock oh;
-
-	EXPECT_CALL(oh, output)
+	EXPECT_CALL(fhMock, write)
 		.Times(1);
 
+	EXPECT_CALL(fhMock, read)
+		.WillRepeatedly(testing::Return("ERROR"));
+
 	oh.output("ERROR");
+	string readString = oh.read();
+
+	EXPECT_EQ("ERROR", readString);
 }

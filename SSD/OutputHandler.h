@@ -1,18 +1,17 @@
 #pragma once
-
 #include <string>
-#include <fstream>
+#include "FileHandler.h"
 
 using std::string;
-using std::ofstream;
+
 
 class OutputHandler {
 public:
-	OutputHandler() {}
+	OutputHandler(FileHandler* fileHandler ) : fileHandler(fileHandler) {}
 
-	virtual void output(const string& output_string);
+	void output(const string& output_string);
+	string read(void);
 
 private:
-	const string OUTPUT_FILENAME = "ssd_output.txt";
-	ofstream file;
+	FileHandler* fileHandler;
 };
