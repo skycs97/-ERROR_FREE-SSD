@@ -128,9 +128,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <ClCompile Include="nand_reader.cpp" />
+    <ClCompile Include="nand_reader_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="nand_flash_memory.h" />
+    <ClInclude Include="nand_flash_memory_mock.h" />
+    <ClInclude Include="nand_reader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
