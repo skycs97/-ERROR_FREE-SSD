@@ -1,62 +1,70 @@
 #include "gmock/gmock.h"
-#include "storage.h"
+#include "ssd_interface.h"
 #include <string>
+#include "command_runner.h"
 
 using std::string;
 using namespace testing;
 
-class MockStorage : public Storage {
+class SsdInterfaceMock : public SsdInterface {
 public:
 	MOCK_METHOD(string, read, (int), (override));
 	MOCK_METHOD(string, write, (int, int), (override));
 };
 
+class TestShellFixtureWithMock : public Test {
+protected:
+	void SetUp() {
+		runner.setStorage(&mockStorage);
+	}
+public:
+	SsdInterfaceMock mockStorage;
+	CommandRunner runner;
+};
 
-TEST(TestShell, ReadMock) {
-	int LBA = 30;
-	string expected = "0x12341234";
+TEST_F(TestShellFixtureWithMock, CmdRunnerRead) {
+	vector<string> command = { "\SSD.exe", "R", "1" };
 
-	MockStorage storage;
-	EXPECT_CALL(storage, read)
-		.WillOnce(Return(expected));
-
-	string actual = storage.read(LBA);
-
-	EXPECT_EQ(expected, actual);
+	EXPECT_CALL(mockStorage, read)
+		.Times(1)
+		.WillRepeatedly(Return("0x0000FFFF"));
+	
+	EXPECT_EQ("0x0000FFFF", runner.runCommand(command));
 }
 
-TEST(TestShell, ReadFailMock) {
-	int LBA = 100;
-	string expected = "ERROR";
+TEST_F(TestShellFixtureWithMock, CmdRunnerWrite) {
+	vector<string> command = { "\SSD.exe", "W", "2", "0xAAAABBBB"};
 
-	MockStorage storage;
-	EXPECT_CALL(storage, read)
-		.WillOnce(Return(expected));
-
-	string actual = storage.read(LBA);
-
-	EXPECT_EQ(expected, actual);
-}
-
-TEST(SSD, WriteExceedIndex) {
-	MockStorage mock;
-
-	string expected = "ERROR";
-	EXPECT_CALL(mock, write(Ge(100), _))
-		.WillRepeatedly(Return("ERROR"));
-	EXPECT_CALL(mock, write(Le(-1), _))
-		.WillRepeatedly(Return("ERROR"));
-
-	EXPECT_EQ(string(expected), string(mock.write(100, 0xFFFF)));
-	EXPECT_EQ(string(expected), string(mock.write(-1, 0xFFFF)));
-}
-
-TEST(SSD, WriteSuccess) {
-	MockStorage mock;
-
-	string expected = "";
-	EXPECT_CALL(mock, write(Le(99), _))
+	EXPECT_CALL(mockStorage, write)
+		.Times(1)
 		.WillRepeatedly(Return(""));
 
-	EXPECT_EQ(string(expected), string(mock.write(4, 0xFFFF)));
+	EXPECT_EQ("", runner.runCommand(command));
+}
+
+TEST_F(TestShellFixtureWithMock, CmdRunnerReadFail) {
+	vector<string> command = { "\SSD.exe", "R", "110" };
+
+	EXPECT_CALL(mockStorage, read)
+		.Times(1)
+		.WillRepeatedly(Return("ERROR"));
+
+	EXPECT_EQ("ERROR", runner.runCommand(command));
+}
+
+TEST_F(TestShellFixtureWithMock, CmdRunnerWriteFail) {
+	vector<string> command = { "\SSD.exe", "W", "110", "0xFFFFFFFF"};
+
+	EXPECT_CALL(mockStorage, write)
+		.Times(1)
+		.WillRepeatedly(Return("ERROR"));
+
+	EXPECT_EQ("ERROR", runner.runCommand(command));
+}
+
+TEST_F(TestShellFixtureWithMock, CmdRunnerNoSetInterface) {
+	CommandRunner emptyRunner;
+	vector<string> command = { "\SSD.exe", "R", "1" };
+
+	EXPECT_THROW(emptyRunner.runCommand(command), std::runtime_error);
 }
