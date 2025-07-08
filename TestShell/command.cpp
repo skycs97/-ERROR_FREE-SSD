@@ -2,15 +2,22 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <sstream>
 #include <stdexcept>
 #include <random>  
 #include <chrono> 
 #include <iomanip>
+#include <sstream>
 
 #include "command.h"
 #include "command_runner.h"
 #include "TEST_SHELL_CONFIG.h"
+
+#include "read_command.h"
+#include "write_command.h"
+#include "help_command.h"
+#include "exit_command.h"
+#include "full_read_command.h"
+#include "full_write_command.h"
 
 Command::Command(std::vector<std::string> commands) : ShellCommands(commands)
 {
@@ -26,99 +33,6 @@ std::string Command::getHelp(void) const {
 
 int Command::getNumOfArgs(void) {
 	return numOfArgs;
-}
-
-void ReadCommand::run(const CommandRunner& cmdRunner) const
-{
-	string result = cmdRunner.read(ShellCommands[1]);
-	printResult(result, ShellCommands[1]);
-}
-
-void ReadCommand::printResult(const string& result, const string& lba) const
-{
-	std::cout << "[Read] ";
-	if (result != ERROR)
-		std::cout << lba << " : ";
-	std::cout << result
-		<< std::endl << std::endl;
-}
-
-void WriteCommand::run(const CommandRunner& cmdRunner) const
-{
-	string result = cmdRunner.write(ShellCommands[1], ShellCommands[2]);
-	printResult(result);
-}
-
-void WriteCommand::printResult(const string& result) const
-{
-	std::cout << "[Write] ";
-	if (result == "")
-		std::cout << DONE;
-	else
-		std::cout << ERROR;
-
-	std::cout << std::endl << std::endl;
-}
-
-void ExitCommand::run(const CommandRunner& cmdRunner) const
-{
-	exit(0);
-}
-
-void HelpCommand::run(const CommandRunner& cmdRunner) const
-{
-	FactoryCommand factory;
-	for (const string& cmd : AVAILABLE_COMMAND_LIST) {
-		std::cout << factory.makeCommand(cmd)->getHelp() << std::endl;;
-	}
-
-	std::cout << std::endl << std::endl;
-	std::cout << "-------------------Developers-------------------------\n";
-	for (const string& str : DEVELOPERS) {
-		std::cout << str << ", ";
-	}
-
-	std::cout << std::endl;
-}
-
-void FullWriteCommand::run(const CommandRunner& cmdRunner) const
-{
-	string writeResult;
-	string fullWriteResult = "";
-
-	for (int lba = MIN_ADDR; lba <= MAX_ADDR; lba++) {
-		writeResult = cmdRunner.write(std::to_string(lba), ShellCommands[1]);
-		if (writeResult == ERROR)
-			fullWriteResult = ERROR;
-	}
-
-	printResult(fullWriteResult);
-}
-
-void FullWriteCommand::printResult(const string& result) const
-{
-	std::cout << "[Full Write] ";
-	if (result == "")
-		std::cout << DONE;
-	else
-		std::cout << ERROR;
-
-	std::cout << std::endl << std::endl;
-}
-
-void FullReadCommand::run(const CommandRunner& cmdRunner) const
-{
-	string result;
-	std::cout << "[Full Read]" << std::endl;
-	for (int lba = MIN_ADDR; lba <= MAX_ADDR; lba++) {
-		result = cmdRunner.read(std::to_string(lba));
-		printResult(result, std::to_string(lba));
-	}
-}
-void FullReadCommand::printResult(const string& result, const string& lba) const
-{
-	std::cout << "LBA " << std::setw(2) << std::setfill('0')  << lba << " : ";
-	std::cout << result << std::endl;
 }
 
 void FullWriteAndReadCompare::run(const CommandRunner& cmdRunner) const

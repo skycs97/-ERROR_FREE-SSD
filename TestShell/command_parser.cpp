@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include "command_parser.h"
 #include "command.h"
+
 using std::string;
 
 Command* CommandParser::getCommand(const std::string& command)

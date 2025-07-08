@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include "command_runner.h"
+#include "TEST_SHELL_CONFIG.h"
 
 namespace {
 	const std::string CMD_READ = "read";
@@ -37,80 +38,6 @@ public:
 protected:
 	static const int MAX_ADDR = 99;
 	static const int MIN_ADDR = 0;
-};
-
-class ReadCommand : public Command {
-public:
-	ReadCommand(std::vector<std::string> cmd) : Command(cmd) {
-		numOfArgs = 2;
-		help = "read [LBA]";
-	};
-
-	void run(const CommandRunner& cmdRunner) const override;
-private:
-	void printResult(const string& result, const string& lba) const;
-};
-
-class WriteCommand : public Command {
-public:
-
-	WriteCommand(std::vector<std::string> cmd) : Command(cmd) {
-		numOfArgs = 3;
-		help = "write [LBA] [data]";
-	};
-
-	void run(const CommandRunner& cmdRunner) const override;
-private:
-	void printResult(const string& result) const;
-};
-
-class ExitCommand : public Command {
-public:
-
-	ExitCommand(std::vector<std::string> cmd) : Command(cmd) {
-		numOfArgs = 1;
-		help = "exit";
-	};
-
-	void run(const CommandRunner& cmdRunner) const override;
-};
-
-class HelpCommand : public Command {
-public:
-
-	HelpCommand(std::vector<std::string> cmd) : Command(cmd) {
-		numOfArgs = 1;
-		help = "help";
-	};
-
-	void run(const CommandRunner& cmdRunner) const override;
-};
-
-class FullWriteCommand : public Command {
-public:
-
-	FullWriteCommand(std::vector<std::string> cmd) : Command(cmd) {
-		numOfArgs = 1;
-		help = "fullwrite";
-	};
-
-	void run(const CommandRunner& cmdRunner) const override;
-private:
-	void printResult(const string& result) const;
-};
-
-class FullReadCommand : public Command {
-public:
-
-	FullReadCommand(std::vector<std::string> cmd) : Command(cmd) {
-		numOfArgs = 1;
-		help = "fullread";
-	};
-
-	void run(const CommandRunner& cmdRunner) const override;
-
-private:
-	void printResult(const string& result, const string& lba) const;
 };
 
 class FullWriteAndReadCompare : public Command {
