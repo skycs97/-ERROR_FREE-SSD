@@ -9,7 +9,7 @@ int main(void) {
 #include "shell.h"
 
 int main(void) {
-	TestShell shell;
+	TestShell& shell = TestShell::getShell();
 	shell.runShell();
 }
 
