@@ -8,8 +8,8 @@ using namespace testing;
 
 class SsdInterfaceMock : public SsdInterface {
 public:
-	MOCK_METHOD(string, read, (int), (override));
-	MOCK_METHOD(string, write, (int, int), (override));
+	MOCK_METHOD(string, read, (const string&), (override));
+	MOCK_METHOD(string, write, (const string&, const string&), (override));
 };
 
 class TestShellFixtureWithMock : public Test {
@@ -20,51 +20,47 @@ protected:
 public:
 	SsdInterfaceMock mockStorage;
 	CommandRunner runner;
+
+	const string VALID_LBA = "10";
+	const string INVALID_LBA = "1000";
+	const string TEST_VALUE = "0xAAAABBBB";
+	const string ERROR_STRING = "ERROR";
 };
 
 TEST_F(TestShellFixtureWithMock, CmdRunnerRead) {
-	vector<string> command = { "\SSD.exe", "R", "1" };
-
-	EXPECT_CALL(mockStorage, read)
+	EXPECT_CALL(mockStorage, read(VALID_LBA))
 		.Times(1)
 		.WillRepeatedly(Return("0x0000FFFF"));
 	
-	EXPECT_EQ("0x0000FFFF", runner.runCommand(command));
+	EXPECT_EQ("0x0000FFFF", runner.read(VALID_LBA));
 }
 
 TEST_F(TestShellFixtureWithMock, CmdRunnerWrite) {
-	vector<string> command = { "\SSD.exe", "W", "2", "0xAAAABBBB"};
-
-	EXPECT_CALL(mockStorage, write)
+	EXPECT_CALL(mockStorage, write(VALID_LBA, _))
 		.Times(1)
-		.WillRepeatedly(Return(""));
+		.WillRepeatedly(Return(TEST_VALUE));
 
-	EXPECT_EQ("", runner.runCommand(command));
+	EXPECT_EQ(TEST_VALUE, runner.write(VALID_LBA, TEST_VALUE));
 }
 
 TEST_F(TestShellFixtureWithMock, CmdRunnerReadFail) {
-	vector<string> command = { "\SSD.exe", "R", "110" };
-
-	EXPECT_CALL(mockStorage, read)
+	EXPECT_CALL(mockStorage, read(INVALID_LBA))
 		.Times(1)
-		.WillRepeatedly(Return("ERROR"));
+		.WillRepeatedly(Return(ERROR_STRING));
 
-	EXPECT_EQ("ERROR", runner.runCommand(command));
+	EXPECT_EQ(ERROR_STRING, runner.read(INVALID_LBA));
 }
 
 TEST_F(TestShellFixtureWithMock, CmdRunnerWriteFail) {
-	vector<string> command = { "\SSD.exe", "W", "110", "0xFFFFFFFF"};
-
-	EXPECT_CALL(mockStorage, write)
+	EXPECT_CALL(mockStorage, write(INVALID_LBA, _))
 		.Times(1)
-		.WillRepeatedly(Return("ERROR"));
+		.WillRepeatedly(Return(ERROR_STRING));
 
-	EXPECT_EQ("ERROR", runner.runCommand(command));
+	EXPECT_EQ(ERROR_STRING, runner.write(INVALID_LBA, TEST_VALUE));
 }
 
 TEST_F(TestShellFixtureWithMock, CmdRunnerNoSetInterface) {
 	CommandRunner emptyRunner;
-	vector<string> command = { "\SSD.exe", "R", "1" };
 
-	EXPECT_THROW(emptyRunner.runCommand(command), std::runtime_error);
+	EXPECT_THROW(emptyRunner.read(VALID_LBA), std::runtime_error);
 }
