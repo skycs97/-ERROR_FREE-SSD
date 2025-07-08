@@ -91,12 +91,25 @@ TEST_F(TestShellFixtureWithMock, CommandRunReadFail) {
 	command->run(runner);
 }
 
-TEST_F(TestShellFixtureWithMock, CommandRunWrite) {
+TEST_F(TestShellFixtureWithMock, CommandRunWritePass) {
 
 	Command* command = fc.makeCommand("write " + VALID_LBA + " " + TEST_VALUE);
 
 	EXPECT_CALL(mockStorage, write(VALID_LBA, _))
-		.Times(1);
+		.Times(1)
+		.WillRepeatedly(Return(""));
+	EXPECT_TRUE(command != nullptr);
+
+	command->run(runner);
+}
+
+TEST_F(TestShellFixtureWithMock, CommandRunWriteFail) {
+
+	Command* command = fc.makeCommand("write " + INVALID_LBA + " " + TEST_VALUE);
+
+	EXPECT_CALL(mockStorage, write(INVALID_LBA, _))
+		.Times(1)
+		.WillRepeatedly(Return("ERROR"));
 	EXPECT_TRUE(command != nullptr);
 
 	command->run(runner);
