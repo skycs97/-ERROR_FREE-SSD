@@ -49,6 +49,18 @@
     <ClCompile Include="test_command.cpp">
       <Filter>테스트 파일</Filter>
     </ClCompile>
+    <ClCompile Include="write_read_aging_command.h">
+      <Filter>헤더 파일\cmds</Filter>
+    </ClCompile>
+    <ClCompile Include="write_read_aging_command.cpp">
+      <Filter>소스 파일\cmds</Filter>
+    </ClCompile>
+    <ClCompile Include="partial_LBA_write_command.cpp">
+      <Filter>소스 파일\cmds</Filter>
+    </ClCompile>
+    <ClCompile Include="full_write_and_read_compare_command.cpp">
+      <Filter>소스 파일\cmds</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="command_parser.h">
@@ -63,7 +75,6 @@
     <ClInclude Include="ssd_interface.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="storage.h" />
     <ClInclude Include="TEST_SHELL_CONFIG.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -86,6 +97,12 @@
       <Filter>헤더 파일\cmds</Filter>
     </ClInclude>
     <ClInclude Include="full_write_command.h">
+      <Filter>헤더 파일\cmds</Filter>
+    </ClInclude>
+    <ClInclude Include="full_write_and_read_compare_command.h">
+      <Filter>헤더 파일\cmds</Filter>
+    </ClInclude>
+    <ClInclude Include="partial_LBA_write_command.h">
       <Filter>헤더 파일\cmds</Filter>
     </ClInclude>
   </ItemGroup>

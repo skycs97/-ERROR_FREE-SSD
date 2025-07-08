@@ -131,9 +131,11 @@
     <ClCompile Include="command_parser.cpp" />
     <ClCompile Include="exit_command.cpp" />
     <ClCompile Include="full_read_command.cpp" />
+    <ClCompile Include="full_write_and_read_compare_command.cpp" />
     <ClCompile Include="full_write_command.cpp" />
     <ClCompile Include="help_command.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="partial_LBA_write_command.cpp" />
     <ClCompile Include="read_command.cpp" />
     <ClCompile Include="shell.cpp" />
     <ClCompile Include="test_command.cpp" />
@@ -145,6 +147,8 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="write_command.cpp" />
+    <ClCompile Include="write_read_aging_command.cpp" />
+    <ClCompile Include="write_read_aging_command.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -154,8 +158,10 @@
     <ClInclude Include="command_runner.h" />
     <ClInclude Include="exit_command.h" />
     <ClInclude Include="full_read_command.h" />
+    <ClInclude Include="full_write_and_read_compare_command.h" />
     <ClInclude Include="full_write_command.h" />
     <ClInclude Include="help_command.h" />
+    <ClInclude Include="partial_LBA_write_command.h" />
     <ClInclude Include="read_command.h" />
     <ClInclude Include="shell.h" />
     <ClInclude Include="ssd_interface.h" />
