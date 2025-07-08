@@ -61,3 +61,10 @@ TEST_F(TestShellFixtureWithMock, CmdRunnerWriteFail) {
 
 	EXPECT_EQ("ERROR", runner.runCommand(command));
 }
+
+TEST_F(TestShellFixtureWithMock, CmdRunnerNoSetInterface) {
+	CommandRunner emptyRunner;
+	vector<string> command = { "\SSD.exe", "R", "1" };
+
+	EXPECT_THROW(emptyRunner.runCommand(command), std::runtime_error);
+}

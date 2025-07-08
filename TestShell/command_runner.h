@@ -11,5 +11,5 @@ public:
 
 	void setStorage(SsdInterface* ssdInterface);
 private:
-	SsdInterface* ssdInterface;
+	SsdInterface* ssdInterface = nullptr;
 };
