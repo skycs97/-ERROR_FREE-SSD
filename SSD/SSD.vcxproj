@@ -132,6 +132,7 @@
     <ClCompile Include="nand_flash_memory_impl_test.cpp" />
     <ClCompile Include="nand_writer.cpp" />
     <ClCompile Include="nand_writer_test.cpp" />
+    <ClCompile Include="ssd.cpp" />
     <None Include="packages.config" />
     <ClCompile Include="nand_reader.cpp" />
     <ClCompile Include="nand_reader_test.cpp" />
