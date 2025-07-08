@@ -9,22 +9,22 @@ using std::vector;
 
 class NandFlashMemoryImplFixture : public Test {
 public:
-	vector<string> GetFullDataWithLBA()
+	vector<string> GetFullSameDataWithLBA(string data)
 	{
 		vector<string> expectingWriteDatas;
 		for (int i = MIN_LBA; i <= MAX_LBA; i++) {
 			std::ostringstream oss;
-			oss << i << '\t' << "0x00001111";
+			oss << i << '\t' << data;
 			expectingWriteDatas.push_back(oss.str());
 		}
 		return expectingWriteDatas;
 	}
 
-	vector<string> GetFullDataWihtoutLBA()
+	vector<string> GetFullSameDataWihtoutLBA(string data)
 	{
 		vector<string> writingDatas;
 		for (int i = MIN_LBA; i <= MAX_LBA; i++) {
-			writingDatas.push_back("0x00001111");
+			writingDatas.push_back(data);
 		}
 		return writingDatas;
 	}
@@ -43,11 +43,31 @@ TEST_F(NandFlashMemoryImplFixture, readTest) {
 }
 
 TEST_F(NandFlashMemoryImplFixture, writeTest) {
-	vector<string> expectingWriteDatas = GetFullDataWithLBA();
-	vector<string> writingDatas = GetFullDataWihtoutLBA();
+	vector<string> expectingWriteDatas = GetFullSameDataWithLBA("0x00001111");
+	vector<string> writingDatas = GetFullSameDataWihtoutLBA("0x00001111");
 	
-	EXPECT_CALL(mockedFileHandler, write("ssd_nand.txt", expectingWriteDatas)).Times(1);
+	EXPECT_CALL(mockedFileHandler, write(NAND_FILENAME, expectingWriteDatas)).Times(1);
 	string actual = memory.write(writingDatas);
 
 	EXPECT_EQ("", actual);
+}
+
+TEST_F(NandFlashMemoryImplFixture, NandFile_Exist) {
+	EXPECT_CALL(mockedFileHandler, checkExistNandFile)
+		.Times(1)
+		.WillOnce(Return(true));
+	EXPECT_CALL(mockedFileHandler, createInitNandFile)
+		.Times(0);
+
+	mockedFileHandler.init();
+}
+
+TEST_F(NandFlashMemoryImplFixture, NandFile_NoExist) {
+	EXPECT_CALL(mockedFileHandler, checkExistNandFile)
+		.Times(1)
+		.WillOnce(Return(false));
+	EXPECT_CALL(mockedFileHandler, createInitNandFile)
+		.Times(1);
+
+	mockedFileHandler.init();
 }
