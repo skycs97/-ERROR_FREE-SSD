@@ -7,7 +7,12 @@ SSD& SSD::getInstance()
 }
 
 SSD::SSD() {
-	nand = new NandFlashMemoryImpl();
+	// Create utility instance
+	FileHandler* fh = new FileHandler();
+	outputHandler = new OutputHandler(fh);
+
+	// Create IO instance
+	nand = new NandFlashMemoryImpl(fh);
 	reader = new NandReader(nand);
 	writer = new NandWriter(nand);
 }

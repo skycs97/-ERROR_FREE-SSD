@@ -3,6 +3,8 @@
 #include "nand_writer.h"
 #include "nand_flash_memory.h"
 #include "nand_flash_memory_impl.h"
+#include "OutputHandler.h"
+#include "FileHandler.h"
 
 class SSD
 {
@@ -19,4 +21,5 @@ private:
 	NandReader* reader;
 	NandWriter* writer;
 	NandFlashMemory* nand;
+	OutputHandler* outputHandler;
 };

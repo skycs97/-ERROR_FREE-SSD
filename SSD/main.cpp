@@ -11,9 +11,7 @@ int main(void) {
 int main(int argc, char* argv[]) {
 	// 1. Create SSD instance
 	SSD& ssd = SSD::getInstance();
-	FileHandler* fh = new FileHandler();
-	NandFlashMemory* nand = new NandFlashMemoryImpl(fh);
-
+	
 	// 2. Parsing command
 
 	// 3. Process command
