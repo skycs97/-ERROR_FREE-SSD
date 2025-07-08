@@ -47,4 +47,9 @@ void FullWriteAndReadCompare::run(const CommandRunner& cmdRunner) const
 
 void FullWriteAndReadCompare::printHelp() const
 {
+	std::cout << "** Full Write And Read Compare Command **\n";
+	std::cout << " - Test command to compare after writing 5 LBAs each and reading them\n";
+	std::cout << "Usage\n";
+	std::cout << " 1_FullWriteAndReadCompare\n";
+	std::cout << " 1_\n";
 }

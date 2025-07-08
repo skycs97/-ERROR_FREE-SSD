@@ -43,5 +43,9 @@ void WriteReadAging::run(const CommandRunner& cmdRunner) const
 
 void WriteReadAging::printHelp() const
 {
-
+	std::cout << "** Write Read Aging Command **\n";
+	std::cout << " - A test that writes a random value to LBA 0 and 99 and then reads it to confirm, repeated 200 times..\n";
+	std::cout << "Usage\n";
+	std::cout << " 3_WriteReadAging\n";
+	std::cout << " 3_\n";
 }
