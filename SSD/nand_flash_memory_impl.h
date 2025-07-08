@@ -1,10 +1,13 @@
 #pragma once
 #include "nand_flash_memory.h"
-
-class NandFlashMemoryImpl : public NandFlashMemory
-{
+#include "FileHandler.h"
+class NandFlashMemoryImpl : public NandFlashMemory {
 public:
-	NandFlashMemoryImpl() = default;
-	string read(int LBA) override { return ""; }
-	string write(int lba, int data) override { return ""; }
+	NandFlashMemoryImpl(FileHandler* fileHandler) :fileHandler{ fileHandler } {}
+
+	vector<string> read() override;
+	string write(int lba, int data) override;
+private:
+	const string NAND_FILENAME = "ssd_nand.txt";
+	FileHandler* fileHandler;
 };
