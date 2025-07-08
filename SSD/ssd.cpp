@@ -33,6 +33,7 @@ void SSD::run(int argc, const char* argv[])
 			break;
 		}
 		default: {
+			throw std::invalid_argument("unknown type");
 			return;
 		}
 		}
