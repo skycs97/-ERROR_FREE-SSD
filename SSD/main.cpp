@@ -14,12 +14,12 @@ int main(void) {
 
 int main(int argc, char* argv[]) {
 	// 1. Create IO and Flash instance
-	NandFlashMemory* nand = new NandFlashMemoryImpl();
+	FileHandler* fh = new FileHandler();
+	NandFlashMemory* nand = new NandFlashMemoryImpl(fh);
 	NandReader* reader = new NandReader(nand);
 	NandWriter* writer = new NandWriter(nand);
 
 	// 2. Create Utility instance
-	FileHandler* fh = new FileHandler();
 	OutputHandler* oh = new OutputHandler(fh);
 	// TODO: Parser
 
