@@ -39,6 +39,8 @@ bool ArgumentParser::etc_cmd_handler(int argc, const char* argv[])
 
 bool ArgumentParser::parse_args(int argc, const char* argv[])
 {
+	if (argc < 2) throw std::invalid_argument("no command");
+
 	if ((string(argv[ARG_IDX_CMD]) == string("R")) || (string(argv[ARG_IDX_CMD]) == string("r"))) {
 		return read_cmd_handler(argc, argv);
 	}
