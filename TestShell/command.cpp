@@ -108,6 +108,34 @@ void FullWriteAndReadCompare::run(const CommandRunner& cmdRunner) const
 
 void PartialLBAWrite::run(const CommandRunner& cmdRunner) const
 {
+	for (int testRepeat = 0; testRepeat < REPEAT_COUNT; testRepeat++) {
+		vector<std::string> result;
+
+		for (std::string Lba : TestLbaList) {
+			cmdRunner.write(Lba, WRITE_DATA);
+		}
+
+		for (std::string Lba : TestLbaList) {
+
+			result.push_back(cmdRunner.read(Lba));
+		}
+
+		if (checkResult(result) == false) {
+			std::cout << "FAIL\n";
+		}
+	}
+	std::cout << "PASS\n";
+}
+
+bool PartialLBAWrite::checkResult(const vector<std::string>& result) const
+{
+	string firstItem = result[0];
+
+	for (const std::string& resultitem : result)
+	{
+		if (resultitem != firstItem) { return false; }
+	}
+	return true;
 }
 
 void WriteReadAging::run(const CommandRunner& cmdRunner) const
@@ -134,6 +162,8 @@ Command* FactoryCommand::makeCommand(const std::string& cmd)
 	else if (shellCmd == CMD_FULLWRITE) return new FullWriteCommand(commands);
 	else if (shellCmd == CMD_FULLREAD) return new FullReadCommand(commands);
 	else if (shellCmd == CMD_1_ || shellCmd == CMD_1_FULLWRITEANDREADCOMPARE) return new FullWriteAndReadCompare(commands);
+
+	else if ((shellCmd == CMD_2_PartialLBAWrite) || (shellCmd == CMD_2_)) return new PartialLBAWrite(commands);
 
 	else return nullptr;
 }
