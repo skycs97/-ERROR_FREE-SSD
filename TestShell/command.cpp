@@ -50,7 +50,7 @@ void FullWriteCommand::run(const CommandRunner& cmdRunner) const
 {
 	std::vector<string> result;
 	for (int lba = MIN_ADDR; lba <= MAX_ADDR; lba++) {
-		result.push_back(cmdRunner.write(ShellCommands[1], ShellCommands[2]));
+		result.push_back(cmdRunner.write(std::to_string(lba), ShellCommands[1]));
 	}
 }
 
@@ -58,7 +58,7 @@ void FullReadCommand::run(const CommandRunner& cmdRunner) const
 {
 	std::vector<string> result;
 	for (int lba = MIN_ADDR; lba <= MAX_ADDR; lba++) {
-		result.push_back(cmdRunner.read(ShellCommands[1]));
+		result.push_back(cmdRunner.read(std::to_string(lba)));
 	}
 }
 void FullWriteAndReadCompare::run(const CommandRunner& cmdRunner) const
