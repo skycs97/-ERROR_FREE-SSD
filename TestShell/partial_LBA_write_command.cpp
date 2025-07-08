@@ -34,4 +34,9 @@ void PartialLBAWrite::run(const CommandRunner& cmdRunner) const
 
 void PartialLBAWrite::printHelp() const
 {
+	std::cout << "** Partial LBA Write Command **\n";
+	std::cout << " - Write a specific value to several LBAs and then read it to check the value.\n";
+	std::cout << "Usage\n";
+	std::cout << " 2_PartialLBAWrite\n";
+	std::cout << " 2_\n";
 }
