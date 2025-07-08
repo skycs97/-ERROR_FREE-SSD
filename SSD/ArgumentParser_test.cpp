@@ -27,6 +27,16 @@ TEST(ArgumentParserTest, ReadCommandExceptionTest) {
 	EXPECT_THROW(parser.parse_args(3, argv), std::invalid_argument);
 }
 
+TEST(ArgumentParserTest, ReadCommandExceptionNotEnoughArgumentTest) {
+	ArgumentParser parser;
+	const char* argv[] = {
+		"ssd.exe",
+		"R"		
+	};
+
+	EXPECT_THROW(parser.parse_args(2, argv), std::invalid_argument);
+}
+
 TEST(ArgumentParserTest, WriteCommandTest) {
 	ArgumentParser parser;
 	const char* argv[] = {
@@ -65,4 +75,25 @@ TEST(ArgumentParserTest, WriteCommandDataExceptionTest) {
 	};
 
 	EXPECT_THROW(parser.parse_args(4, argv), std::invalid_argument);
+}
+
+TEST(ArgumentParserTest, WriteCommandExceptionNotEnoughArgumentTest1) {
+	ArgumentParser parser;
+	const char* argv[] = {
+		"ssd.exe",
+		"W"
+	};
+
+	EXPECT_THROW(parser.parse_args(2, argv), std::invalid_argument);
+}
+
+TEST(ArgumentParserTest, WriteCommandExceptionNotEnoughArgumentTest2) {
+	ArgumentParser parser;
+	const char* argv[] = {
+		"ssd.exe",
+		"W",
+		"50"
+	};
+
+	EXPECT_THROW(parser.parse_args(3, argv), std::invalid_argument);
 }
