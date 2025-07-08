@@ -38,7 +38,7 @@ void ReadCommand::printResult(const string& result, const string& lba) const
 	std::cout << "[Read] ";
 	if (result != ERROR)
 		std::cout << lba << " : ";
-	std::cout << result;
+	std::cout << result
 		<< std::endl << std::endl;
 }
 
@@ -79,11 +79,19 @@ void FullWriteCommand::run(const CommandRunner& cmdRunner) const
 
 void FullReadCommand::run(const CommandRunner& cmdRunner) const
 {
-	std::vector<string> result;
+	string result;
+	std::cout << "[Full Read]" << std::endl;
 	for (int lba = MIN_ADDR; lba <= MAX_ADDR; lba++) {
-		result.push_back(cmdRunner.read(std::to_string(lba)));
+		result = cmdRunner.read(std::to_string(lba));
+		printResult(result, std::to_string(lba));
 	}
 }
+void FullReadCommand::printResult(const string& result, const string& lba) const
+{
+	std::cout << "LBA " << std::setw(2) << std::setfill('0')  << lba << " : ";
+	std::cout << result << std::endl;
+}
+
 void FullWriteAndReadCompare::run(const CommandRunner& cmdRunner) const
 {
 	std::vector<string> result;

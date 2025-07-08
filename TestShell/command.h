@@ -106,6 +106,9 @@ public:
 	};
 
 	void run(const CommandRunner& cmdRunner) const override;
+
+private:
+	void printResult(const string& result, const string& lba) const;
 };
 
 class FullWriteAndReadCompare : public Command {
