@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "command_parser.h"
+#include "command.h"
 
 using std::vector;
 using std::string;
@@ -16,12 +17,15 @@ public:
 	}
 
 	void runShell();
-	void HelpCommand();
 
 private:
+	bool isEmptyInput(const string& input);
+	string getUserInput();
+
 	TestShell() {};
 	TestShell& operator=(const TestShell& other) = delete;
 	TestShell(const TestShell& other) = delete;
-	vector<std::string> command;
+
+	Command* command = nullptr;
 	CommandParser parser;
 };
