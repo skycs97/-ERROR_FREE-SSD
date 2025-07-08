@@ -40,7 +40,5 @@ TEST_F(WriterFixture, InvalidCase_OutOfRange)
 	EXPECT_CALL(nand, write(_))
 		.Times(0);
 
-	string expected = "ERROR";
-	string actual = writer.write(INVALID_RANGE_LBA, VALID_DATA);
-	EXPECT_EQ(expected, actual);
+	EXPECT_THROW(writer.write(INVALID_RANGE_LBA, VALID_DATA), std::runtime_error);
 }
