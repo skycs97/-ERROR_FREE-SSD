@@ -6,8 +6,8 @@ public:
 
 	FullReadCommand(std::vector<std::string> cmd) : Command(cmd) {
 		numOfArgs = 1;
-		help = "fullread";
 	};
 
 	void run(const CommandRunner& cmdRunner) const override;
+	void printHelp() const override;
 };

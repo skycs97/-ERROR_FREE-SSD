@@ -25,10 +25,13 @@ const std::string CMD_FULLWRITE = "fullwrite";
 const std::string CMD_FULLREAD = "fullread";
 
 const vector<string> AVAILABLE_COMMAND_LIST = {
+	CMD_HELP,
 	CMD_READ,
 	CMD_WRITE,
 	CMD_EXIT,
-	CMD_HELP,
 	CMD_FULLWRITE,
 	CMD_FULLREAD
 };
+
+static const int MAX_LBA = 99;
+static const int MIN_LBA = 0;

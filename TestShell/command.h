@@ -25,26 +25,20 @@ class Command {
 public:
 	Command(std::vector<std::string> commands);
 	std::vector<std::string> getShellCommands(void);
-	std::string getHelp(void) const;
 	int getNumOfArgs(void);
 
 	virtual void run(const CommandRunner& cmdRunner) const = 0;
+	virtual void printHelp(void) const = 0;
 
 	std::vector<std::string> ShellCommands;
 
 	int numOfArgs = 0;
-	std::string help = "";
-
-protected:
-	static const int MAX_ADDR = 99;
-	static const int MIN_ADDR = 0;
 };
 
 class FullWriteAndReadCompare : public Command {
 public:
 	FullWriteAndReadCompare(std::vector<std::string> cmd) : Command(cmd) {
 		numOfArgs = 1;
-		help = "FullWriteAndReadCompare";
 	};
 	void run(const CommandRunner& cmdRunner) const override;
 };
@@ -53,7 +47,6 @@ class PartialLBAWrite : public Command {
 public:
 	PartialLBAWrite(std::vector<std::string> cmd) : Command(cmd) {
 		numOfArgs = 1;
-		help = "PartialLBAWrite";
 	};
 	void run(const CommandRunner& cmdRunner) const override;
 private:
@@ -68,7 +61,6 @@ class WriteReadAging : public Command {
 public:
 	WriteReadAging(std::vector<std::string> cmd) : Command(cmd) {
 		numOfArgs = 0;
-		help = "WriteReadAging";
 	};
 	void run(const CommandRunner& cmdRunner) const override;
 };
