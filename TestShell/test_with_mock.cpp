@@ -126,7 +126,7 @@ TEST_F(TestShellFixtureWithMock, CommandRunFullWriteAndReadCompare) {
 
 TEST_F(TestShellFixtureWithMock, PartialLBAWrite) {
 	static const int OPERATION_CALL_COUNT = 150;
-	vector<string> user_input_command = { "2_", "2_PartialLBAWrite"};
+	vector<string> user_input_command = { "2_", "2_PartialLBAWrite" };
 	for (string user_input : user_input_command) {
 		Command* command = fc.makeCommand(user_input);
 
@@ -140,4 +140,22 @@ TEST_F(TestShellFixtureWithMock, PartialLBAWrite) {
 
 		command->run(runner);
 	}
+}
+
+TEST_F(TestShellFixtureWithMock, WriteReadAging) {
+	Command* command = fc.makeCommand("3_ ");
+
+	EXPECT_CALL(mockStorage, read(_))
+		.Times(400)
+		.WillOnce(Return("0xF0F0F0F0"))
+		.WillOnce(Return("0xF0F0F0F0"))
+		.WillOnce(Return("0x5A5A5A5A"))
+		.WillOnce(Return("0x5A5A5A5A"))
+		.WillRepeatedly(Return("0xA5A5A5A5"));
+
+	EXPECT_CALL(mockStorage, write(_, _))
+		.Times(400)
+		.WillRepeatedly(Return(""));
+
+	command->run(runner);
 }
