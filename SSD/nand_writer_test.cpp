@@ -4,7 +4,6 @@
 
 using namespace testing;
 
-static const int MAX_LBA = 100;
 static const int VALID_RANGE_LBA = 53;
 static const int INVALID_RANGE_LBA = 999;
 static const string VALID_DATA = "0xAAAABBBB";

@@ -1,4 +1,5 @@
 #pragma once
+#include "global_config.h"
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -31,8 +32,4 @@ private:
 	CMD_TYPE eCmd = NONE_CMD;
 	int nAddr = -1;
 	string dwData = "";
-
-	const int ARG_IDX_CMD = 1;
-	const int ARG_IDX_ADDR = 2;
-	const int ARG_IDX_DATA = 3;
 };
