@@ -18,7 +18,3 @@ public:
 	int numOfArgs = 0;
 };
 
-class FactoryCommand {
-public:
-	Command* makeCommand(const std::string& cmd);
-};

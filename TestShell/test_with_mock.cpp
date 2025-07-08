@@ -2,8 +2,8 @@
 #include "ssd_interface.h"
 #include <string>
 #include "command_runner.h"
-#include "command.h"
-
+#include "command_list.h"
+#include "command_factory.h"
 using std::string;
 using namespace testing;
 
@@ -172,7 +172,7 @@ TEST_F(TestShellFixtureWithMock, PartialLBAWrite) {
 }
 
 TEST_F(TestShellFixtureWithMock, WriteReadAging) {
-	Command* command = fc.makeCommand("3_ ");
+	Command* command = fc.makeCommand("3_");
 
 	EXPECT_CALL(mockStorage, read(_))
 		.Times(400)

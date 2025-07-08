@@ -1,6 +1,7 @@
 #include "help_command.h"
 #include <iostream>
 #include <sstream>
+#include "command_factory.h"
 
 std::string join(std::vector<std::string> const& strings, std::string delim)
 {
