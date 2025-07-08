@@ -1,83 +1,66 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="소스 파일">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="헤더 파일">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="리소스 파일">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="테스트 파일">
-      <UniqueIdentifier>{25fe4ce9-965b-48ea-8131-2a5d865f872f}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup>
-    <Filter Include="소스 파일">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="헤더 파일">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="리소스 파일">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="테스트 파일">
-      <UniqueIdentifier>{25fe4ce9-965b-48ea-8131-2a5d865f872f}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="test_with_mock.cpp">
-      <Filter>테스트 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="command_runner.cpp">
+    <ClCompile Include="command.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="command_parser.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
+    <ClCompile Include="command_runner.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shell.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="test_testshell_command_parser.cpp">
       <Filter>테스트 파일</Filter>
     </ClCompile>
-
-
-
+    <ClCompile Include="test_with_mock.cpp">
+      <Filter>테스트 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="storage.h">
-    <ClInclude Include="ssd_interface.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="command_runner.h">
+    <ClInclude Include="command.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="command_parser.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="command.h">
+    <ClInclude Include="command_runner.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="shell.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ssd_interface.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{9c65a3a0-67b6-4d68-8922-1119c2ea9232}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{f90e1601-80d7-4efb-9132-9da5e4886ccd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="테스트 파일">
+      <UniqueIdentifier>{35a4f419-5b2a-447a-a6a2-dbb0690f4539}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{16c83091-6886-42d1-a610-4caf8e8a4659}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
