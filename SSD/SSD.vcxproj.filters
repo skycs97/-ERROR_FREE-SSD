@@ -48,6 +48,12 @@
     <ClCompile Include="nand_writer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="ArgumentParser_test.cpp">
+      <Filter>테스트 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ArgumentParser.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="nand_flash_memory_impl_test.cpp">
       <Filter>테스트 파일</Filter>
     </ClCompile>
@@ -81,6 +87,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="nand_writer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ArgumentParser.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="ssd.h">

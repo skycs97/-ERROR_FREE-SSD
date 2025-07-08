@@ -127,6 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ArgumentParser.cpp" />
+    <ClCompile Include="ArgumentParser_test.cpp" />
     <ClCompile Include="file_handler_mock.h" />
     <ClCompile Include="nand_flash_memory_impl.cpp" />
     <ClCompile Include="nand_flash_memory_impl_test.cpp" />
@@ -144,6 +146,7 @@
     <ClCompile Include="OutputHandler_test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArgumentParser.h" />
     <ClInclude Include="FileHandler.h" />
     <ClInclude Include="nand_flash_memory_impl.h" />
     <ClInclude Include="OutputHandler.h" />
