@@ -2,6 +2,7 @@
 #include "ssd_interface.h"
 #include <string>
 #include "command_runner.h"
+#include "command.h"
 
 using std::string;
 using namespace testing;
@@ -63,4 +64,22 @@ TEST_F(TestShellFixtureWithMock, CmdRunnerNoSetInterface) {
 	CommandRunner emptyRunner;
 
 	EXPECT_THROW(emptyRunner.read(VALID_LBA), std::runtime_error);
+}
+
+TEST_F(TestShellFixtureWithMock, FullWriteAndReadCompare) {
+
+	vector<string> command = {"1_"};
+	FullWriteAndReadCompare fullTest(command);
+
+	EXPECT_CALL(mockStorage, read(_))
+		.Times(100)
+		.WillRepeatedly(Return("0xA5A5A5A5"));
+
+	EXPECT_CALL(mockStorage, write(_,_))
+		.Times(100)
+		.WillRepeatedly(Return(""));
+
+	fullTest.run(runner);
+
+	//EXPECT_THROW(emptyRunner.read(VALID_LBA), std::runtime_error);
 }
