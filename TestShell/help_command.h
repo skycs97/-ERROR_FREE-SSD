@@ -7,8 +7,8 @@ public:
 
 	HelpCommand(std::vector<std::string> cmd) : Command(cmd) {
 		numOfArgs = 1;
-		help = "help";
 	};
 
+	void printHelp() const override;
 	void run(const CommandRunner& cmdRunner) const override;
 };

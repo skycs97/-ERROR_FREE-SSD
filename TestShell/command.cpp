@@ -27,10 +27,6 @@ std::vector<std::string> Command::getShellCommands(void) {
 	return ShellCommands;
 }
 
-std::string Command::getHelp(void) const {
-	return help;
-}
-
 int Command::getNumOfArgs(void) {
 	return numOfArgs;
 }

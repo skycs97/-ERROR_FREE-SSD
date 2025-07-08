@@ -6,9 +6,10 @@ public:
 
 	FullWriteCommand(std::vector<std::string> cmd) : Command(cmd) {
 		numOfArgs = 1;
-		help = "fullwrite";
 	};
 
 	void run(const CommandRunner& cmdRunner) const override;
+	void printHelp() const override;
+
 };
 
