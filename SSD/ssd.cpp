@@ -1,4 +1,5 @@
 #include "ssd.h"
+#include <stdexcept>
 
 SSD::SSD(FileHandler* fileHandler) {
 	// Create result IO instance
@@ -19,20 +20,25 @@ SSD::~SSD() {
 
 void SSD::run(int argc, const char* argv[])
 {
-	argumentParser->parse_args(argc, argv);
-	string data="";
-	switch (argumentParser->getCmdType()) {
-	case ArgumentParser::READ_CMD: {
-		int addr = argumentParser->getAddr();
-		data = reader->read(addr);
-		break;
+	string data = "";
+	try {
+		argumentParser->parse_args(argc, argv);
+		switch (argumentParser->getCmdType()) {
+		case ArgumentParser::READ_CMD: {
+			int addr = argumentParser->getAddr();
+			data = reader->read(addr);
+			break;
+		}
+		case ArgumentParser::WRITE_CMD: {
+			break;
+		}
+		default: {
+			return;
+		}
+		}
 	}
-	case ArgumentParser::WRITE_CMD: {
-		break;
-	}
-	default: {
-		return;
-	}
+	catch (std::exception e) {
+		data = "ERROR";
 	}
 	outputHandler->output(data);
 }
