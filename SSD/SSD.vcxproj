@@ -141,7 +141,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileHandler.h" />
+    <ClInclude Include="nand_flash_memory_impl.h" />
     <ClInclude Include="OutputHandler.h" />
+    <ClInclude Include="ssd.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="nand_flash_memory.h" />
