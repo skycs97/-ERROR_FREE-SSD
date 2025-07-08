@@ -1,6 +1,7 @@
 #include "nand_writer.h"
 
-string NandWriter::write(int lba, int data)
+string NandWriter::write(int lba, string data)
 {
-	return nandFlashMemory->write(lba, data);
+	vector<string> datas;
+	return nandFlashMemory->write(datas);
 }

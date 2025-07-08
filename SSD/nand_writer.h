@@ -10,7 +10,7 @@ public:
 	NandWriter(NandFlashMemory* nandFlashMemory)
 		: nandFlashMemory{ nandFlashMemory } {}
 
-	string write(int lba, int data);
+	string write(int lba, string data);
 
 private:
 	NandFlashMemory* nandFlashMemory;
