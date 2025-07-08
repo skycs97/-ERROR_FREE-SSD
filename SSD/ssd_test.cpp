@@ -5,13 +5,12 @@ using namespace testing;
 TEST(SSD, run_with_read_command)
 {
 	// arrange
-	SSD& ssd = SSD::getInstance();
 	FileHandlerMock mockedFileHandler;
-	ssd.setFileHandler(&mockedFileHandler);
-	
+	SSD ssd = SSD(&mockedFileHandler);
+
 	//1. ssd.exe r 0 호출시
-	int argc = 2;
-	const char* argv[] = { "r", "0" };
+	int argc = 3;
+	const char* argv[] = {"ssd.exe", "r", "0" };
 
 	//2. ssd_nand.txt에 아래와 같이 작성되어있다면
 	vector<string> writtenData = { "0\t0x11111111","1\t0x22222222" };

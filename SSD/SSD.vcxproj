@@ -135,6 +135,7 @@
     <ClCompile Include="nand_writer.cpp" />
     <ClCompile Include="nand_writer_test.cpp" />
     <ClCompile Include="ssd.cpp" />
+    <ClCompile Include="ssd_test.cpp" />
     <None Include="packages.config" />
     <ClCompile Include="nand_reader.cpp" />
     <ClCompile Include="nand_reader_test.cpp" />

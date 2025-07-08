@@ -5,21 +5,19 @@
 #include "nand_flash_memory_impl.h"
 #include "OutputHandler.h"
 #include "FileHandler.h"
+#include "ArgumentParser.h"
 
 class SSD
 {
 public:
-	static SSD& getInstance();
+	SSD(FileHandler* fileHandler);
 	~SSD();
-	void run();
-
+	void run(int argc, const char* argv[]);
 private:
-	SSD();
-	SSD(const SSD& other) = delete;
-	SSD& operator=(const SSD& other) = delete;
 
 	NandReader* reader;
 	NandWriter* writer;
 	NandFlashMemory* nand;
 	OutputHandler* outputHandler;
+	ArgumentParser* argumentParser;
 };
