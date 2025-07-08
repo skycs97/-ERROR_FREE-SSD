@@ -6,22 +6,15 @@ using namespace testing;
 
 class FileHandlerMock : public FileHandler {
 public:
-	MOCK_METHOD(void, write, (const std::string&), (override));
-	MOCK_METHOD(std::string, read, (), (override));
+	MOCK_METHOD(void, write, (const string&, const vector<string>&), (override));
 };
 
 TEST(Output, mock_file_test) {
 	NiceMock<FileHandlerMock> fhMock;
 	OutputHandler oh(&fhMock);
-
-	EXPECT_CALL(fhMock, write)
+	const string OUTPUT_FILENAME = "ssd_output.txt";
+	EXPECT_CALL(fhMock, write(OUTPUT_FILENAME, _))
 		.Times(1);
 
-	EXPECT_CALL(fhMock, read)
-		.WillRepeatedly(testing::Return("ERROR"));
-
 	oh.output("ERROR");
-	string readString = oh.read();
-
-	EXPECT_EQ("ERROR", readString);
 }

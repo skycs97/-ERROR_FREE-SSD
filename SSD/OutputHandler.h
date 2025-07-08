@@ -13,5 +13,6 @@ public:
 	string read(void);
 
 private:
+	const string OUTPUT_FILENAME = "ssd_output.txt";
 	FileHandler* fileHandler;
 };
