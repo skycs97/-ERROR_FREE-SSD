@@ -18,3 +18,15 @@ TEST(NandFlashMemoryImpl, readTest) {
 
 	EXPECT_EQ(expected, actual);
 }
+
+TEST(NandFlashMemoryImpl, writeTest) {
+	FileHandlerMock mockedFileHandler;
+	NandFlashMemoryImpl memory{ &mockedFileHandler };
+
+	vector<string> writingDatas = { "0\t0x00000000","1\t0x00000001" };
+	EXPECT_CALL(mockedFileHandler, write("ssd_nand.txt",writingDatas)).Times(1);
+	vector<string> writingData = { "0x00000000", "0x00000001" };
+	string actual = memory.write(writingData);
+
+	EXPECT_EQ("", actual);
+}
