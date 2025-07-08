@@ -23,6 +23,9 @@ const std::string CMD_EXIT = "exit";
 const std::string CMD_HELP = "help";
 const std::string CMD_FULLWRITE = "fullwrite";
 const std::string CMD_FULLREAD = "fullread";
+const std::string CMD_1_FULLWRITEANDREADCOMPARE = "1_FullWriteAndReadCompare";
+const std::string CMD_2_PartialLBAWrite = "2_PartialLBAWrite";
+const std::string CMD_3_WRITEREADAGING = "3_WriteReadAging";
 
 const vector<string> AVAILABLE_COMMAND_LIST = {
 	CMD_HELP,
@@ -30,7 +33,10 @@ const vector<string> AVAILABLE_COMMAND_LIST = {
 	CMD_WRITE,
 	CMD_EXIT,
 	CMD_FULLWRITE,
-	CMD_FULLREAD
+	CMD_FULLREAD,
+	CMD_1_FULLWRITEANDREADCOMPARE,
+	CMD_2_PartialLBAWrite,
+	CMD_3_WRITEREADAGING
 };
 
 static const int MAX_LBA = 99;
