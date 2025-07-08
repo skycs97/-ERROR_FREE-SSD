@@ -61,6 +61,9 @@
     <ClCompile Include="full_write_and_read_compare_command.cpp">
       <Filter>소스 파일\cmds</Filter>
     </ClCompile>
+    <ClCompile Include="command_factory.cpp">
+      <Filter>소스 파일\cmds</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="command_parser.h">
@@ -105,9 +108,15 @@
     <ClInclude Include="partial_LBA_write_command.h">
       <Filter>헤더 파일\cmds</Filter>
     </ClInclude>
+    <ClInclude Include="command_list.h">
+      <Filter>헤더 파일\cmds</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="command_factory.h">
+      <Filter>헤더 파일\cmds</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="리소스 파일">

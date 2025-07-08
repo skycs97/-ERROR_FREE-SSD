@@ -127,6 +127,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="command.cpp" />
+    <ClCompile Include="command_factory.cpp" />
     <ClCompile Include="command_runner.cpp" />
     <ClCompile Include="command_parser.cpp" />
     <ClCompile Include="exit_command.cpp" />
@@ -151,10 +152,12 @@
     <ClCompile Include="write_read_aging_command.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="command_factory.h" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="command.h" />
+    <ClInclude Include="command_list.h" />
     <ClInclude Include="command_runner.h" />
     <ClInclude Include="exit_command.h" />
     <ClInclude Include="full_read_command.h" />

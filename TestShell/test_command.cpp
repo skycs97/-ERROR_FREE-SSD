@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "command.h"
+#include "command_factory.h"
 
 class CommandFactoryTest : public testing::Test {
 public:

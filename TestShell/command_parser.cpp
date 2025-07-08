@@ -4,7 +4,8 @@
 #include <sstream>
 #include <stdexcept>
 #include "command_parser.h"
-#include "command.h"
+#include "command_list.h"
+#include "command_factory.h"
 
 using std::string;
 
