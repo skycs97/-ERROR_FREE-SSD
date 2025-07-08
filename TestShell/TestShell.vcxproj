@@ -139,6 +139,8 @@
     <ClCompile Include="partial_LBA_write_command.cpp" />
     <ClCompile Include="read_command.cpp" />
     <ClCompile Include="shell.cpp" />
+    <ClCompile Include="ssd_impl.cpp" />
+    <ClCompile Include="ssd_impl.h" />
     <ClCompile Include="test_command.cpp" />
     <ClCompile Include="test_testshell_command_parser.cpp" />
     <ClCompile Include="test_with_mock.cpp">
