@@ -1,13 +1,8 @@
 #include "gmock/gmock.h"
 #include "OutputHandler.h"
-#include "FileHandler.h"
+#include "file_handler_mock.h"
 
 using namespace testing;
-
-class FileHandlerMock : public FileHandler {
-public:
-	MOCK_METHOD(void, write, (const string&, const vector<string>&), (override));
-};
 
 TEST(Output, mock_file_test) {
 	NiceMock<FileHandlerMock> fhMock;
