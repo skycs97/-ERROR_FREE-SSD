@@ -8,13 +8,9 @@ int main(void) {
 #else
 #include "ssd.h"
 
-int main(int argc, char* argv[]) {
-	// 1. Create SSD instance
-	SSD& ssd = SSD::getInstance();
-	
-	// 2. Parsing command
-
-	// 3. Process command
-	ssd.run();
+int main(int argc, const char* argv[]) {
+	FileHandler* fileHandler = new FileHandler();
+	SSD* ssd = new SSD(fileHandler);
+	ssd->run(argc, argv);
 }
 #endif
