@@ -21,43 +21,61 @@ public:
 	virtual void run(void) = 0;
 
 	std::vector<std::string> ShellCommands;
-	int numOfArgs;
-	std::string help;
+	int numOfArgs = 0;
+	std::string help = "";
 };
 
 class ReadCommand : public Command {
 public:
-	ReadCommand(std::vector<std::string> cmd) : Command(cmd) {};
+	ReadCommand(std::vector<std::string> cmd) : Command(cmd) {
+		numOfArgs = 2;
+		help = "read [LBA]";
+	};
 	void run(void) override;
 };
 
 class WriteCommand : public Command {
 public:
-	WriteCommand(std::vector<std::string> cmd) : Command(cmd) {};
+	WriteCommand(std::vector<std::string> cmd) : Command(cmd) {
+		numOfArgs = 3;
+		help = "write [LBA] [data]";
+	};
 	void run(void) override;
 };
 
 class ExitCommand : public Command {
 public:
-	ExitCommand(std::vector<std::string> cmd) : Command(cmd) {};
+	ExitCommand(std::vector<std::string> cmd) : Command(cmd) {
+		numOfArgs = 1;
+		help = "exit";
+	};
 	void run(void) override;
 };
 
 class HelpCommand : public Command {
 public:
-	HelpCommand(std::vector<std::string> cmd) : Command(cmd) {};
+	HelpCommand(std::vector<std::string> cmd) : Command(cmd) {
+		numOfArgs = 1;
+		help = "help";
+	};
 	void run(void) override;
 };
 
 class FullWriteCommand : public Command {
 public:
-	FullWriteCommand(std::vector<std::string> cmd) : Command(cmd) {};
+	FullWriteCommand(std::vector<std::string> cmd) : Command(cmd) {
+		numOfArgs = 1;
+		help = "fullwrite";
+	};
 	void run(void) override;
 };
 
 class FullReadCommand : public Command {
 public:
-	FullReadCommand(std::vector<std::string> cmd) : Command(cmd) {};
+	FullReadCommand(std::vector<std::string> cmd) : Command(cmd) {
+		numOfArgs = 1;
+		help = "fullread";
+	};
 	void run(void) override;
 };
 

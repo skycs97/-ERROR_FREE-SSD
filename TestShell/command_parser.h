@@ -1,9 +1,9 @@
 #pragma once
 #include <iostream>
-#include <vector>
+#include "command.h"
 
 class CommandParser {
 
 public:
-	std::vector<std::string> getCommand(const std::string& command);
+	Command* getCommand(const std::string& command);
 };

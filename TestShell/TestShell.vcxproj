@@ -127,6 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+
+    <ClCompile Include="command.cpp" />
     <ClCompile Include="command_runner.cpp" />
     <ClCompile Include="command_parser.cpp" />
     <ClCompile Include="main.cpp" />
@@ -143,10 +145,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+
+    <ClInclude Include="command.h" />
     <ClInclude Include="command_runner.h" />
     <ClInclude Include="shell.h" />
     <ClInclude Include="ssd_interface.h" />
     <ClInclude Include="command_parser.h" />
+    <ClInclude Include="storage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
