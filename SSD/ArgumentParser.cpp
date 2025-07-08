@@ -39,10 +39,10 @@ bool ArgumentParser::etc_cmd_handler(int argc, const char* argv[])
 
 bool ArgumentParser::parse_args(int argc, const char* argv[])
 {
-	if ((argv[ARG_IDX_CMD] == "R") || (argv[ARG_IDX_CMD] == "r")) {
+	if ((string(argv[ARG_IDX_CMD]) == string("R")) || (string(argv[ARG_IDX_CMD]) == string("r"))) {
 		return read_cmd_handler(argc, argv);
 	}
-	else if ((argv[ARG_IDX_CMD] == "W") || (argv[ARG_IDX_CMD] == "w")) {
+	else if ((string(argv[ARG_IDX_CMD]) == string("W")) || (string(argv[ARG_IDX_CMD]) == string("w"))) {
 		return write_cmd_handler(argc, argv);
 	}
 	else {
