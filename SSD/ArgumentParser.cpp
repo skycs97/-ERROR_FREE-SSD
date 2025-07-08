@@ -25,8 +25,8 @@ bool ArgumentParser::write_cmd_handler(int argc, const char* argv[])
 	nAddr = atoi(argv[ARG_IDX_ADDR]);
 	if ((nAddr < 0) || (nAddr > 99)) throw std::invalid_argument("Out of range");
 
-	dwData = static_cast<unsigned int>(parseHexAddress(string(argv[ARG_IDX_DATA])));
-
+	parseHexAddress(string(argv[ARG_IDX_DATA]));
+	dwData = argv[ARG_IDX_DATA];
 	return true;
 }
 
@@ -60,7 +60,7 @@ int ArgumentParser::getAddr()
 	return nAddr;
 }
 
-unsigned int ArgumentParser::getData()
+string ArgumentParser::getData()
 {
 	return dwData;
 }

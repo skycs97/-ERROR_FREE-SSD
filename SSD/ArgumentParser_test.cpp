@@ -50,7 +50,7 @@ TEST(ArgumentParserTest, WriteCommandTest) {
 
 	EXPECT_EQ(ArgumentParser::WRITE_CMD, parser.getCmdType());
 	EXPECT_EQ(20, parser.getAddr());
-	EXPECT_EQ(0xAAAABBBB, parser.getData());
+	EXPECT_EQ("0xAAAABBBB", parser.getData());
 }
 
 TEST(ArgumentParserTest, WriteCommandExceptionTest) {

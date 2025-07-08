@@ -30,6 +30,9 @@ void SSD::run(int argc, const char* argv[])
 			break;
 		}
 		case ArgumentParser::WRITE_CMD: {
+			int addr = argumentParser->getAddr();
+			string data = argumentParser->getData();
+			writer->write(addr, data);
 			break;
 		}
 		default: {

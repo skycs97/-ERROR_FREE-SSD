@@ -23,10 +23,18 @@ TEST(NandFlashMemoryImpl, writeTest) {
 	FileHandlerMock mockedFileHandler;
 	NandFlashMemoryImpl memory{ &mockedFileHandler };
 
-	vector<string> writingDatas = { "0\t0x00000000","1\t0x00000001" };
-	EXPECT_CALL(mockedFileHandler, write("ssd_nand.txt",writingDatas)).Times(1);
-	vector<string> writingData = { "0x00000000", "0x00000001" };
-	string actual = memory.write(writingData);
+	vector<string> expectingWriteDatas;
+	for (int i = 0; i < 100; i++) {
+		std::ostringstream oss;
+		oss << i << '\t' << "0x00001111";
+		expectingWriteDatas.push_back(oss.str());
+	}
+	vector<string> writingDatas;
+	for (int i = 0; i < 100; i++) {
+		writingDatas.push_back("0x00001111");
+	}
+	EXPECT_CALL(mockedFileHandler, write("ssd_nand.txt", expectingWriteDatas)).Times(1);
+	string actual = memory.write(writingDatas);
 
 	EXPECT_EQ("", actual);
 }
