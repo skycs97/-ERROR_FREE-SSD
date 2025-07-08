@@ -1,5 +1,5 @@
 #pragma once
-#include "storage.h"
+#include "ssd_interface.h"
 #include <vector>
 
 using std::string;
@@ -9,7 +9,7 @@ class CommandRunner {
 public:
 	string runCommand(vector<string> cmd);
 
-	void setStorage(Storage* storage);
+	void setStorage(SsdInterface* ssdInterface);
 private:
-	Storage* storage;
+	SsdInterface* ssdInterface;
 };

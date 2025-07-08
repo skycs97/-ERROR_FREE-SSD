@@ -1,12 +1,12 @@
 #include "gmock/gmock.h"
-#include "storage.h"
+#include "ssd_interface.h"
 #include <string>
 #include "command_runner.h"
 
 using std::string;
 using namespace testing;
 
-class MockStorage : public Storage {
+class SsdInterfaceMock : public SsdInterface {
 public:
 	MOCK_METHOD(string, read, (int), (override));
 	MOCK_METHOD(string, write, (int, int), (override));
@@ -18,7 +18,7 @@ protected:
 		runner.setStorage(&mockStorage);
 	}
 public:
-	MockStorage mockStorage;
+	SsdInterfaceMock mockStorage;
 	CommandRunner runner;
 };
 
