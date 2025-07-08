@@ -15,6 +15,13 @@ void FileHandler::write(const string& file_name, const vector<string>& output_st
 }
 
 vector<string> FileHandler::read(const string& file_name) {
-	// todo: 파일 read 기능 필요시 구현
-	return {};
+	ifstream readfile;
+	readfile.open(file_name);
+	std::vector<std::string> lines;
+	std::string line;
+	while (std::getline(readfile, line)) {
+		lines.push_back(line);
+	}
+	readfile.close();
+	return lines;
 }
