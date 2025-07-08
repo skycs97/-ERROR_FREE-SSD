@@ -1,4 +1,4 @@
-#include "gmock/gmock.h"
+ï»¿#include "gmock/gmock.h"
 #include "ssd.h"
 #include "file_handler_mock.h"
 using namespace testing;
@@ -6,22 +6,22 @@ using namespace testing;
 class SSDFixture : public Test {
 public:
 	FileHandlerMock mockedFileHandler;
-	SSD ssd{&mockedFileHandler};
+	SSD ssd{ &mockedFileHandler };
 
-	// mocking nand µ¥ÀÌÅÍ. 
-	// n¹øÂ° addrÀÇ °ªÀº nÀÇ 16Áø¼ö Ç¥Çö. (ex  15\t0x0000000f )
+	// mocking nand ë°ì´í„°. 
+	// në²ˆì§¸ addrì˜ ê°’ì€ nì˜ 16ì§„ìˆ˜ í‘œí˜„. (ex  15\t0x0000000f )
 	vector<string> getMockedData() {
 		vector<string> ret;
 		for (int i = 0; i < 100; i++) {
 			std::ostringstream oss;
-			// 10Áø¼ö¿Í ÅÇ
+			// 10ì§„ìˆ˜ì™€ íƒ­
 			oss << i << '\t'
-				// "0x" Á¢µÎ»ç
+				// "0x" ì ‘ë‘ì‚¬
 				<< "0x"
-				// 16Áø¼ö, ¼Ò¹®ÀÚ, Æø 8, '0' Ã¤¿ò
+				// 16ì§„ìˆ˜, ì†Œë¬¸ì, í­ 8, '0' ì±„ì›€
 				<< std::hex << std::nouppercase << std::setw(8) << std::setfill('0')
 				<< i;
-			// ´Ù½Ã 10Áø¼ö ¸ğµå·Î º¹¿ø(´ÙÀ½ ·çÇÁ¿¡¼­ ¾ÈÀüÇÏ°Ô »ç¿ëÇÏ±â À§ÇØ)
+			// ë‹¤ì‹œ 10ì§„ìˆ˜ ëª¨ë“œë¡œ ë³µì›(ë‹¤ìŒ ë£¨í”„ì—ì„œ ì•ˆì „í•˜ê²Œ ì‚¬ìš©í•˜ê¸° ìœ„í•´)
 			oss << std::dec;
 
 			ret.push_back(oss.str());
@@ -32,17 +32,17 @@ public:
 
 TEST_F(SSDFixture, run_with_read_command)
 {
-	//1. ssd.exe r 0 È£Ãâ½Ã
+	//1. ssd.exe r 0 í˜¸ì¶œì‹œ
 	int argc = 3;
-	const char* argv[] = {"ssd.exe", "r", "1" };
+	const char* argv[] = { "ssd.exe", "r", "1" };
 
-	//2. ssd_nand.txt¿¡ ¾Æ·¡¿Í °°ÀÌ ÀÛ¼ºµÇ¾îÀÖ´Ù¸é
+	//2. ssd_nand.txtì— ì•„ë˜ì™€ ê°™ì´ ì‘ì„±ë˜ì–´ìˆë‹¤ë©´
 	vector<string> writtenData = getMockedData();
 	EXPECT_CALL(mockedFileHandler, read("ssd_nand.txt"))
 		.Times(1)
 		.WillRepeatedly(Return(writtenData));
 
-	//3. output¿¡ 0x00000001À» Àû±æ ±â´ëÇÕ´Ï´Ù.
+	//3. outputì— 0x00000001ì„ ì ê¸¸ ê¸°ëŒ€í•©ë‹ˆë‹¤.
 	vector<string> expectedOutput = { "0x00000001" };
 	EXPECT_CALL(mockedFileHandler, write("ssd_output.txt", expectedOutput))
 		.Times(1);
@@ -52,11 +52,11 @@ TEST_F(SSDFixture, run_with_read_command)
 
 TEST_F(SSDFixture, run_with_read_command_but_invalid_addr)
 {
-	//1. ssd.exe r 110 È£Ãâ½Ã
+	//1. ssd.exe r 110 í˜¸ì¶œì‹œ
 	int argc = 3;
 	const char* argv[] = { "ssd.exe", "r", "110" };
 
-	//2. output¿¡ ERROR¸¦ Àû±æ ±â´ëÇÕ´Ï´Ù.
+	//2. outputì— ERRORë¥¼ ì ê¸¸ ê¸°ëŒ€í•©ë‹ˆë‹¤.
 	vector<string> expectedOutput = { "ERROR" };
 	EXPECT_CALL(mockedFileHandler, write("ssd_output.txt", expectedOutput))
 		.Times(1);
