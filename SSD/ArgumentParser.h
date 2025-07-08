@@ -18,7 +18,7 @@ public:
 
 	CMD_TYPE getCmdType();
 	int getAddr();
-	unsigned int getData();
+	string getData();
 
 private:
 	bool read_cmd_handler(int argc, const char* argv[]);
@@ -30,7 +30,7 @@ private:
 
 	CMD_TYPE eCmd = NONE_CMD;
 	int nAddr = -1;
-	unsigned int dwData = 0;
+	string dwData = "";
 
 	const int ARG_IDX_CMD = 1;
 	const int ARG_IDX_ADDR = 2;

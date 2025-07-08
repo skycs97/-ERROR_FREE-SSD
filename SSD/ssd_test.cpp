@@ -67,7 +67,7 @@ TEST_F(SSDFixture, run_with_read_command_but_invalid_addr)
 TEST_F(SSDFixture, run_with_write_command)
 {
 	//1. ssd.exe r 0 호출시
-	int argc = 3;
+	int argc = 4;
 	char newData[] = "0x00001111";
 	const char* argv[] = { "ssd.exe", "w", "1", newData };
 
@@ -78,7 +78,7 @@ TEST_F(SSDFixture, run_with_write_command)
 		.WillRepeatedly(Return(writtenData));
 
 	vector<string> newDatas = getMockedData();
-	newDatas[1] = newData;
+	newDatas[1] = "1\t0x00001111";
 	EXPECT_CALL(mockedFileHandler, write("ssd_nand.txt", newDatas))
 		.Times(1);
 
