@@ -129,7 +129,12 @@
     <ClCompile Include="command.cpp" />
     <ClCompile Include="command_runner.cpp" />
     <ClCompile Include="command_parser.cpp" />
+    <ClCompile Include="exit_command.cpp" />
+    <ClCompile Include="full_read_command.cpp" />
+    <ClCompile Include="full_write_command.cpp" />
+    <ClCompile Include="help_command.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="read_command.cpp" />
     <ClCompile Include="shell.cpp" />
     <ClCompile Include="test_command.cpp" />
     <ClCompile Include="test_testshell_command_parser.cpp" />
@@ -139,6 +144,7 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="write_command.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -146,10 +152,16 @@
   <ItemGroup>
     <ClInclude Include="command.h" />
     <ClInclude Include="command_runner.h" />
+    <ClInclude Include="exit_command.h" />
+    <ClInclude Include="full_read_command.h" />
+    <ClInclude Include="full_write_command.h" />
+    <ClInclude Include="help_command.h" />
+    <ClInclude Include="read_command.h" />
     <ClInclude Include="shell.h" />
     <ClInclude Include="ssd_interface.h" />
     <ClInclude Include="command_parser.h" />
     <ClInclude Include="TEST_SHELL_CONFIG.h" />
+    <ClInclude Include="write_command.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

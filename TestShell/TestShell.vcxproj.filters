@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="command.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="command_parser.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -28,14 +25,32 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="command.cpp">
+      <Filter>소스 파일\cmds</Filter>
+    </ClCompile>
+    <ClCompile Include="read_command.cpp">
+      <Filter>소스 파일\cmds</Filter>
+    </ClCompile>
+    <ClCompile Include="write_command.cpp">
+      <Filter>소스 파일\cmds</Filter>
+    </ClCompile>
+    <ClCompile Include="help_command.cpp">
+      <Filter>소스 파일\cmds</Filter>
+    </ClCompile>
+    <ClCompile Include="exit_command.cpp">
+      <Filter>소스 파일\cmds</Filter>
+    </ClCompile>
+    <ClCompile Include="full_read_command.cpp">
+      <Filter>소스 파일\cmds</Filter>
+    </ClCompile>
+    <ClCompile Include="full_write_command.cpp">
+      <Filter>소스 파일\cmds</Filter>
+    </ClCompile>
     <ClCompile Include="test_command.cpp">
       <Filter>테스트 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="command.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="command_parser.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -51,6 +66,27 @@
     <ClInclude Include="storage.h" />
     <ClInclude Include="TEST_SHELL_CONFIG.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="command.h">
+      <Filter>헤더 파일\cmds</Filter>
+    </ClInclude>
+    <ClInclude Include="read_command.h">
+      <Filter>헤더 파일\cmds</Filter>
+    </ClInclude>
+    <ClInclude Include="write_command.h">
+      <Filter>헤더 파일\cmds</Filter>
+    </ClInclude>
+    <ClInclude Include="help_command.h">
+      <Filter>헤더 파일\cmds</Filter>
+    </ClInclude>
+    <ClInclude Include="exit_command.h">
+      <Filter>헤더 파일\cmds</Filter>
+    </ClInclude>
+    <ClInclude Include="full_read_command.h">
+      <Filter>헤더 파일\cmds</Filter>
+    </ClInclude>
+    <ClInclude Include="full_write_command.h">
+      <Filter>헤더 파일\cmds</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +104,12 @@
     </Filter>
     <Filter Include="헤더 파일">
       <UniqueIdentifier>{16c83091-6886-42d1-a610-4caf8e8a4659}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\cmds">
+      <UniqueIdentifier>{5820f259-7bad-4014-ad6b-9f322d35124d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\cmds">
+      <UniqueIdentifier>{fa81b17e-4768-48af-ab4c-c94c13d7b815}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
