@@ -10,7 +10,7 @@ void TestShell::runShell() {
 			continue;
 
 		try {
-			command = parser.getCommand(input);
+			command = parser.getCommand(input)->getShellCommands();
 			if (command[0] == "exit")
 				return;
 			else if (command[0] == "help") {
