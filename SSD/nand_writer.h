@@ -13,5 +13,7 @@ public:
 	string write(int lba, string data);
 
 private:
+	bool isOutOfRange(int lba);
+
 	NandFlashMemory* nandFlashMemory;
 };
