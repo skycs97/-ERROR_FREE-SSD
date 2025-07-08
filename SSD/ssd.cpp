@@ -22,6 +22,8 @@ void SSD::run(int argc, const char* argv[])
 {
 	string data = "";
 	try {
+		outputHandler->getFileHandler()->init();
+
 		argumentParser->parse_args(argc, argv);
 		switch (argumentParser->getCmdType()) {
 		case ArgumentParser::READ_CMD: {

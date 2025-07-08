@@ -12,6 +12,7 @@ public:
 
 	void output(const string& output_string);
 	string read(void);
+	FileHandler* getFileHandler() { return fileHandler; }
 
 private:
 	FileHandler* fileHandler;
