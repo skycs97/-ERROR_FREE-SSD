@@ -21,14 +21,11 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="test_with_mock.cpp">
       <Filter>테스트 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="command_parser.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -36,6 +33,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="storage.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="command_parser.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
