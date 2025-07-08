@@ -10,6 +10,6 @@ vector<string> NandFlashMemoryImpl::read() {
 	return ret;
 }
 
-string NandFlashMemoryImpl::write(int lba, int data) {
+string NandFlashMemoryImpl::write(const vector<string>& data) {
 	return "";
 }

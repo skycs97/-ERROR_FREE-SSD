@@ -4,19 +4,36 @@
 
 using namespace testing;
 
-TEST(Writer, WriteZeroInLBA0)
+static const int VALID_RANGE_LBA = 53;
+static const int INVALID_RANGE_LBA = 999;
+static const string VALID_DATA = "0xAAAABBBB";
+
+TEST(Writer, ValidCase)
 {
 	// arrange
-	NandFlashMemoryMock memory;
-	NandWriter writer(&memory);
+	NandFlashMemoryMock nand;
+	NandWriter writer(&nand);
 
 	// act, assert
-	EXPECT_CALL(memory, write(_, _))
+	EXPECT_CALL(nand, write(_))
 		.WillRepeatedly(Return(""));
 
-	int lba = 0;
-	int data = 0x00000000;
 	string expected = "";
-	string actual = writer.write(lba, data);
+	string actual = writer.write(VALID_RANGE_LBA, VALID_DATA);
+	EXPECT_EQ(expected, actual);
+}
+
+TEST(Writer, InvalidCase_OutOfRange)
+{
+	// arrange
+	NandFlashMemoryMock nand;
+	NandWriter writer(&nand);
+
+	// act, assert
+	EXPECT_CALL(nand, write(_))
+		.Times(0);
+
+	string expected = "ERROR";
+	string actual = writer.write(INVALID_RANGE_LBA, VALID_DATA);
 	EXPECT_EQ(expected, actual);
 }

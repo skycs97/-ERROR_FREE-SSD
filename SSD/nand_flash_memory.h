@@ -8,5 +8,5 @@ using std::vector;
 class NandFlashMemory {
 public:
 	virtual vector<string> read() = 0;
-	virtual string write(int lba, int data) = 0;
+	virtual string write(const vector<string>& data) = 0;
 };

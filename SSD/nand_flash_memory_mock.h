@@ -6,5 +6,5 @@
 class NandFlashMemoryMock : public NandFlashMemory {
 public:
 	MOCK_METHOD(vector<string>, read, (), (override));
-	MOCK_METHOD(string, write, (int, int), (override));
+	MOCK_METHOD(string, write, (const vector<string>&), (override));
 };
