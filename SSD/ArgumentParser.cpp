@@ -41,6 +41,9 @@ bool ArgumentParser::parse_args(int argc, const char* argv[])
 		}
 	}
 
+	if ((eCmd == READ_CMD) && (argc != 3)) throw std::invalid_argument("number of argument is incorrect");
+	if ((eCmd == WRITE_CMD) && (argc != 4)) throw std::invalid_argument("number of argument is incorrect");
+
 	return true;
 }
 
