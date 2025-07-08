@@ -7,9 +7,9 @@ using std::vector;
 
 class CommandRunner {
 public:
-	string read(const string& LBA);
-	string write(const string& LBA, const string& value);
-	bool isSetSsdInterface();
+	string read(const string& LBA) const;
+	string write(const string& LBA, const string& value) const;
+	bool isSetSsdInterface() const;
 	void setStorage(SsdInterface* ssdInterface);
 private:
 	SsdInterface* ssdInterface = nullptr;

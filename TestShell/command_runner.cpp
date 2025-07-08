@@ -1,6 +1,6 @@
 #include "command_runner.h"
 #include <stdexcept>
-string CommandRunner::read(const string& LBA)
+string CommandRunner::read(const string& LBA) const
 {
 	if (isSetSsdInterface() == false) {
 		throw std::runtime_error("ssd Interface hasn't set");
@@ -11,18 +11,18 @@ string CommandRunner::read(const string& LBA)
 	return result;
 }
 
-string CommandRunner::write(const string& LBA, const string& value)
+string CommandRunner::write(const string& LBA, const string& value) const
 {
 	if (isSetSsdInterface() == false) {
 		throw std::runtime_error("ssd Interface hasn't set");
 	}
-	
+
 	string result = ssdInterface->write(LBA, value);
 
 	return result;
 }
 
-bool CommandRunner::isSetSsdInterface()
+bool CommandRunner::isSetSsdInterface() const
 {
 	return ssdInterface != nullptr;
 }
