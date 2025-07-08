@@ -2,6 +2,7 @@
 #include "ssd.h"
 #include "file_handler_mock.h"
 using namespace testing;
+
 TEST(SSD, run_with_read_command)
 {
 	// arrange
@@ -20,6 +21,24 @@ TEST(SSD, run_with_read_command)
 
 	//3. output에 0x11111111을 적길 기대합니다.
 	vector<string> expectedOutput = { "0x11111111" };
+	EXPECT_CALL(mockedFileHandler, write("ssd_output.txt", expectedOutput))
+		.Times(1);
+
+	ssd.run(argc, argv);
+}
+
+TEST(SSD, run_with_read_command_but_invalid_addr)
+{
+	// arrange
+	FileHandlerMock mockedFileHandler;
+	SSD ssd = SSD(&mockedFileHandler);
+
+	//1. ssd.exe r 110 호출시
+	int argc = 3;
+	const char* argv[] = { "ssd.exe", "r", "110" };
+
+	//2. output에 ERROR를 적길 기대합니다.
+	vector<string> expectedOutput = { "ERROR" };
 	EXPECT_CALL(mockedFileHandler, write("ssd_output.txt", expectedOutput))
 		.Times(1);
 
