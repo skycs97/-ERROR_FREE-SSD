@@ -247,6 +247,5 @@ Command* FactoryCommand::makeCommand(const std::string& cmd)
 	else if ((shellCmd == CMD_2_) || (shellCmd == CMD_2_PartialLBAWrite)) return new PartialLBAWrite(commands);
 	else if ((shellCmd == CMD_3_) || (shellCmd == CMD_3_WRITEREADAGING)) return new WriteReadAging(commands);
 
-
 	else return nullptr;
 }
