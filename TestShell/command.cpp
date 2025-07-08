@@ -71,10 +71,27 @@ void HelpCommand::run(const CommandRunner& cmdRunner) const
 
 void FullWriteCommand::run(const CommandRunner& cmdRunner) const
 {
-	std::vector<string> result;
+	string writeResult;
+	string fullWriteResult = "";
+
 	for (int lba = MIN_ADDR; lba <= MAX_ADDR; lba++) {
-		result.push_back(cmdRunner.write(std::to_string(lba), ShellCommands[1]));
+		writeResult = cmdRunner.write(std::to_string(lba), ShellCommands[1]);
+		if (writeResult == ERROR)
+			fullWriteResult = ERROR;
 	}
+
+	printResult(fullWriteResult);
+}
+
+void FullWriteCommand::printResult(const string& result) const
+{
+	std::cout << "[Full Write] ";
+	if (result == "")
+		std::cout << DONE;
+	else
+		std::cout << ERROR;
+
+	std::cout << std::endl << std::endl;
 }
 
 void FullReadCommand::run(const CommandRunner& cmdRunner) const

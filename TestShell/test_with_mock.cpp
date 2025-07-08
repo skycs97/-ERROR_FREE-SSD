@@ -132,7 +132,8 @@ TEST_F(TestShellFixtureWithMock, CommandRunFullWrite) {
 	Command* command = fc.makeCommand("fullwrite " + TEST_VALUE);
 
 	EXPECT_CALL(mockStorage, write(_, _))
-		.Times(100);
+		.Times(100)
+		.WillRepeatedly(Return(""));
 	EXPECT_TRUE(command != nullptr);
 
 	command->run(runner);
