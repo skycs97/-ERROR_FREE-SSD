@@ -14,11 +14,25 @@ TEST(CommandParserTest, Read) {
 	EXPECT_EQ(exepct, cmdParser.getCommand(inputCommand)->getShellCommands());
 }
 
+TEST(CommandParserTest, ReadWithWrongArgs) {
+	CommandParser cmdParser;
+	string inputCommand = "read 0 0";
+
+	EXPECT_THROW(cmdParser.getCommand(inputCommand), std::invalid_argument);
+}
+
 TEST(CommandParserTest, Write) {
 	CommandParser cmdParser;
 	string inputCommand = "write 0 0x12341234";
 	vector<string> exepct = { "write", "0", "0x12341234"};
 	EXPECT_EQ(exepct, cmdParser.getCommand(inputCommand)->getShellCommands());
+}
+
+TEST(CommandParserTest, WriteWithWrongArgs) {
+	CommandParser cmdParser;
+	string inputCommand = "write 0 0 0";
+
+	EXPECT_THROW(cmdParser.getCommand(inputCommand), std::invalid_argument);
 }
 
 TEST(CommandParserTest, Help) {
@@ -28,6 +42,13 @@ TEST(CommandParserTest, Help) {
 	EXPECT_EQ(exepct, cmdParser.getCommand(inputCommand)->getShellCommands()[0]);
 }
 
+TEST(CommandParserTest, HelpWithWrongArgs) {
+	CommandParser cmdParser;
+	string inputCommand = "help 0";
+
+	EXPECT_THROW(cmdParser.getCommand(inputCommand), std::invalid_argument);
+}
+
 TEST(CommandParserTest, Exit) {
 	CommandParser cmdParser;
 	string inputCommand = "exit";
@@ -35,8 +56,15 @@ TEST(CommandParserTest, Exit) {
 	EXPECT_EQ(exepct, cmdParser.getCommand(inputCommand)->getShellCommands()[0]);
 }
 
+TEST(CommandParserTest, ExitWithWrongArgs) {
+	CommandParser cmdParser;
+	string inputCommand = "exit 0";
+
+	EXPECT_THROW(cmdParser.getCommand(inputCommand), std::invalid_argument);
+}
+
 TEST(CommandParserTest, InValidCommand) {
 	CommandParser cmdParser;
 	string inputCommand = "R 0";
-	EXPECT_THROW(cmdParser.getCommand(inputCommand)->getShellCommands(), std::invalid_argument);
+	EXPECT_THROW(cmdParser.getCommand(inputCommand), std::invalid_argument);
 }
