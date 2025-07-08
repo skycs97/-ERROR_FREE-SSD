@@ -21,6 +21,9 @@ public:
 	unsigned int getData();
 
 private:
+	bool read_cmd_handler(int argc, const char* argv[]);
+	bool write_cmd_handler(int argc, const char* argv[]);
+	bool etc_cmd_handler(int argc, const char* argv[]);
 
 	// stoul에서 변환 실패 시 std::invalid_argument 예외, 범위 초과 시 std::out_of_range 예외를 발생
 	unsigned long parseHexAddress(const std::string& hexAddress);
@@ -28,4 +31,8 @@ private:
 	CMD_TYPE eCmd = NONE_CMD;
 	int nAddr = -1;
 	unsigned int dwData = 0;
+
+	const int ARG_IDX_CMD = 1;
+	const int ARG_IDX_ADDR = 2;
+	const int ARG_IDX_DATA = 3;
 };
