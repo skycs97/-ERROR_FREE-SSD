@@ -41,3 +41,23 @@ TEST_F(TestShellFixtureWithMock, CmdRunnerWrite) {
 
 	EXPECT_EQ("", runner.runCommand(command));
 }
+
+TEST_F(TestShellFixtureWithMock, CmdRunnerReadFail) {
+	vector<string> command = { "\SSD.exe", "R", "110" };
+
+	EXPECT_CALL(mockStorage, read)
+		.Times(1)
+		.WillRepeatedly(Return("ERROR"));
+
+	EXPECT_EQ("ERROR", runner.runCommand(command));
+}
+
+TEST_F(TestShellFixtureWithMock, CmdRunnerWriteFail) {
+	vector<string> command = { "\SSD.exe", "W", "110", "0xFFFFFFFF"};
+
+	EXPECT_CALL(mockStorage, write)
+		.Times(1)
+		.WillRepeatedly(Return("ERROR"));
+
+	EXPECT_EQ("ERROR", runner.runCommand(command));
+}
