@@ -63,3 +63,29 @@ TEST_F(SSDFixture, run_with_read_command_but_invalid_addr)
 
 	ssd.run(argc, argv);
 }
+
+TEST_F(SSDFixture, run_with_write_command)
+{
+	//1. ssd.exe r 0 호출시
+	int argc = 3;
+	char newData[] = "0x00001111";
+	const char* argv[] = { "ssd.exe", "w", "1", newData };
+
+	//2. ssd_nand.txt에 아래와 같이 작성되어있다면
+	vector<string> writtenData = getMockedData();
+	EXPECT_CALL(mockedFileHandler, read("ssd_nand.txt"))
+		.Times(1)
+		.WillRepeatedly(Return(writtenData));
+
+	vector<string> newDatas = getMockedData();
+	newDatas[1] = newData;
+	EXPECT_CALL(mockedFileHandler, write("ssd_nand.txt", newDatas))
+		.Times(1);
+
+	//3. output에 0x00000001을 적길 기대합니다.
+	vector<string> expectedOutput = { "" };
+	EXPECT_CALL(mockedFileHandler, write("ssd_output.txt", expectedOutput))
+		.Times(1);
+
+	ssd.run(argc, argv);
+}
