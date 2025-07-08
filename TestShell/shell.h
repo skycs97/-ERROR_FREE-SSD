@@ -11,6 +11,8 @@ using std::string;
 
 class TestShell {
 public:
+	CommandRunner runner;
+
 	static TestShell& getShell() {
 		static TestShell instance;
 		return instance;

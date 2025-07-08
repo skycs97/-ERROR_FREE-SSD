@@ -10,7 +10,7 @@ void TestShell::runShell() {
 
 		try {
 			command = parser.getCommand(input);
-			command->run();
+			command->run(runner);
 		}
 		catch (std::invalid_argument& e) {
 			std::cout << e.what() << std::endl;
