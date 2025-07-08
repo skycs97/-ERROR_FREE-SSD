@@ -32,7 +32,7 @@ TEST_F(TestShellFixtureWithMock, CmdRunnerRead) {
 	EXPECT_CALL(mockStorage, read(VALID_LBA))
 		.Times(1)
 		.WillRepeatedly(Return("0x0000FFFF"));
-	
+
 	EXPECT_EQ("0x0000FFFF", runner.read(VALID_LBA));
 }
 
@@ -68,14 +68,14 @@ TEST_F(TestShellFixtureWithMock, CmdRunnerNoSetInterface) {
 
 TEST_F(TestShellFixtureWithMock, FullWriteAndReadCompare) {
 
-	vector<string> command = {"1_"};
+	vector<string> command = { "1_" };
 	FullWriteAndReadCompare fullTest(command);
 
 	EXPECT_CALL(mockStorage, read(_))
 		.Times(100)
 		.WillRepeatedly(Return("0xA5A5A5A5"));
 
-	EXPECT_CALL(mockStorage, write(_,_))
+	EXPECT_CALL(mockStorage, write(_, _))
 		.Times(100)
 		.WillRepeatedly(Return(""));
 

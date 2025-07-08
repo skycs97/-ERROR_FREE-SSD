@@ -10,6 +10,8 @@ namespace {
 	const std::string CMD_HELP = "help";
 	const std::string CMD_FULLWRITE = "fullwrite";
 	const std::string CMD_FULLREAD = "fullread";
+	const std::string CMD_1_FULLWRITEANDREADCOMPARE = "1_FullWriteAndReadCompare";
+	const std::string CMD_1_ = "1_";
 }
 
 class Command {
