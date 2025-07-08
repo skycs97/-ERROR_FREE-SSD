@@ -5,18 +5,16 @@ using std::string;
 using std::ofstream;
 using std::ifstream;
 
-void FileHandler::write(const string& output_string) {
-	file.open(OUTPUT_FILENAME);
-	file << output_string;
-	file.close();
+void FileHandler::write(const string& file_name, const vector<string>& output_string) {
+	ofstream writefile;
+	writefile.open(file_name);
+	for (const auto& line : output_string) {
+		writefile << line << '\n';
+	}
+	writefile.close();
 }
 
-string FileHandler::read(void) {
-	ifstream readfile;
-	readfile.open(OUTPUT_FILENAME);
-	string output_string;
-	readfile >> output_string;
-	readfile.close();
-
-	return output_string;
+vector<string> FileHandler::read(const string& file_name) {
+	// todo: 파일 read 기능 필요시 구현
+	return {};
 }
