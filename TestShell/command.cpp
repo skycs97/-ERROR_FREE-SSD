@@ -10,6 +10,7 @@
 
 #include "command.h"
 #include "command_runner.h"
+#include "TEST_SHELL_CONFIG.h"
 
 Command::Command(std::vector<std::string> commands) : ShellCommands(commands)
 {
@@ -66,7 +67,18 @@ void ExitCommand::run(const CommandRunner& cmdRunner) const
 
 void HelpCommand::run(const CommandRunner& cmdRunner) const
 {
-	std::cout << getHelp();
+	FactoryCommand factory;
+	for (const string& cmd : AVAILABLE_COMMAND_LIST) {
+		std::cout << factory.makeCommand(cmd)->getHelp() << std::endl;;
+	}
+
+	std::cout << std::endl << std::endl;
+	std::cout << "-------------------Developers-------------------------\n";
+	for (const string& str : DEVELOPERS) {
+		std::cout << str << ", ";
+	}
+
+	std::cout << std::endl;
 }
 
 void FullWriteCommand::run(const CommandRunner& cmdRunner) const

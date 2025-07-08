@@ -7,7 +7,6 @@
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -150,6 +149,7 @@
     <ClInclude Include="shell.h" />
     <ClInclude Include="ssd_interface.h" />
     <ClInclude Include="command_parser.h" />
+    <ClInclude Include="TEST_SHELL_CONFIG.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

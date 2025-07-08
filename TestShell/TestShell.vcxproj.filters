@@ -48,6 +48,10 @@
     <ClInclude Include="ssd_interface.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="storage.h" />
+    <ClInclude Include="TEST_SHELL_CONFIG.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
