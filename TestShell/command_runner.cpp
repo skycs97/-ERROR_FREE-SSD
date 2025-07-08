@@ -2,7 +2,7 @@
 #include <stdexcept>
 string CommandRunner::read(const string& LBA)
 {
-	if (ssdInterface == nullptr) {
+	if (isSetSsdInterface() == false) {
 		throw std::runtime_error("ssd Interface hasn't set");
 	}
 
@@ -13,13 +13,18 @@ string CommandRunner::read(const string& LBA)
 
 string CommandRunner::write(const string& LBA, const string& value)
 {
-	if (ssdInterface == nullptr) {
+	if (isSetSsdInterface() == false) {
 		throw std::runtime_error("ssd Interface hasn't set");
 	}
 	
 	string result = ssdInterface->write(LBA, value);
 
 	return result;
+}
+
+bool CommandRunner::isSetSsdInterface()
+{
+	return ssdInterface != nullptr;
 }
 
 void CommandRunner::setStorage(SsdInterface* ssdInterface)

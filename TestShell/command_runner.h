@@ -9,6 +9,7 @@ class CommandRunner {
 public:
 	string read(const string& LBA);
 	string write(const string& LBA, const string& value);
+	bool isSetSsdInterface();
 	void setStorage(SsdInterface* ssdInterface);
 private:
 	SsdInterface* ssdInterface = nullptr;

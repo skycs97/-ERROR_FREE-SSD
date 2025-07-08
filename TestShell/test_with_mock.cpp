@@ -20,52 +20,47 @@ protected:
 public:
 	SsdInterfaceMock mockStorage;
 	CommandRunner runner;
+
+	const string VALID_LBA = "10";
+	const string INVALID_LBA = "1000";
+	const string TEST_VALUE = "0xAAAABBBB";
+	const string ERROR_STRING = "ERROR";
 };
 
 TEST_F(TestShellFixtureWithMock, CmdRunnerRead) {
-	string LBA = "10";
-
-	EXPECT_CALL(mockStorage, read)
+	EXPECT_CALL(mockStorage, read(VALID_LBA))
 		.Times(1)
 		.WillRepeatedly(Return("0x0000FFFF"));
 	
-	EXPECT_EQ("0x0000FFFF", runner.read(LBA));
+	EXPECT_EQ("0x0000FFFF", runner.read(VALID_LBA));
 }
 
 TEST_F(TestShellFixtureWithMock, CmdRunnerWrite) {
-	string LBA = "10";
-	string value = "0xAAAABBBB";
-	EXPECT_CALL(mockStorage, write(LBA, _))
+	EXPECT_CALL(mockStorage, write(VALID_LBA, _))
 		.Times(1)
-		.WillRepeatedly(Return(value));
+		.WillRepeatedly(Return(TEST_VALUE));
 
-	EXPECT_EQ(value, runner.write(LBA, value));
+	EXPECT_EQ(TEST_VALUE, runner.write(VALID_LBA, TEST_VALUE));
 }
 
 TEST_F(TestShellFixtureWithMock, CmdRunnerReadFail) {
-	string LBA = "1000";
-
-	EXPECT_CALL(mockStorage, read)
+	EXPECT_CALL(mockStorage, read(INVALID_LBA))
 		.Times(1)
-		.WillRepeatedly(Return("ERROR"));
+		.WillRepeatedly(Return(ERROR_STRING));
 
-	EXPECT_EQ("ERROR", runner.read(LBA));
+	EXPECT_EQ(ERROR_STRING, runner.read(INVALID_LBA));
 }
 
 TEST_F(TestShellFixtureWithMock, CmdRunnerWriteFail) {
-	string LBA = "1000";
-	string value = "0xFFFFFFFF";
-
-	EXPECT_CALL(mockStorage, write(LBA, _))
+	EXPECT_CALL(mockStorage, write(INVALID_LBA, _))
 		.Times(1)
-		.WillRepeatedly(Return("ERROR"));
+		.WillRepeatedly(Return(ERROR_STRING));
 
-	EXPECT_EQ("ERROR", runner.write(LBA, value));
+	EXPECT_EQ(ERROR_STRING, runner.write(INVALID_LBA, TEST_VALUE));
 }
 
 TEST_F(TestShellFixtureWithMock, CmdRunnerNoSetInterface) {
 	CommandRunner emptyRunner;
-	string LBA = "10";
 
-	EXPECT_THROW(emptyRunner.read(LBA), std::runtime_error);
+	EXPECT_THROW(emptyRunner.read(VALID_LBA), std::runtime_error);
 }
