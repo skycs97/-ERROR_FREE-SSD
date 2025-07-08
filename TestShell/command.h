@@ -95,6 +95,8 @@ public:
 	};
 
 	void run(const CommandRunner& cmdRunner) const override;
+private:
+	void printResult(const string& result) const;
 };
 
 class FullReadCommand : public Command {
