@@ -7,7 +7,7 @@ using namespace testing;
 TEST(Output, mock_file_test) {
 	NiceMock<FileHandlerMock> fhMock;
 	OutputHandler oh(&fhMock);
-	const string OUTPUT_FILENAME = "ssd_output.txt";
+
 	EXPECT_CALL(fhMock, write(OUTPUT_FILENAME, _))
 		.Times(1);
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "FileHandler.h"
+#include "global_config.h"
 
 using std::string;
 
@@ -13,6 +14,5 @@ public:
 	string read(void);
 
 private:
-	const string OUTPUT_FILENAME = "ssd_output.txt";
 	FileHandler* fileHandler;
 };

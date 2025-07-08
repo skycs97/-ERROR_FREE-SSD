@@ -23,7 +23,7 @@ bool ArgumentParser::write_cmd_handler(int argc, const char* argv[])
 
 	eCmd = WRITE_CMD;
 	nAddr = atoi(argv[ARG_IDX_ADDR]);
-	if ((nAddr < 0) || (nAddr > 99)) throw std::invalid_argument("Out of range");
+	if ((nAddr < MIN_LBA) || (nAddr > MAX_LBA)) throw std::invalid_argument("Out of range");
 
 	parseHexAddress(string(argv[ARG_IDX_DATA]));
 	dwData = argv[ARG_IDX_DATA];

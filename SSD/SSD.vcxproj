@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="ArgumentParser.h" />
     <ClInclude Include="FileHandler.h" />
+    <ClInclude Include="global_config.h" />
     <ClInclude Include="nand_flash_memory_impl.h" />
     <ClInclude Include="OutputHandler.h" />
     <ClInclude Include="ssd.h" />
