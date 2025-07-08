@@ -8,8 +8,8 @@ using namespace testing;
 
 class SsdInterfaceMock : public SsdInterface {
 public:
-	MOCK_METHOD(string, read, (int), (override));
-	MOCK_METHOD(string, write, (int, int), (override));
+	MOCK_METHOD(string, read, (const string&), (override));
+	MOCK_METHOD(string, write, (const string&, const string&), (override));
 };
 
 class TestShellFixtureWithMock : public Test {
@@ -23,48 +23,49 @@ public:
 };
 
 TEST_F(TestShellFixtureWithMock, CmdRunnerRead) {
-	vector<string> command = { "\SSD.exe", "R", "1" };
+	string LBA = "10";
 
 	EXPECT_CALL(mockStorage, read)
 		.Times(1)
 		.WillRepeatedly(Return("0x0000FFFF"));
 	
-	EXPECT_EQ("0x0000FFFF", runner.runCommand(command));
+	EXPECT_EQ("0x0000FFFF", runner.read(LBA));
 }
 
 TEST_F(TestShellFixtureWithMock, CmdRunnerWrite) {
-	vector<string> command = { "\SSD.exe", "W", "2", "0xAAAABBBB"};
-
-	EXPECT_CALL(mockStorage, write)
+	string LBA = "10";
+	string value = "0xAAAABBBB";
+	EXPECT_CALL(mockStorage, write(LBA, _))
 		.Times(1)
-		.WillRepeatedly(Return(""));
+		.WillRepeatedly(Return(value));
 
-	EXPECT_EQ("", runner.runCommand(command));
+	EXPECT_EQ(value, runner.write(LBA, value));
 }
 
 TEST_F(TestShellFixtureWithMock, CmdRunnerReadFail) {
-	vector<string> command = { "\SSD.exe", "R", "110" };
+	string LBA = "1000";
 
 	EXPECT_CALL(mockStorage, read)
 		.Times(1)
 		.WillRepeatedly(Return("ERROR"));
 
-	EXPECT_EQ("ERROR", runner.runCommand(command));
+	EXPECT_EQ("ERROR", runner.read(LBA));
 }
 
 TEST_F(TestShellFixtureWithMock, CmdRunnerWriteFail) {
-	vector<string> command = { "\SSD.exe", "W", "110", "0xFFFFFFFF"};
+	string LBA = "1000";
+	string value = "0xFFFFFFFF";
 
-	EXPECT_CALL(mockStorage, write)
+	EXPECT_CALL(mockStorage, write(LBA, _))
 		.Times(1)
 		.WillRepeatedly(Return("ERROR"));
 
-	EXPECT_EQ("ERROR", runner.runCommand(command));
+	EXPECT_EQ("ERROR", runner.write(LBA, value));
 }
 
 TEST_F(TestShellFixtureWithMock, CmdRunnerNoSetInterface) {
 	CommandRunner emptyRunner;
-	vector<string> command = { "\SSD.exe", "R", "1" };
+	string LBA = "10";
 
-	EXPECT_THROW(emptyRunner.runCommand(command), std::runtime_error);
+	EXPECT_THROW(emptyRunner.read(LBA), std::runtime_error);
 }

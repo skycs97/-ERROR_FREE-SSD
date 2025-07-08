@@ -1,17 +1,23 @@
 #include "command_runner.h"
 #include <stdexcept>
-string CommandRunner::runCommand(vector<string> cmd) {
+string CommandRunner::read(const string& LBA)
+{
 	if (ssdInterface == nullptr) {
 		throw std::runtime_error("ssd Interface hasn't set");
 	}
 
-	string result = "";
-	if (cmd[1] == "R") {
-		result = ssdInterface->read(stoi(cmd[2]));
+	string result = ssdInterface->read(LBA);
+
+	return result;
+}
+
+string CommandRunner::write(const string& LBA, const string& value)
+{
+	if (ssdInterface == nullptr) {
+		throw std::runtime_error("ssd Interface hasn't set");
 	}
-	else if (cmd[1] == "W") {
-		result = ssdInterface->write(stoi(cmd[2]), stoi(cmd[3]));
-	}
+	
+	string result = ssdInterface->write(LBA, value);
 
 	return result;
 }

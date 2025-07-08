@@ -7,8 +7,8 @@ using std::vector;
 
 class CommandRunner {
 public:
-	string runCommand(vector<string> cmd);
-
+	string read(const string& LBA);
+	string write(const string& LBA, const string& value);
 	void setStorage(SsdInterface* ssdInterface);
 private:
 	SsdInterface* ssdInterface = nullptr;
