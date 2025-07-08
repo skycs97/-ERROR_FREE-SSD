@@ -12,6 +12,8 @@ namespace {
 	const std::string CMD_FULLREAD = "fullread";
 	const std::string CMD_1_FULLWRITEANDREADCOMPARE = "1_FullWriteAndReadCompare";
 	const std::string CMD_1_ = "1_";
+	const std::string CMD_2_PartialLBAWrite = "2_PartialLBAWrite";
+	const std::string CMD_2_ = "2_";
 }
 
 class Command {
@@ -114,6 +116,12 @@ public:
 		help = "PartialLBAWrite";
 	};
 	void run(const CommandRunner& cmdRunner) const override;
+private:
+	static const int REPEAT_COUNT = 30;
+	const std::string WRITE_DATA{ "0x12341234" };
+	std::vector<std::string> TestLbaList = { "4","0","3","1","2" };
+
+	bool checkResult(const std::vector<std::string>& result) const;
 };
 
 class WriteReadAging : public Command {
