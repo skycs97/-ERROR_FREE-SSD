@@ -66,12 +66,26 @@ TEST_F(TestShellFixtureWithMock, CmdRunnerNoSetInterface) {
 
 	EXPECT_THROW(emptyRunner.read(VALID_LBA), std::runtime_error);
 }
-TEST_F(TestShellFixtureWithMock, CommandRunRead) {
+
+TEST_F(TestShellFixtureWithMock, CommandRunReadPass) {
 
 	Command* command = fc.makeCommand("read " + VALID_LBA);
 
 	EXPECT_CALL(mockStorage, read(VALID_LBA))
-		.Times(1);
+		.Times(1)
+		.WillRepeatedly(Return("0xAAAABBBB"));
+	EXPECT_TRUE(command != nullptr);
+
+	command->run(runner);
+}
+
+TEST_F(TestShellFixtureWithMock, CommandRunReadFail) {
+
+	Command* command = fc.makeCommand("read " + INVALID_LBA);
+
+	EXPECT_CALL(mockStorage, read(INVALID_LBA))
+		.Times(1)
+		.WillRepeatedly(Return("ERROR"));
 	EXPECT_TRUE(command != nullptr);
 
 	command->run(runner);

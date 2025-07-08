@@ -16,6 +16,8 @@ namespace {
 	const std::string CMD_2_ = "2_";
     const std::string CMD_3_WRITEREADAGING = "3_WriteReadAging";
 	const std::string CMD_3_ = "3_";
+	const std::string ERROR = "ERROR";
+	const std::string DONE = "DONE";
 }
 
 class Command {
@@ -45,6 +47,8 @@ public:
 	};
 
 	void run(const CommandRunner& cmdRunner) const override;
+private:
+	void printResult(const string& result, const string& lba) const;
 };
 
 class WriteCommand : public Command {

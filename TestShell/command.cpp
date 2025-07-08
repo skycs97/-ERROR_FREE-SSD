@@ -29,8 +29,17 @@ int Command::getNumOfArgs(void) {
 
 void ReadCommand::run(const CommandRunner& cmdRunner) const
 {
-	std::vector<string> result;
-	result.push_back(cmdRunner.read(ShellCommands[1]));
+	string result = cmdRunner.read(ShellCommands[1]);
+	printResult(result, ShellCommands[1]);
+}
+
+void ReadCommand::printResult(const string& result, const string& lba) const
+{
+	std::cout << "[Read] ";
+	if (result != ERROR)
+		std::cout << lba << " : ";
+	std::cout << result
+		<< std::endl << std::endl;
 }
 
 void WriteCommand::run(const CommandRunner& cmdRunner) const
@@ -201,7 +210,7 @@ Command* FactoryCommand::makeCommand(const std::string& cmd)
 	else if ((shellCmd == CMD_1_) || (shellCmd == CMD_1_FULLWRITEANDREADCOMPARE)) return new FullWriteAndReadCompare(commands);
 	else if ((shellCmd == CMD_2_) || (shellCmd == CMD_2_PartialLBAWrite)) return new PartialLBAWrite(commands);
 	else if ((shellCmd == CMD_3_) || (shellCmd == CMD_3_WRITEREADAGING)) return new WriteReadAging(commands);
-	
+
 
 	else return nullptr;
 }
