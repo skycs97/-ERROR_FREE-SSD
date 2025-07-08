@@ -97,3 +97,12 @@ TEST(ArgumentParserTest, WriteCommandExceptionNotEnoughArgumentTest2) {
 
 	EXPECT_THROW(parser.parse_args(3, argv), std::invalid_argument);
 }
+
+TEST(ArgumentParserTest, NoCommandExceptionTest) {
+	ArgumentParser parser;
+	const char* argv[] = {
+		"ssd.exe"
+	};
+
+	EXPECT_THROW(parser.parse_args(1, argv), std::invalid_argument);
+}
