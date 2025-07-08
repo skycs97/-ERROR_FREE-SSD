@@ -21,6 +21,7 @@ protected:
 public:
 	SsdInterfaceMock mockStorage;
 	CommandRunner runner;
+	FactoryCommand fc;
 
 	const string VALID_LBA = "10";
 	const string INVALID_LBA = "1000";
@@ -65,11 +66,52 @@ TEST_F(TestShellFixtureWithMock, CmdRunnerNoSetInterface) {
 
 	EXPECT_THROW(emptyRunner.read(VALID_LBA), std::runtime_error);
 }
+TEST_F(TestShellFixtureWithMock, CommandRunRead) {
 
-TEST_F(TestShellFixtureWithMock, FullWriteAndReadCompare) {
+	Command* command = fc.makeCommand("read " + VALID_LBA);
 
-	vector<string> command = { "1_" };
-	FullWriteAndReadCompare fullTest(command);
+	EXPECT_CALL(mockStorage, read(VALID_LBA))
+		.Times(1);
+	EXPECT_TRUE(command != nullptr);
+
+	command->run(runner);
+}
+
+TEST_F(TestShellFixtureWithMock, CommandRunWrite) {
+
+	Command* command = fc.makeCommand("write " + VALID_LBA + " " + TEST_VALUE);
+
+	EXPECT_CALL(mockStorage, write(VALID_LBA, _))
+		.Times(1);
+	EXPECT_TRUE(command != nullptr);
+
+	command->run(runner);
+}
+
+TEST_F(TestShellFixtureWithMock, CommandRunFullRead) {
+
+	Command* command = fc.makeCommand("fullread");
+
+	EXPECT_CALL(mockStorage, read(_))
+		.Times(100);
+	EXPECT_TRUE(command != nullptr);
+
+	command->run(runner);
+}
+
+TEST_F(TestShellFixtureWithMock, CommandRunFullWrite) {
+
+	Command* command = fc.makeCommand("fullwrite " + TEST_VALUE);
+
+	EXPECT_CALL(mockStorage, write(_, _))
+		.Times(100);
+	EXPECT_TRUE(command != nullptr);
+
+	command->run(runner);
+}
+
+TEST_F(TestShellFixtureWithMock, CommandRunFullWriteAndReadCompare) {
+	Command* command = fc.makeCommand("1_ ");
 
 	EXPECT_CALL(mockStorage, read(_))
 		.Times(100)
@@ -79,7 +121,5 @@ TEST_F(TestShellFixtureWithMock, FullWriteAndReadCompare) {
 		.Times(100)
 		.WillRepeatedly(Return(""));
 
-	fullTest.run(runner);
-
-	//EXPECT_THROW(emptyRunner.read(VALID_LBA), std::runtime_error);
+	command->run(runner);
 }
