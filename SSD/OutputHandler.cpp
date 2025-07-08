@@ -5,10 +5,5 @@
 #include <string>
 
 void OutputHandler::output(const string& output_string) {
-	fileHandler->write(output_string);
+	fileHandler->write(OUTPUT_FILENAME, { output_string });
 }
-
-string OutputHandler::read(void) {
-	return fileHandler->read();
-}
-

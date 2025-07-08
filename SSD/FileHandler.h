@@ -11,9 +11,8 @@ public:
 	FileHandler() {}
 
 	virtual void write(const string& file_name, const vector<string>& output_string);
-	virtual vector<string>& read(const string& file_name);
+	virtual vector<string> read(const string& file_name);
 
 private:
-	const string OUTPUT_FILENAME = "ssd_output.txt";
-	ofstream file;
+
 };
