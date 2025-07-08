@@ -10,13 +10,16 @@ static const int INVALID_RANGE_LBA = 999;
 static const string VALID_DATA = "0xAAAABBBB";
 static const string INIT_DATA = "0x00000000";
 
-TEST(Writer, ValidCase)
+class WriterFixture : public Test
 {
-	// arrange
+public:
 	NandFlashMemoryMock nand;
-	NandWriter writer(&nand);
-	vector<string> dummy_data(MAX_LBA, INIT_DATA);
+	NandWriter writer{ &nand };
+	vector<string> dummy_data{ MAX_LBA, INIT_DATA };
+};
 
+TEST_F(WriterFixture, ValidCase)
+{
 	// act, assert
 	EXPECT_CALL(nand, read())
 		.Times(1)
@@ -31,12 +34,8 @@ TEST(Writer, ValidCase)
 	EXPECT_EQ(expected, actual);
 }
 
-TEST(Writer, InvalidCase_OutOfRange)
+TEST_F(WriterFixture, InvalidCase_OutOfRange)
 {
-	// arrange
-	NandFlashMemoryMock nand;
-	NandWriter writer(&nand);
-
 	// act, assert
 	EXPECT_CALL(nand, write(_))
 		.Times(0);
