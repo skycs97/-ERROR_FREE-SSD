@@ -14,6 +14,8 @@ namespace {
 	const std::string CMD_1_ = "1_";
 	const std::string CMD_2_PartialLBAWrite = "2_PartialLBAWrite";
 	const std::string CMD_2_ = "2_";
+    const std::string CMD_3_WRITEREADAGING = "3_WriteReadAging";
+	const std::string CMD_3_ = "3_";
 }
 
 class Command {
