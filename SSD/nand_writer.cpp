@@ -12,5 +12,5 @@ string NandWriter::write(int lba, string data)
 
 bool NandWriter::isOutOfRange(int lba)
 {
-	return (lba < 0 || lba > 99);
+	return (lba < MIN_LBA || lba > MAX_LBA);
 }
