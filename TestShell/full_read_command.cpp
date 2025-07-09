@@ -1,5 +1,5 @@
-#include "full_read_command.h"
 #include <iomanip>
+#include "full_read_command.h"
 
 void FullReadCommand::run(const CommandRunner& cmdRunner) const
 {

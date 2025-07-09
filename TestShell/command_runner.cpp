@@ -1,5 +1,6 @@
-#include "command_runner.h"
 #include <stdexcept>
+#include "command_runner.h"
+
 string CommandRunner::read(const string& LBA) const
 {
 	if (isSetSsdInterface() == false) {

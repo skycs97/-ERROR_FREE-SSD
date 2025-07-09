@@ -1,5 +1,5 @@
-#include "write_command.h"
 #include <iostream>
+#include "write_command.h"
 
 void WriteCommand::run(const CommandRunner& cmdRunner) const
 {

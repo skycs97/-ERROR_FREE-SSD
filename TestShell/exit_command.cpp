@@ -1,5 +1,5 @@
-#include "exit_command.h"
 #include <iostream>
+#include "exit_command.h"
 
 void ExitCommand::run(const CommandRunner& cmdRunner) const
 {

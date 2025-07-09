@@ -1,5 +1,5 @@
-#include "command_factory.h"
 #include <sstream>
+#include "command_factory.h"
 
 Command* FactoryCommand::makeCommand(const std::string& cmd)
 {

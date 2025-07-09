@@ -1,5 +1,5 @@
-#include "read_command.h"
 #include <iostream>
+#include "read_command.h"
 
 void ReadCommand::run(const CommandRunner& cmdRunner) const
 {
