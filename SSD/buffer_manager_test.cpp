@@ -13,7 +13,7 @@ protected:
 			.WillRepeatedly(Return(nandData));
 	}
 public:
-	FileHandlerMock fileHandler;
+	NiceMock<FileHandlerMock> fileHandler;
 	NandFlashMemoryImpl nand{ &fileHandler };
 	BufferManager manager{ &nand, &fileHandler };
 	vector<string> nandData;

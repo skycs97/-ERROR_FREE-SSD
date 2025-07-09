@@ -62,6 +62,8 @@ void BufferManager::updateBufferState(int buffer_num)
 
 void BufferManager::fillBufferInfo(string fname, int buffer_num, bool need_file_change)
 {
+	if (buffer_num < 1 || buffer_num > 5) throw std::exception("invalid buffer_num.");
+
 	std::smatch m;
 	std::regex writeRegex(R"([1-5]_W_([0-9]*)_(0x[0-9A-Fa-f]+))");
 	std::regex eraseRegex(R"([1-5]_E_([0-9]*)_([0-9]+))");
@@ -104,6 +106,8 @@ void BufferManager::setBufferInfo(int buffer_num,
 	string written_data,
 	int size)
 {
+	if (buffer_num < 1 || buffer_num > 5) throw std::exception("invalid buffer_num.");
+
 	buffers[buffer_num - 1].fname = fname;
 	buffers[buffer_num - 1].cmd = cmd;
 	buffers[buffer_num - 1].lba = lba;
@@ -144,10 +148,10 @@ void BufferManager::addWriteCommand(int lba, const string& data) {
 		flush();
 	}
 	
-	int index = getUsedBufferCount();
+	int added_buf_num = getUsedBufferCount() + 1;
 	std::ostringstream oss;
-	oss << index + 1 << "_W_" << lba <<"_"<< data;
-	fillBufferInfo(oss.str(), index, true);
+	oss << added_buf_num << "_W_" << lba <<"_"<< data;
+	fillBufferInfo(oss.str(), added_buf_num, true);
 	IncreaseBufferCnt();
 }
 
@@ -156,16 +160,17 @@ void BufferManager::addEraseCommand(int lba, int count) {
 		flush();
 	}
 	//로직 구현
-	int index = getUsedBufferCount();
+	int added_buf_num = getUsedBufferCount() + 1;
 	std::ostringstream oss;
-	oss << index + 1 << "_E_" << lba <<"_"<<count;
-	fillBufferInfo(oss.str(), index, true);
+	oss << added_buf_num + 1 << "_E_" << lba <<"_"<<count;
+	fillBufferInfo(oss.str(), added_buf_num, true);
 	IncreaseBufferCnt();
 }
 
 void BufferManager::flush() {
 	vector<string> datas = nandFlashMemory->read();
-	for (int index = 0; index < getUsedBufferCount(); index++) {
+	int buf_cnt = getUsedBufferCount();
+	for (int index = 0; index < buf_cnt; index++) {
 		if (buffers[index].cmd == CMD_WRITE)
 		{
 			datas[buffers[index].lba] = buffers[index].written_data;
@@ -180,18 +185,16 @@ void BufferManager::flush() {
 			}
 		}
 
-		string file_name = string(getBufferFilePrefix(index)) + BUFFER_NAME_EMPTY;
-		fillBufferInfo(file_name, index, true);
+		int added_buf_num = index + 1;
+		string file_name = string(getBufferFilePrefix(added_buf_num)) + BUFFER_NAME_EMPTY;
+		fillBufferInfo(file_name, added_buf_num, true);
 		DecreaseBufferCnt();
 	}
 	nandFlashMemory->write(datas);
 }
 
 void BufferManager::writeBuffer(const string& new_name, int buffer_num) {
-	vector<string> old_name = fileHandler->findFileUsingPrefix(BUFFER_DIR_NAME, getBufferFilePrefix(buffer_num));
-	if (old_name.size() > 1) throw std::exception("There are many buffer files in same prefix.");
-
-	fileHandler->rename(old_name.front(), new_name);
+	fileHandler->rename(buffers[buffer_num - 1].fname, new_name);
 }
 
 int BufferManager::getUsedBufferCount() {
