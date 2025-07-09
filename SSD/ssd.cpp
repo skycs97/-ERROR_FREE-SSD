@@ -26,7 +26,7 @@ void SSD::run(int argc, const char* argv[])
 		outputHandler->getFileHandler()->init();
 		SSDCommand* cmd = nullptr;
 		
-		if (argc > 2) {
+		if (argc > 1) {
 			cmd = factory->createCommand(argv[ARG_IDX_CMD], nand, bufferManager);
 			cmd->parseArg(argc, argv);
 			result = cmd->run();

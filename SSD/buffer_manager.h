@@ -76,7 +76,7 @@ private:
 	bool isBufferFull();
 
 	//fileHandler에 새로 버퍼를 기록합니다.
-	void writeBuffer(const string& new_name, int buffer_num);
+	void writeBuffer(const string& old_name, const string& new_name);
 
 	void IncreaseBufferCnt();
 

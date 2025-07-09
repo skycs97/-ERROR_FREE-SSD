@@ -23,6 +23,7 @@ public:
 
 	virtual void createDirIfNotExist(const string& dir_path);
 	virtual bool isExist(const string& dir_path, const string& file_name);
+	virtual bool isExist(const string& dir_path, const string& file_name, int len);
 	virtual void createEmptyFile(const string& file_path);
 	virtual void rename(const string& old_name, const string& new_name) const;
 	virtual vector<string> findFileUsingPrefix(const string& path, const string& prefix);
