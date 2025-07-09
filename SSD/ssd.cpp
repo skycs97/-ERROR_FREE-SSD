@@ -10,6 +10,7 @@ SSD::SSD(FileHandler* fileHandler) {
 	BufferManager* bufferManager = new BufferManager(nand, fileHandler);
 	reader = new NandReader(nand, bufferManager);
 	writer = new NandWriter(nand, bufferManager);
+	eraser = new NandEraser(nand);
 
 	argumentParser = new ArgumentParser();
 }
@@ -35,8 +36,15 @@ void SSD::run(int argc, const char* argv[])
 		}
 		case ArgumentParser::WRITE_CMD: {
 			int addr = argumentParser->getAddr();
-			string data = argumentParser->getData();
+			data = argumentParser->getData();
 			writer->write(addr, data);
+			break;
+		}
+		case ArgumentParser::ERASE_CMD: {
+			int addr = argumentParser->getAddr();
+			int size = argumentParser->getSize();
+			eraser->erase(addr, size);
+			data = "COMPLETE_ERASE";
 			break;
 		}
 		default: {

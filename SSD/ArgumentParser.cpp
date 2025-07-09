@@ -12,7 +12,7 @@ bool ArgumentParser::read_cmd_handler(int argc, const char* argv[])
 
 	eCmd = READ_CMD;
 	nAddr = atoi(argv[ARG_IDX_ADDR]);
-	if ((nAddr < 0) || (nAddr > 99)) throw std::invalid_argument("Out of range");
+	if ((nAddr < MIN_LBA) || (nAddr > MAX_LBA)) throw std::invalid_argument("Out of range");
 
 	return true;
 }
@@ -27,6 +27,20 @@ bool ArgumentParser::write_cmd_handler(int argc, const char* argv[])
 
 	parseHexAddress(string(argv[ARG_IDX_DATA]));
 	dwData = argv[ARG_IDX_DATA];
+	return true;
+}
+
+bool ArgumentParser::erase_cmd_handler(int argc, const char* argv[])
+{
+	if (argc != 4) throw std::invalid_argument("number of argument is incorrect");
+
+	eCmd = ERASE_CMD;
+	nAddr = atoi(argv[ARG_IDX_ADDR]);
+	if ((nAddr < MIN_LBA) || (nAddr > MAX_LBA)) throw std::invalid_argument("Out of range");
+
+	nSize = atoi(argv[ARG_IDX_DATA]);
+	if (nAddr + nSize > 100) throw std::invalid_argument("The erase range exceeds the MAX_LBA");
+
 	return true;
 }
 
@@ -47,6 +61,9 @@ bool ArgumentParser::parse_args(int argc, const char* argv[])
 	else if ((string(argv[ARG_IDX_CMD]) == string("W")) || (string(argv[ARG_IDX_CMD]) == string("w"))) {
 		return write_cmd_handler(argc, argv);
 	}
+	else if ((string(argv[ARG_IDX_CMD]) == string("E")) || (string(argv[ARG_IDX_CMD]) == string("e"))) {
+		return erase_cmd_handler(argc, argv);
+	}
 	else {
 		return etc_cmd_handler(argc, argv);
 	}
@@ -60,6 +77,11 @@ ArgumentParser::CMD_TYPE ArgumentParser::getCmdType()
 int ArgumentParser::getAddr()
 {
 	return nAddr;
+}
+
+int ArgumentParser::getSize()
+{
+	return nSize;
 }
 
 string ArgumentParser::getData()
