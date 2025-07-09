@@ -61,7 +61,7 @@ private:
 	// 버퍼 상태 업데이트
 	void updateBufferState(int buffer_num);
 
-	void fillBufferInfo(string fname, int buffer_num);
+	void fillBufferInfo(string fname, int buffer_num, bool need_file_change);
 
 	void setBufferInfo(
 		int buffer_num,
@@ -76,7 +76,7 @@ private:
 	bool isBufferFull();
 
 	//fileHandler에 새로 버퍼를 기록합니다.
-	void writeBuffer();
+	void writeBuffer(const string& new_name, int buffer_num);
 
 	void IncreaseBufferCnt();
 
