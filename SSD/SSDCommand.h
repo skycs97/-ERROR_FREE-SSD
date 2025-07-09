@@ -16,5 +16,11 @@ public:
 class SSDCommandFactory {
 public:
 	SSDCommand* createCommand(const string& cmdName, NandFlashMemory* nandFlashMemory, BufferManager* bufferManager);
+
+private:
+	bool isReadCmd(const string& cmdName);
+	bool isWriteCmd(const string& cmdName);
+	bool isEraseCmd(const string& cmdName);
+	bool isFlushCmd(const string& cmdName);
 };
 

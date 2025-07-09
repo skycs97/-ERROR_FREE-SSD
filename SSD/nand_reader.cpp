@@ -16,7 +16,7 @@ string NandReader::read(int LBA)
 
 bool NandReader::parseArg(int argc, const char* argv[])
 {
-	if (argc != 3) throw std::invalid_argument("number of argument is incorrect");
+	if (argc != READ_CORRECT_ARG_SIZE) throw std::invalid_argument("number of argument is incorrect");
 
 	parser.setCmdType(ArgumentParser::READ_CMD);
 	parser.setAddr(atoi(argv[ARG_IDX_ADDR]));
