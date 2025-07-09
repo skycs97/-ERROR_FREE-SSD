@@ -110,3 +110,14 @@ void FileHandler::createEmptyFile(const string& file_path)
 
 	return;
 }
+
+void FileHandler::rename(const string& old_name, const string& new_name) const
+{
+	if (std::rename(old_name.c_str(), new_name.c_str()) == 0) {
+		// success
+		return;
+	}
+	else {
+		throw std::runtime_error("rename fail");
+	}
+}
