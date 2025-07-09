@@ -9,7 +9,7 @@ using std::string;
 
 class SSDCommand {
 public:
-	virtual bool parseArg(int argc, const char* argv[]) = 0;
+	virtual void parseArg(int argc, const char* argv[]) = 0;
 	virtual string run() = 0;
 };
 

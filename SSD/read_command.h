@@ -13,14 +13,15 @@ public:
 		bufferManager{ bufferManager } {
 	}
 	
-	virtual bool parseArg(int argc, const char* argv[]) override;
+	virtual void parseArg(int argc, const char* argv[]) override;
 	virtual string run() override;
 
-	string read(int LBA);
 private:
-	bool isInvalidAddress(int nLBA);
+	bool isInvalidAddress();
 
 	NandFlashMemory* nandFlashMemory;
 	BufferManager* bufferManager;
 	ArgumentParser parser;
+
+	int lba;
 };

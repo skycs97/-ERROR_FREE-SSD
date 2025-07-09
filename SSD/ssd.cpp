@@ -28,7 +28,7 @@ void SSD::run(int argc, const char* argv[])
 		SSDCommand* cmd = nullptr;
 		
 		if (argc > 2) {
-			cmd = factory->createCommand(string((argv[ARG_IDX_CMD])), nand, bufferManager);
+			cmd = factory->createCommand(argv[ARG_IDX_CMD], nand, bufferManager);
 			cmd->parseArg(argc, argv);
 			result = cmd->run();
 		} else throw std::invalid_argument("Invalid Command");

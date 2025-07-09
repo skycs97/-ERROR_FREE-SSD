@@ -7,18 +7,20 @@ using namespace testing;
 
 class ReadCommandFixture : public Test {
 public:
-	static constexpr int LBA_IN_RANGE = 0;
+	static constexpr int ARGC = 3;
+	const char* VALID_ARGV[ARGC] = { "ssd.exe", "R", "0" };
 	const vector<string> NAND_WRITTEN_VALUE = { "0x12345678" };
 
 	FileHandlerMock mockedFileHandler;
 	NandFlashMemoryMock memory;
 	BufferManager bufferManager{ &memory, &mockedFileHandler };
-	ReadCommand readCommand{ &memory , &bufferManager};
+	ReadCommand readCommand{ &memory , &bufferManager };
 };
 
 TEST_F(ReadCommandFixture, readTestWithSuccessResult) {
 	EXPECT_CALL(memory, read()).WillRepeatedly(Return(NAND_WRITTEN_VALUE));
-	string actual = readCommand.read(LBA_IN_RANGE);
+	readCommand.parseArg(ARGC, VALID_ARGV);
+	string actual = readCommand.run();
 	string expected = "0x12345678";
 
 	EXPECT_EQ(expected, actual);

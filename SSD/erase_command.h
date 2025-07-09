@@ -13,18 +13,20 @@ public:
 	EraseCommand(NandFlashMemory* nandFlashMemory, BufferManager* bufferManager)
 		: nandFlashMemory{ nandFlashMemory }, bufferManager{ bufferManager } {
 	}
-	virtual bool parseArg(int argc, const char* argv[]) override;
+	virtual void parseArg(int argc, const char* argv[]) override;
 	virtual string run() override;
 	
 	void erase(int lba, int size);
 
 private:
 
-	bool isInvalidAddress(int nLBA);
-	bool isInvalidEraseCount(int nEraseLBACount);
-	bool isInvalidEraseRange(int nEraseStartLBA, int nEraseLBACount);
+	bool isInvalidAddress();
+	bool isInvalidEraseCount();
+	bool isInvalidEraseRange();
 
 	NandFlashMemory* nandFlashMemory;
 	BufferManager* bufferManager;
 	ArgumentParser parser;	
+	int startLBA;
+	int count;
 };
