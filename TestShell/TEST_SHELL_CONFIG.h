@@ -43,3 +43,5 @@ static const int MIN_LBA = 0;
 
 const std::string ERROR = "ERROR";
 const std::string DONE = "DONE";
+const std::string FAIL = "FAIL";
+const std::string WRITESUCCESS = "";

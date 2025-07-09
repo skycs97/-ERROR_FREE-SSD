@@ -7,10 +7,8 @@
 
 void WriteReadAging::run(const CommandRunner& cmdRunner) const
 {
-	std::vector<string> result;
-	string writeSuccess = "";
-	string res;
-
+	string lba0 = "0";
+	string lba99 = "99";
 	std::mt19937 generator(std::chrono::system_clock::now().time_since_epoch().count());
 	std::uniform_int_distribution<unsigned int> distribution(
 		std::numeric_limits<unsigned int>::min(),
@@ -18,29 +16,31 @@ void WriteReadAging::run(const CommandRunner& cmdRunner) const
 	);
 
 	for (int i = 0; i < 200; i++) {
-		unsigned int random_value = distribution(generator);
-		std::stringstream ss;
-		ss << "0x" << std::hex
-			<< std::uppercase
-			<< std::setw(8) << std::setfill('0')
-			<< random_value;
 
-		std::string hex_string = ss.str();
+		string data = hexToString(distribution(generator));
 
-		if (writeSuccess != (res = cmdRunner.write("0", hex_string)))
-			result.push_back(res);
+		if (WRITESUCCESS != cmdRunner.write(lba0, data))
+			throw TestScriptFailExcpetion(FAIL);
 
-		if (writeSuccess != (res = cmdRunner.write("99", hex_string)))
-			result.push_back(res);
+		if (WRITESUCCESS != cmdRunner.write(lba99, data))
+			throw TestScriptFailExcpetion(FAIL);
 
-		if (cmdRunner.read("0") != cmdRunner.read("99"))
-			result.push_back(res);
+		if (cmdRunner.read(lba0) != cmdRunner.read(lba99))
+			throw TestScriptFailExcpetion(FAIL);
 	}
 
-	if (result.size())
-		throw TestScriptFailExcpetion("Fail");
-
 	std::cout << "Pass" << std::endl;
+}
+
+string WriteReadAging::hexToString(unsigned int random_value) const
+{
+	std::stringstream ss;
+	ss << "0x" << std::hex
+		<< std::uppercase
+		<< std::setw(8) << std::setfill('0')
+		<< random_value;
+
+	return ss.str();
 }
 
 void WriteReadAging::printHelp() const
