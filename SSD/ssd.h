@@ -1,6 +1,7 @@
 #pragma once
 #include "nand_reader.h"
 #include "nand_writer.h"
+#include "nand_eraser.h"
 #include "nand_flash_memory.h"
 #include "nand_flash_memory_impl.h"
 #include "OutputHandler.h"
@@ -17,6 +18,7 @@ private:
 
 	NandReader* reader;
 	NandWriter* writer;
+	NandEraser* eraser;
 	NandFlashMemory* nand;
 	OutputHandler* outputHandler;
 	ArgumentParser* argumentParser;
