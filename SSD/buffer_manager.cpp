@@ -5,7 +5,7 @@
 #include <iomanip>
 
 bool BufferManager::isBufferFull() {
-	return getUsedBufferCount() == 5;
+	return getUsedBufferCount() == BUFFER_SIZE;
 }
 
 bool BufferManager::read(int lba, string& outputData) {
