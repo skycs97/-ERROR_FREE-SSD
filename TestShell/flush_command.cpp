@@ -15,6 +15,8 @@ void FlushCommand::run(const CommandRunner& cmdRunner) const
 	if (result == ERROR) {
 		throw std::runtime_error("flush error!");
 	}
+
+	std::cout << "flush success!\n";
 }
 
 void FlushCommand::printHelp() const
