@@ -21,6 +21,8 @@ private:
 	NandWriter* writer;
 	NandEraser* eraser;
 	NandFlashMemory* nand;
+	BufferManager* bufferManager;
 	OutputHandler* outputHandler;
 	ArgumentParser* argumentParser;
+	SSDCommandFactory* factory;
 };

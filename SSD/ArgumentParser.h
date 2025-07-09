@@ -16,6 +16,17 @@ public:
 	int getAddr();
 	int getSize();
 	string getData();
+	int getEraseStartAddr() { return nEraseStartAddr; }
+	int getEraseCount() { return nEraseCount; }
+
+
+	void setCmdType(CMD_TYPE cmdType) { eCmd = cmdType; }
+	void setAddr(int addr) { nAddr = addr; }
+	void setData(const string& data) { strData = data; }
+	void setEraseStartAddr(int startAddr) { nEraseStartAddr = startAddr; }
+	void setEraseCount(int nCount) { nEraseCount = nCount; }
+	// stoul에서 변환 실패 시 std::invalid_argument 예외, 범위 초과 시 std::out_of_range 예외를 발생
+	unsigned long parseHexAddress(const std::string& hexAddress);
 
 private:
 	bool read_cmd_handler(int argc, const char* argv[]);
@@ -29,11 +40,12 @@ private:
 	bool isWriteCmd(const char* argv[]);
 	bool isEraseCmd(const char* argv[]);
 
-	// stoul에서 변환 실패 시 std::invalid_argument 예외, 범위 초과 시 std::out_of_range 예외를 발생
-	unsigned long parseHexAddress(const std::string& hexAddress);
 
-	CMD_TYPE eCmd = CMD_INVALID;
+	CMD_TYPE eCmd = NONE_CMD;
+	CMD_TYPE eCmd = NONE_CMD;
 	int nAddr = -1;
 	int nSize = -1;
-	string dwData = "";
+	string strData = "";
+	int nEraseStartAddr = -1;
+	int nEraseCount = -1;
 };

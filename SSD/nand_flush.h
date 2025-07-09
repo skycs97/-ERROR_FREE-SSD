@@ -2,21 +2,19 @@
 
 #include <string>
 #include "nand_flash_memory.h"
-#include "buffer_manager.h"
 #include "SSDCommand.h"
+#include "buffer_manager.h"
 
 using std::string;
-class NandReader : public SSDCommand {
+class NandFlush : public SSDCommand {
 public:
-	NandReader(NandFlashMemory* nandFlashMemory, BufferManager* bufferManager):
-		nandFlashMemory{ nandFlashMemory }, 
-		bufferManager{ bufferManager } {
+	NandFlush(NandFlashMemory* nandFlashMemory, BufferManager* bufferManager) :
+		nandFlashMemory{ nandFlashMemory }, bufferManager{ bufferManager } {
 	}
-	
 	virtual bool parseArg(int argc, const char* argv[]) override;
 	virtual string run() override;
 
-	string read(int LBA);
+	bool flush();
 private:
 	NandFlashMemory* nandFlashMemory;
 	BufferManager* bufferManager;

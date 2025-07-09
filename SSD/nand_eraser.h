@@ -1,17 +1,25 @@
 #pragma once
+
+#include <string>
 #include "nand_flash_memory.h"
 #include "global_config.h"
 #include "buffer_manager.h"
+#include "SSDCommand.h"
 
-class NandEraser
-{
+using std::string;
+
+class NandEraser : public SSDCommand {
 public:
 	NandEraser(NandFlashMemory* nandFlashMemory, BufferManager* bufferManager)
 		: nandFlashMemory{ nandFlashMemory }, bufferManager{ bufferManager } {
 	}
+	virtual bool parseArg(int argc, const char* argv[]) override;
+	virtual string run() override;
+	
 	void erase(int lba, int size);
 
 private:
 	NandFlashMemory* nandFlashMemory;
 	BufferManager* bufferManager;
+	ArgumentParser parser;	
 };

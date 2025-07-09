@@ -1,5 +1,7 @@
 #include "nand_reader.h"
 
+using std::string;
+
 string NandReader::read(int LBA)
 {
 	if (BUFFER_ENABLE) {
@@ -10,4 +12,22 @@ string NandReader::read(int LBA)
 	}
 	vector<string> datas = nandFlashMemory->read();
 	return datas.at(LBA);
+}
+
+bool NandReader::parseArg(int argc, const char* argv[])
+{
+	if (argc != 3) throw std::invalid_argument("number of argument is incorrect");
+
+	parser.setCmdType(ArgumentParser::READ_CMD);
+	parser.setAddr(atoi(argv[ARG_IDX_ADDR]));
+
+	if ((parser.getAddr() < MIN_LBA) || (parser.getAddr() > MAX_LBA)) throw std::invalid_argument("Out of range");
+
+	return true;
+}
+
+string NandReader::run()
+{
+	int addr = parser.getAddr();
+	return read(addr);	
 }
