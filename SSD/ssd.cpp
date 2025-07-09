@@ -1,4 +1,4 @@
-#include "ssd.h"
+ï»¿#include "ssd.h"
 #include "buffer_manager.h"
 #include <stdexcept>
 
@@ -15,7 +15,7 @@ SSD::SSD(FileHandler* fileHandler) {
 
 	argumentParser = new ArgumentParser();
 
-	// FIXME: ³»ºÎÀûÀ¸·Î std::exception »ç¿ëÇÏ³ª, ÇöÀç À§Ä¡´Â try-catch ¹® ¹Û
+	// FIXME: ë‚´ë¶€ì ìœ¼ë¡œ std::exception ì‚¬ìš©í•˜ë‚˜, í˜„ìž¬ ìœ„ì¹˜ëŠ” try-catch ë¬¸ ë°–
 	bufferManager->init();
 }
 
