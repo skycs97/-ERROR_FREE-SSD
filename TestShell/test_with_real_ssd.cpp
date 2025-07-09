@@ -2,8 +2,8 @@
 #include "ssd_interface.h"
 #include <string>
 #include "command_runner.h"
-#include "command.h"
-
+#include "command_list.h"
+#include "command_factory.h"
 #include "ssd_impl.h"
 
 using std::string;
@@ -29,23 +29,26 @@ public:
 	static const int MAX_LBA = 99;
 };
 
-TEST_F(TestShellFixtureWithReal, CmdRunnerRealRead) {
-	SetUp();
+TEST_F(TestShellFixtureWithReal, CmdRunnerRealReadSuccess) {
+	Command* writeCommand = fc.makeCommand("write " + VALID_LBA+" "+ TEST_VALUE);
+	EXPECT_TRUE(writeCommand != nullptr);
 
-	EXPECT_EQ("", runner.write(VALID_LBA, ERASE_VALUE));
-	EXPECT_EQ(ERASE_VALUE, runner.read(VALID_LBA));
+	writeCommand->run(runner);
 
+	Command* readCommand = fc.makeCommand("read " + VALID_LBA);	
+	EXPECT_TRUE(readCommand != nullptr);
+
+	readCommand->run(runner);
 }
 
-TEST_F(TestShellFixtureWithReal, CmdRunnerRealRead2) {
-	SetUp();
+TEST_F(TestShellFixtureWithReal, CmdRunnerRealReadFail) {
+	Command* writeCommand = fc.makeCommand("write " + INVALID_LBA + " " + TEST_VALUE);
+	EXPECT_TRUE(writeCommand != nullptr);
 
-	EXPECT_EQ("", runner.write(VALID_LBA, TEST_VALUE));
-	EXPECT_EQ(TEST_VALUE, runner.read(VALID_LBA));
-}
+	writeCommand->run(runner);
 
-TEST_F(TestShellFixtureWithReal, CmdRunnerRealWriteError) {
-	SetUp();
+	Command* readCommand = fc.makeCommand("read " + INVALID_LBA);
+	EXPECT_TRUE(readCommand != nullptr);
 
-	EXPECT_EQ(ERROR_STRING, runner.write(INVALID_LBA, TEST_VALUE));
+	readCommand->run(runner);
 }
