@@ -1,7 +1,4 @@
-#include <random>  
-#include <chrono> 
 #include <iomanip>
-#include <sstream>
 #include "command_runner.h"
 #include "write_read_aging_command.h"
 
@@ -18,40 +15,23 @@ void WriteReadAgingCommand::run(const CommandRunner& cmdRunner) const
 {
 	printProcess();
 
-	string lba0 = "0";
-	string lba99 = "99";
-	std::mt19937 generator(std::chrono::system_clock::now().time_since_epoch().count());
-	std::uniform_int_distribution<unsigned int> distribution(
-		std::numeric_limits<unsigned int>::min(),
-		std::numeric_limits<unsigned int>::max()
-	);
+	RandomNumberGenerator rng;
 
 	for (int i = 0; i < 200; i++) {
 
-		string data = hexToString(distribution(generator));
+		string data = rng.generateRandomUnsignedIntString();
 
-		if (WRITESUCCESS != cmdRunner.write(lba0, data))
+		if (WRITESUCCESS != cmdRunner.write(std::to_string(MIN_LBA), data))
 			throw TestScriptFailExcpetion(FAIL);
 
-		if (WRITESUCCESS != cmdRunner.write(lba99, data))
+		if (WRITESUCCESS != cmdRunner.write(std::to_string(MAX_LBA), data))
 			throw TestScriptFailExcpetion(FAIL);
 
-		if (cmdRunner.read(lba0) != cmdRunner.read(lba99))
+		if (cmdRunner.read(std::to_string(MIN_LBA)) != cmdRunner.read(std::to_string(MAX_LBA)))
 			throw TestScriptFailExcpetion(FAIL);
 	}
 
 	std::cout << "Pass" << std::endl;
-}
-
-string WriteReadAgingCommand::hexToString(unsigned int random_value) const
-{
-	std::stringstream ss;
-	ss << "0x" << std::hex
-		<< std::uppercase
-		<< std::setw(8) << std::setfill('0')
-		<< random_value;
-
-	return ss.str();
 }
 
 void WriteReadAgingCommand::printHelp() const
