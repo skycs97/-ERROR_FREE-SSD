@@ -8,4 +8,6 @@ public:
 	};
 	void run(const CommandRunner& cmdRunner) const override;
 	void printHelp() const override;
+private:
+	string hexToString(unsigned int random_value) const;
 };
