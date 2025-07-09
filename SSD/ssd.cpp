@@ -1,4 +1,5 @@
 #include "ssd.h"
+#include "buffer_manager.h"
 #include <stdexcept>
 
 SSD::SSD(FileHandler* fileHandler) {
@@ -6,8 +7,9 @@ SSD::SSD(FileHandler* fileHandler) {
 	outputHandler = new OutputHandler(fileHandler);
 	// Create nand IO instance
 	nand = new NandFlashMemoryImpl(fileHandler);
-	reader = new NandReader(nand);
-	writer = new NandWriter(nand);
+	BufferManager* bufferManager = new BufferManager(nand, fileHandler);
+	reader = new NandReader(nand, bufferManager);
+	writer = new NandWriter(nand, bufferManager);
 
 	argumentParser = new ArgumentParser();
 }
