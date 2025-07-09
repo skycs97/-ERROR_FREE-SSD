@@ -36,16 +36,16 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="nand_reader_test.cpp">
+    <ClCompile Include="read_command_test.cpp">
       <Filter>테스트 파일</Filter>
     </ClCompile>
-    <ClCompile Include="nand_reader.cpp">
+    <ClCompile Include="read_command.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="nand_writer_test.cpp">
+    <ClCompile Include="write_command_test.cpp">
       <Filter>테스트 파일</Filter>
     </ClCompile>
-    <ClCompile Include="nand_writer.cpp">
+    <ClCompile Include="write_command.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="argument_parser.cpp">
@@ -69,7 +69,7 @@
     <ClCompile Include="buffer_manager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="nand_eraser.cpp">
+    <ClCompile Include="erase_command.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="buffer_manager_test.cpp">
@@ -78,7 +78,7 @@
     <ClCompile Include="file_handler_test.cpp">
       <Filter>테스트 파일</Filter>
     </ClCompile>
-    <ClCompile Include="nand_flush.cpp">
+    <ClCompile Include="flush_command.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="ssd_command.cpp">
@@ -98,13 +98,13 @@
     <ClInclude Include="nand_flash_memory_mock.h">
       <Filter>테스트 파일</Filter>
     </ClInclude>
-    <ClInclude Include="nand_reader.h">
+    <ClInclude Include="read_command.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="nand_flash_memory.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="nand_writer.h">
+    <ClInclude Include="write_command.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="argument_parser.h">
@@ -122,10 +122,10 @@
     <ClInclude Include="buffer_manager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="nand_eraser.h">
+    <ClInclude Include="erase_command.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="nand_flush.h">
+    <ClInclude Include="flush_command.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="ssd_command.h">

@@ -1,6 +1,6 @@
-﻿#include "nand_writer.h"
+﻿#include "write_command.h"
 
-string NandWriter::write(int lba, string data)
+string WriteCommand::write(int lba, string data)
 {
 	if (BUFFER_ENABLE) {
 		bufferManager->addWriteCommand(lba, data);
@@ -12,7 +12,7 @@ string NandWriter::write(int lba, string data)
 	return nandFlashMemory->write(datas);
 }
 
-bool NandWriter::parseArg(int argc, const char* argv[])
+bool WriteCommand::parseArg(int argc, const char* argv[])
 {
 	if (argc != WRITE_CORRECT_ARG_SIZE) throw std::invalid_argument("number of argument is incorrect");
 
@@ -26,12 +26,12 @@ bool NandWriter::parseArg(int argc, const char* argv[])
 	return true;
 }
 
-bool NandWriter::isInvalidAddress(int nLBA) {
+bool WriteCommand::isInvalidAddress(int nLBA) {
 	if ((nLBA < MIN_LBA) || (nLBA > MAX_LBA)) return true;
 	return false;
 }
 
-string NandWriter::run()
+string WriteCommand::run()
 {
 	int addr = parser.getLBA();
 	string data = parser.getData();

@@ -1,22 +1,23 @@
 #pragma once
-
 #include <string>
 #include "nand_flash_memory.h"
 #include "buffer_manager.h"
+#include "global_config.h"
 #include "ssd_command.h"
-
 using std::string;
-class NandReader : public SSDCommand {
+
+class WriteCommand : public SSDCommand
+{
 public:
-	NandReader(NandFlashMemory* nandFlashMemory, BufferManager* bufferManager):
-		nandFlashMemory{ nandFlashMemory }, 
+	WriteCommand(NandFlashMemory* nandFlashMemory, BufferManager* bufferManager) :
+		nandFlashMemory{ nandFlashMemory },
 		bufferManager{ bufferManager } {
 	}
-	
+
+	string write(int lba, string data);
+
 	virtual bool parseArg(int argc, const char* argv[]) override;
 	virtual string run() override;
-
-	string read(int LBA);
 private:
 	bool isInvalidAddress(int nLBA);
 

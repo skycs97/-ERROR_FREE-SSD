@@ -1,8 +1,8 @@
 #include "ssd_command.h"
-#include "nand_reader.h"
-#include "nand_writer.h"
-#include "nand_eraser.h"
-#include "nand_flush.h"
+#include "read_command.h"
+#include "write_command.h"
+#include "erase_command.h"
+#include "flush_command.h"
 
 using std::string;
 
@@ -10,10 +10,10 @@ SSDCommand* SSDCommandFactory::createCommand(const string& cmdName, NandFlashMem
 {
 
 
-	if (isReadCmd(cmdName)) return new NandReader(nandFlashMemory, bufferManager);
-	else if (isWriteCmd(cmdName)) return new NandWriter(nandFlashMemory, bufferManager);
-	else if (isEraseCmd(cmdName)) return new NandEraser(nandFlashMemory, bufferManager);
-	else if (isFlushCmd(cmdName)) return new NandFlush(nandFlashMemory, bufferManager);
+	if (isReadCmd(cmdName)) return new ReadCommand(nandFlashMemory, bufferManager);
+	else if (isWriteCmd(cmdName)) return new WriteCommand(nandFlashMemory, bufferManager);
+	else if (isEraseCmd(cmdName)) return new EraseCommand(nandFlashMemory, bufferManager);
+	else if (isFlushCmd(cmdName)) return new FlushCommand(nandFlashMemory, bufferManager);
 	else throw std::invalid_argument("Unknown command type: " + cmdName);
 
 	return nullptr;

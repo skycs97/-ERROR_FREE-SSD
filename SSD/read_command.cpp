@@ -1,8 +1,8 @@
-#include "nand_reader.h"
+#include "read_command.h"
 
 using std::string;
 
-string NandReader::read(int LBA)
+string ReadCommand::read(int LBA)
 {
 	if (BUFFER_ENABLE) {
 		string ret = "";
@@ -14,7 +14,7 @@ string NandReader::read(int LBA)
 	return datas.at(LBA);
 }
 
-bool NandReader::parseArg(int argc, const char* argv[])
+bool ReadCommand::parseArg(int argc, const char* argv[])
 {
 	if (argc != READ_CORRECT_ARG_SIZE) throw std::invalid_argument("number of argument is incorrect");
 
@@ -26,12 +26,12 @@ bool NandReader::parseArg(int argc, const char* argv[])
 	return true;
 }
 
-bool NandReader::isInvalidAddress(int nLBA) {
+bool ReadCommand::isInvalidAddress(int nLBA) {
 	if ((nLBA < MIN_LBA) || (nLBA > MAX_LBA)) return true;
 	return false;
 }
 
-string NandReader::run()
+string ReadCommand::run()
 {
 	int addr = parser.getLBA();
 	return read(addr);	

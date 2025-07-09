@@ -10,10 +10,6 @@ SSD::SSD(FileHandler* fileHandler) {
 	// Create nand IO instance
 	nand = new NandFlashMemoryImpl(fileHandler);
 	bufferManager = new BufferManager(nand, fileHandler);
-	reader = new NandReader(nand, bufferManager);
-	writer = new NandWriter(nand, bufferManager);
-	eraser = new NandEraser(nand, bufferManager);
-
 	argumentParser = new ArgumentParser();
 	factory = new SSDCommandFactory();
 	// FIXME: 내부적으로 std::exception 사용하나, 현재 위치는 try-catch 문 밖
@@ -21,9 +17,6 @@ SSD::SSD(FileHandler* fileHandler) {
 }
 
 SSD::~SSD() {
-	delete reader;
-	delete writer;
-	delete nand;
 	delete bufferManager;
 }
 
@@ -32,8 +25,6 @@ void SSD::run(int argc, const char* argv[])
 	string result = "";
 	try {
 		outputHandler->getFileHandler()->init();
-		
-
 		SSDCommand* cmd = nullptr;
 		
 		if (argc > 2) {
