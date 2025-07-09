@@ -15,10 +15,10 @@ Command* CommandParser::getCommand(const std::string& command)
 	Command* cmd = fc.makeCommand(command);
 
 	if (cmd == nullptr)
-		throw std::invalid_argument("Invalid command");
+		throw TestScriptFailExcpetion("Invalid command");;
 
 	if (cmd->getShellCommands().size() != cmd->getNumOfArgs())
-		throw std::invalid_argument("Invalid argument");
+		throw TestScriptFailExcpetion("Invalid command");;
 
 	return cmd;
 }

@@ -26,7 +26,7 @@ void PartialLBAWrite::run(const CommandRunner& cmdRunner) const
 		}
 
 		if (checkResult(result) == false) {
-			throw TestScriptFailExcpetion();
+			throw TestScriptFailExcpetion("Fail");
 		}
 	}
 

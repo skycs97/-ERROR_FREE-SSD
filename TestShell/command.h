@@ -21,7 +21,10 @@ public:
 
 class TestScriptFailExcpetion : public std::exception {
 public:
+	TestScriptFailExcpetion(const std::string& msg) : message(msg) {};
 	const char* what() const noexcept override {
-		return "FAIL!";
+		return message.c_str();
 	}
+private:
+	std::string message;
 };

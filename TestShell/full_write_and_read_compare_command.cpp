@@ -40,7 +40,7 @@ void FullWriteAndReadCompare::run(const CommandRunner& cmdRunner) const
 	}
 
 	if (result.size())
-		throw TestScriptFailExcpetion();
+		throw TestScriptFailExcpetion("Fail");
 
 	std::cout << "Pass" << std::endl;
 }
