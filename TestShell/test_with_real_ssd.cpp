@@ -52,4 +52,23 @@ TEST_F(TestShellFixtureWithReal, CmdRunnerRealReadFail) {
 
 	readCommand->run(runner);
 }
+
+TEST_F(TestShellFixtureWithReal, Erase) {
+	const string startIdx = "0";
+	const string range = "10";
+	auto eraseCommand = parser.parseAndMakeShellCommand("erase " + startIdx + " " + range);
+	EXPECT_TRUE(eraseCommand != nullptr); 
+
+	eraseCommand->run(runner);
+}
+
+TEST_F(TestShellFixtureWithReal, EraseInRange) {
+	const string startIdx = "0";
+	const string endIdx = "10";
+
+	auto eraseCommand = parser.parseAndMakeShellCommand("erase_range " + startIdx + " " + endIdx);
+	EXPECT_TRUE(eraseCommand != nullptr);
+
+	eraseCommand->run(runner);
+}
 #endif

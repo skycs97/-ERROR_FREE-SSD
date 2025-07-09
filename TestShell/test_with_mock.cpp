@@ -12,6 +12,7 @@ class SsdInterfaceMock : public SsdInterface {
 public:
 	MOCK_METHOD(string, read, (const string&), (override));
 	MOCK_METHOD(string, write, (const string&, const string&), (override));
+	MOCK_METHOD(string, erase, (const string&, const string&), (override));
 };
 
 class TestShellFixtureWithMock : public Test {
@@ -188,5 +189,30 @@ TEST_F(TestShellFixtureWithMock, WriteReadAgingCommand) {
 		.WillRepeatedly(Return(""));
 
 	command->run(runner);
+}
+
+TEST_F(TestShellFixtureWithMock, CmdRunnerErase) {
+	EXPECT_CALL(mockStorage, erase(_, _))
+		.Times(1)
+		.WillRepeatedly(Return(""));
+
+		EXPECT_EQ("", runner.erase("0", "10"));
+}
+
+TEST_F(TestShellFixtureWithMock, CmdRunnerErase0to99) {
+	EXPECT_CALL(mockStorage, erase(_, _))
+		.Times(10)
+		.WillRepeatedly(Return(""));
+
+		EXPECT_EQ("", runner.erase("0", "100"));
+}
+
+TEST_F(TestShellFixtureWithMock, CmdRunnerEraseRange) {
+	auto command = parser.parseAndMakeShellCommand("erase_range 0 11");
+	EXPECT_CALL(mockStorage, erase(_, _))
+		.Times(2)
+		.WillRepeatedly(Return(""));
+
+		command->run(runner);
 }
 #endif
