@@ -133,6 +133,7 @@
     <ClCompile Include="ArgumentParser_test.cpp" />
     <ClCompile Include="buffer_manager.cpp" />
     <ClCompile Include="buffer_manager_test.cpp" />
+    <ClCompile Include="FileHandler_test.cpp" />
     <ClCompile Include="file_handler_mock.h" />
     <ClCompile Include="nand_eraser.cpp" />
     <ClCompile Include="nand_flash_memory_impl.cpp" />

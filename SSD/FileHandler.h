@@ -24,6 +24,7 @@ public:
 	void createDirIfNotExist(const string& dir_path);
 	bool isExist(const string& dir_path, const string& file_name);
 	void createEmptyFile(const string& file_path);
+	void rename(const string& old_name, const string& new_name) const;
 
 private:
 
