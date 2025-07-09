@@ -7,10 +7,13 @@ int main(void) {
 }
 #else
 #include "shell.h"
+#include "ssd_impl.h"
 
-int main(void) {
+int main(int argc, char* argv[]) {
+	SsdImpl ssd;
 	TestShell& shell = TestShell::getShell();
-	shell.runShell();
+	shell.runner.setStorage(&ssd);
+	shell.runShell(argc, argv);
 }
 
 #endif

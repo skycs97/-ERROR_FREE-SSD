@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <stdexcept>
 #include "command_runner.h"
 #include "TEST_SHELL_CONFIG.h"
 
@@ -18,3 +19,9 @@ public:
 	int numOfArgs = 0;
 };
 
+class TestScriptFailExcpetion : public std::exception {
+public:
+	const char* what() const noexcept override {
+		return "FAIL!";
+	}
+};

@@ -26,10 +26,11 @@ void PartialLBAWrite::run(const CommandRunner& cmdRunner) const
 		}
 
 		if (checkResult(result) == false) {
-			std::cout << "FAIL\n";
+			throw TestScriptFailExcpetion();
 		}
 	}
-	std::cout << "PASS\n";
+
+	std::cout << "Pass" << std::endl;
 }
 
 void PartialLBAWrite::printHelp() const
