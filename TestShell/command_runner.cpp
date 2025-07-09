@@ -23,6 +23,17 @@ string CommandRunner::write(const string& LBA, const string& value) const
 	return result;
 }
 
+string CommandRunner::flush() const
+{
+	if (isSetSsdInterface() == false) {
+		throw std::runtime_error("ssd Interface hasn't set");
+	}
+
+	string result = ssdInterface->flush();
+
+	return result;
+}
+
 string CommandRunner::erase(const string& startLBA, const string& LBARange) const
 {
 	if (isSetSsdInterface() == false) {

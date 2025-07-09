@@ -12,6 +12,7 @@ public:
 		addFactory(CMD_EXIT, new ExitCommandFactory());
 		addFactory(CMD_FULLREAD, new FullReadCommandFactory());
 		addFactory(CMD_FULLWRITE, new FullWriteCommandFactory());
+		addFactory(CMD_FLUSH, new FlushCommandFactory());
 		addFactory(CMD_1_FULL_WRITE_AND_READ_COMPARE, new FullWriteAndReadCompareCommandFactory());
 		addFactory(CMD_2_PARTIAL_LBA_WRITE, new PartialLBAWriteCommandFactory());
 		addFactory(CMD_3_WRITE_READ_AGING, new WriteReadAgingCommandFactory());

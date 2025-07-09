@@ -66,3 +66,7 @@ string SsdImpl::erase(const string& startIndex, const string& range)
 
     return line;
 }
+
+string SsdImpl::flush() {
+    return "";
+}
