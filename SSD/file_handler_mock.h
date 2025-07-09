@@ -8,7 +8,6 @@ public:
 	MOCK_METHOD(void, createInitNandFile, (const string&), (override));
 	MOCK_METHOD(void, write, (const string&, const vector<string>&), (override));
 	MOCK_METHOD(vector<string>, read, (const string&), (override));
-	MOCK_METHOD(void, createDirIfNotExist, (const string&), (override));
 	MOCK_METHOD(bool, isExist, (const string&, const string&), (override));
 	MOCK_METHOD(bool, isExist, (const string&, const string&, int), (override));
 	MOCK_METHOD(void, createEmptyFile, (const string&), (override));

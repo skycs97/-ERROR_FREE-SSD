@@ -5,7 +5,7 @@
 #include <iomanip>
 
 void BufferManager::init() {
-	fileHandler->createDirIfNotExist(BUFFER_DIR_NAME);
+	if (fileHandler->createDirectory(BUFFER_DIR_NAME) == false) throw std::runtime_error("Fail to create directory.");
 
 	for (int buf_idx = 0; buf_idx < BUFFER_SIZE; buf_idx++)
 	{
