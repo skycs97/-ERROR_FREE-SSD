@@ -147,6 +147,7 @@
     <ClCompile Include="test_command.cpp" />
     <ClCompile Include="test_logger.cpp" />
     <ClCompile Include="test_command_parser.cpp" />
+    <ClCompile Include="test_util.cpp" />
     <ClCompile Include="test_with_mock.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> %(AdditionalOptions)</AdditionalOptions>
@@ -164,6 +165,7 @@
   <ItemGroup>
     <ClInclude Include="flush_command.h" />
     <ClInclude Include="ssd_impl.h" />
+    <ClInclude Include="test_util.h" />
     <ClInclude Include="write_read_aging_command.h" />
     <ClInclude Include="command.h" />
     <ClInclude Include="command_factory_complex.h" />

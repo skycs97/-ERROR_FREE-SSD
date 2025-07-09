@@ -3,8 +3,10 @@
 #include <iomanip>
 #include <vector>
 #include <stdexcept>
+#include <random>
 #include "command_runner.h"
 #include "TEST_SHELL_CONFIG.h"
+#include "test_util.h"
 
 class Command {
 public:
