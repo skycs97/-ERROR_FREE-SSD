@@ -38,7 +38,4 @@ private:
 
 	//fileHandler에 새로 버퍼를 기록합니다.
 	void writeBuffer();
-
-	//fileHandler 로부터 버퍼를 가져옵니다.
-	void readBuffer();
 };

@@ -9,7 +9,6 @@ bool BufferManager::isBufferFull() {
 }
 
 bool BufferManager::read(int lba, string& outputData) {
-	readBuffer();
 	for (int index = getUsedBufferCount() - 1; index >= 0; index--) {
 		string data = buffers.at(index);
 		std::smatch m;
@@ -37,7 +36,6 @@ bool BufferManager::read(int lba, string& outputData) {
 }
 
 void BufferManager::addWriteCommand(int lba, const string& data) {
-	readBuffer();
 	if (isBufferFull()) {
 		flush();
 	}
@@ -51,7 +49,6 @@ void BufferManager::addWriteCommand(int lba, const string& data) {
 }
 
 void BufferManager::addEraseCommand(int lba, int count) {
-	readBuffer();
 	if (isBufferFull()) {
 		flush();
 	}
@@ -96,10 +93,6 @@ void BufferManager::flush() {
 
 void BufferManager::writeBuffer() {
 	//bufferData의 string을 이름으로 하는 file들 생성
-}
-
-void BufferManager::readBuffer() {
-	//file을 읽어서 bufferData를 초기화
 }
 
 int BufferManager::getUsedBufferCount() {
