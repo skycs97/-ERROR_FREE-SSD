@@ -13,7 +13,7 @@
     <ClCompile Include="shell.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="test_testshell_command_parser.cpp">
+    <ClCompile Include="test_command_parser.cpp">
       <Filter>테스트 파일</Filter>
     </ClCompile>
     <ClCompile Include="test_with_mock.cpp">
