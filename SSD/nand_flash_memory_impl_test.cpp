@@ -20,7 +20,7 @@ public:
 		return expectingWriteDatas;
 	}
 
-	vector<string> GetFullSameDataWihtoutLBA(string data)
+	vector<string> GetFullSameDataWithoutLBA(string data)
 	{
 		vector<string> writingDatas;
 		for (int i = MIN_LBA; i <= MAX_LBA; i++) {
@@ -44,7 +44,7 @@ TEST_F(NandFlashMemoryImplFixture, readTest) {
 
 TEST_F(NandFlashMemoryImplFixture, writeTest) {
 	vector<string> expectingWriteDatas = GetFullSameDataWithLBA("0x00001111");
-	vector<string> writingDatas = GetFullSameDataWihtoutLBA("0x00001111");
+	vector<string> writingDatas = GetFullSameDataWithoutLBA("0x00001111");
 	
 	EXPECT_CALL(mockedFileHandler, write(NAND_FILENAME, expectingWriteDatas)).Times(1);
 	string actual = memory.write(writingDatas);
