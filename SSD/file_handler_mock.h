@@ -1,6 +1,6 @@
 #pragma once
 #include "gmock/gmock.h"
-#include "FileHandler.h"
+#include "file_handler.h"
 
 class FileHandlerMock : public FileHandler {
 public:

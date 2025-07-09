@@ -1,7 +1,7 @@
 ﻿#include "ssd.h"
 #include "buffer_manager.h"
 #include <stdexcept>
-#include "SSDCommand.h"
+#include "ssd_command.h"
 
 SSD::SSD(FileHandler* fileHandler) {
 	// Create result IO instance

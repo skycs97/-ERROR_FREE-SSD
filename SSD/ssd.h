@@ -4,9 +4,9 @@
 #include "nand_eraser.h"
 #include "nand_flash_memory.h"
 #include "nand_flash_memory_impl.h"
-#include "OutputHandler.h"
-#include "FileHandler.h"
-#include "ArgumentParser.h"
+#include "output_handler.h"
+#include "file_handler.h"
+#include "argument_parser.h"
 
 class SSD
 {

@@ -4,7 +4,7 @@
 #include "nand_flash_memory.h"
 #include "global_config.h"
 #include "buffer_manager.h"
-#include "SSDCommand.h"
+#include "ssd_command.h"
 
 using std::string;
 

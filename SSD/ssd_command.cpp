@@ -1,4 +1,4 @@
-#include "SSDCommand.h"
+#include "ssd_command.h"
 #include "nand_reader.h"
 #include "nand_writer.h"
 #include "nand_eraser.h"

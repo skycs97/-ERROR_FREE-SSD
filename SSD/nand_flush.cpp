@@ -1,4 +1,4 @@
-#include "SSDCommand.h"
+#include "ssd_command.h"
 #include "nand_flush.h"
 
 using std::string;
