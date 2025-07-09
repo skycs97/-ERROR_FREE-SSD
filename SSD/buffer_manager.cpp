@@ -23,8 +23,11 @@ void BufferManager::init() {
 bool BufferManager::existBufferFile(int buffer_num)
 {
 	string dir_path = BUFFER_DIR_NAME "\\*";
+	string empty_file_name = string(getBufferFilePrefix(buffer_num)) + BUFFER_NAME_EMPTY;
+	if (fileHandler->isExist(dir_path, empty_file_name)) return false;
+
 	string file_name = getBufferFilePrefix(buffer_num);
-	if (fileHandler->isExist(dir_path, file_name)) return true;
+	if (fileHandler->isExist(dir_path, file_name, 2)) return true;
 	return false;
 }
 
@@ -67,6 +70,7 @@ void BufferManager::fillBufferInfo(string fname, int buffer_num, bool need_file_
 	std::smatch m;
 	std::regex writeRegex(R"([1-5]_W_([0-9]*)_(0x[0-9A-Fa-f]+))");
 	std::regex eraseRegex(R"([1-5]_E_([0-9]*)_([0-9]+))");
+	string old_name = buffers[buffer_num - 1].fname;
 
 	if (std::regex_search(fname, m, writeRegex)) {
 		setBufferInfo(buffer_num,
@@ -86,7 +90,7 @@ void BufferManager::fillBufferInfo(string fname, int buffer_num, bool need_file_
 	}
 	else {
 		setBufferInfo(buffer_num,
-			"",
+			fname,
 			INVALID_VALUE,
 			INVALID_VALUE,
 			"",
@@ -95,7 +99,7 @@ void BufferManager::fillBufferInfo(string fname, int buffer_num, bool need_file_
 
 	if (need_file_change)
 	{
-		writeBuffer(fname, buffer_num);
+		writeBuffer(old_name, fname);
 	}
 }
 
@@ -193,8 +197,12 @@ void BufferManager::flush() {
 	nandFlashMemory->write(datas);
 }
 
-void BufferManager::writeBuffer(const string& new_name, int buffer_num) {
-	fileHandler->rename(buffers[buffer_num - 1].fname, new_name);
+void BufferManager::writeBuffer(const string& old_name, const string& new_name) {
+	string old_path = BUFFER_DIR_NAME "\\";
+	old_path += old_name;
+	string new_path = BUFFER_DIR_NAME "\\";
+	new_path += new_name;
+	fileHandler->rename(old_path, new_path);
 }
 
 int BufferManager::getUsedBufferCount() {
