@@ -13,8 +13,8 @@ public:
 	EraseCommand(NandFlashMemory* nandFlashMemory, BufferManager* bufferManager)
 		: nandFlashMemory{ nandFlashMemory }, bufferManager{ bufferManager } {
 	}
-	virtual void parseArg(int argc, const char* argv[]) override;
-	virtual string run() override;
+	void parseArg(int argc, const char* argv[]) override;
+	string run() override;
 	
 	void erase(int lba, int size);
 

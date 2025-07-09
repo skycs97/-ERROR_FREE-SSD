@@ -14,8 +14,8 @@ public:
 		bufferManager{ bufferManager } {
 	}
 
-	virtual void parseArg(int argc, const char* argv[]) override;
-	virtual string run() override;
+	void parseArg(int argc, const char* argv[]) override;
+	string run() override;
 private:
 	bool isInvalidAddress();
 	void validDataOrThrow();
