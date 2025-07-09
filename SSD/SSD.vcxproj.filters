@@ -75,6 +75,9 @@
     <ClCompile Include="nand_eraser.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="buffer_manager_test.cpp">
+      <Filter>테스트 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

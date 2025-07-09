@@ -34,3 +34,7 @@ void BufferManager::flush() {
 void BufferManager::updateBuffer() {
 
 }
+
+int BufferManager::getUsedBufferCount() {
+	return 0;
+}

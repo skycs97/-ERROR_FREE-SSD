@@ -22,6 +22,9 @@ public:
 
 	// 모든 버퍼의 내용을 nand에 기록합니다.
 	void flush();
+
+	// empty가 아닌 버퍼의 개수를 리턴합니다.
+	int getUsedBufferCount();
 private:
 	NandFlashMemory* nandFlashMemory;
 	FileHandler* fileHandler;
