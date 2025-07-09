@@ -18,10 +18,10 @@ bool BufferManager::existBufferFile(int buf_idx)
 {
 	string dir_path = BUFFER_DIR_NAME "\\*";
 	string empty_file_name = getBufferFilePrefix(buf_idx) + BUFFER_NAME_EMPTY;
-	if (fileHandler->isExist(dir_path, empty_file_name)) return false;
+	if (fileHandler->isFileExistByMatchLength(dir_path, empty_file_name, empty_file_name.length())) return false;
 
-	string file_name = getBufferFilePrefix(buf_idx);
-	if (fileHandler->isExist(dir_path, file_name, 2)) return true;
+	string prefix_name = getBufferFilePrefix(buf_idx);
+	if (fileHandler->isFileExistByMatchLength(dir_path, prefix_name, prefix_name.length())) return true;
 	return false;
 }
 
