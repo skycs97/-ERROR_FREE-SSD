@@ -40,7 +40,7 @@ void SSD::run(int argc, const char* argv[])
 			cmd = factory->createCommand(string((argv[ARG_IDX_CMD])), nand, bufferManager);
 			cmd->parseArg(argc, argv);
 			result = cmd->run();
-		}
+		} else throw std::invalid_argument("Invalid Command");
 	}
 	catch (std::exception e) {
 		result = "ERROR";
