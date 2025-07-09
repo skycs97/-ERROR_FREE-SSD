@@ -41,7 +41,7 @@ void WriteReadAgingCommand::run(const CommandRunner& cmdRunner) const
 	std::cout << "Pass" << std::endl;
 }
 
-string WriteReadAging::hexToString(unsigned int random_value) const
+string WriteReadAgingCommand::hexToString(unsigned int random_value) const
 {
 	std::stringstream ss;
 	ss << "0x" << std::hex

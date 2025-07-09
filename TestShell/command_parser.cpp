@@ -20,9 +20,8 @@ std::shared_ptr<Command> CommandParser::parseAndMakeShellCommand(const std::stri
 
 	if (cmd == nullptr)
 		throw TestScriptFailExcpetion("Invalid command");;
-		throw std::invalid_argument("Invalid command");
-	if (cmd->getNumOfArgs() != args.size())
-		throw std::invalid_argument("invliad arguments");
+	if (cmd->getNumOfArgs() != args.size())		
+		throw TestScriptFailExcpetion("Invalid arguments");;
 
 	return cmd;
 }
@@ -33,8 +32,6 @@ std::pair<string, vector<string>> CommandParser::splitCmd(const std::string& use
 	std::string word;
 	std::vector<std::string> args;
 
-	if (cmd->getShellCommands().size() != cmd->getNumOfArgs())
-		throw TestScriptFailExcpetion("Invalid command");;
 	ss >> word;
 	string cmdName = convertShortCommand(word);
 

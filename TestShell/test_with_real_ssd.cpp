@@ -3,7 +3,7 @@
 #include <string>
 #include "command_runner.h"
 #include "command_list.h"
-#include "command_factory.h"
+#include "command_parser.h"
 #include "ssd_impl.h"
 
 using std::string;
@@ -18,8 +18,7 @@ protected:
 public:
 	SsdImpl storage;
 	CommandRunner runner;
-	FactoryCommand fc;
-
+	CommandParser parser;
 	const string VALID_LBA = "10";
 	const string INVALID_LBA = "1000";
 	const string TEST_VALUE = "0xAAAABBBB";
@@ -30,24 +29,24 @@ public:
 };
 
 TEST_F(TestShellFixtureWithReal, CmdRunnerRealReadSuccess) {
-	Command* writeCommand = fc.makeCommand("write " + VALID_LBA+" "+ TEST_VALUE);
+	auto writeCommand = parser.parseAndMakeShellCommand("write " + VALID_LBA+" "+ TEST_VALUE);
 	EXPECT_TRUE(writeCommand != nullptr);
 
 	writeCommand->run(runner);
 
-	Command* readCommand = fc.makeCommand("read " + VALID_LBA);	
+	auto readCommand = parser.parseAndMakeShellCommand("read " + VALID_LBA);
 	EXPECT_TRUE(readCommand != nullptr);
 
 	readCommand->run(runner);
 }
 
 TEST_F(TestShellFixtureWithReal, CmdRunnerRealReadFail) {
-	Command* writeCommand = fc.makeCommand("write " + INVALID_LBA + " " + TEST_VALUE);
+	auto writeCommand = parser.parseAndMakeShellCommand("write " + INVALID_LBA + " " + TEST_VALUE);
 	EXPECT_TRUE(writeCommand != nullptr);
 
 	writeCommand->run(runner);
 
-	Command* readCommand = fc.makeCommand("read " + INVALID_LBA);
+	auto readCommand = parser.parseAndMakeShellCommand("read " + INVALID_LBA);
 	EXPECT_TRUE(readCommand != nullptr);
 
 	readCommand->run(runner);
