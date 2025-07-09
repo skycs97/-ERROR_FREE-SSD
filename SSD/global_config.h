@@ -10,6 +10,9 @@
 #define CMD_FLUSH	4
 #define INVALID_VALUE	0xFFFF
 
+// NAND
+#define NAND_DATA_EMPTY	"0x00000000"
+
 // ArgumentParser
 #define ARG_IDX_CMD		1
 #define ARG_IDX_ADDR	2

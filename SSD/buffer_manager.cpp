@@ -34,7 +34,7 @@ void BufferManager::createBufferFile(int buffer_num)
 	string file_path = BUFFER_DIR_NAME "\\";
 	file_path += file_name;
 	fileHandler->createEmptyFile(file_path);
-	fillBufferInfo(file_name);
+	fillBufferInfo(file_name, buffer_num);
 	return;
 }
 
@@ -56,38 +56,59 @@ void BufferManager::updateBufferState(int buffer_num)
 	
 	if (buffer_fname.size() > 1) throw std::exception("There are many buffer files in same prefix.");
 	
-	fillBufferInfo(buffer_fname.front());
+	fillBufferInfo(buffer_fname.front(), buffer_num);
+	IncreaseBufferCnt();
 }
 
-void BufferManager::fillBufferInfo(string fname)
+void BufferManager::fillBufferInfo(string fname, int buffer_num)
 {
-	BufferInfo buffer_info;
 	std::smatch m;
 	std::regex writeRegex(R"([1-5]_W_([0-9]*)_(0x[0-9A-Fa-f]+))");
 	std::regex eraseRegex(R"([1-5]_E_([0-9]*)_([0-9]+))");
 
 	if (std::regex_search(fname, m, writeRegex)) {
-		buffer_info.cmd = CMD_WRITE;
-		buffer_info.erase_size = INVALID_VALUE;
-		buffer_info.fname = fname;
-		buffer_info.lba = std::atoi(m.str(1).c_str());
-		buffer_info.written_data = m.str(2);
+		setBufferInfo(buffer_num,
+			fname,
+			CMD_WRITE,
+			std::atoi(m.str(1).c_str())/*LBA*/,
+			m.str(2)/*data*/,
+			INVALID_VALUE/*erase size*/);
 	}
 	else if (std::regex_search(fname, m, eraseRegex)) {
-		buffer_info.cmd = CMD_ERASE;
-		buffer_info.erase_size = std::atoi(m.str(2).c_str());
-		buffer_info.fname = fname;
-		buffer_info.lba = std::atoi(m.str(1).c_str());
-		buffer_info.written_data = INVALID_VALUE;
+		buffers[buffer_num].cmd = CMD_ERASE;
+		buffers[buffer_num].erase_size = std::atoi(m.str(2).c_str());
+		buffers[buffer_num].fname = fname;
+		buffers[buffer_num].lba = std::atoi(m.str(1).c_str());
+		buffers[buffer_num].written_data = INVALID_VALUE;
+		setBufferInfo(buffer_num,
+			fname,
+			CMD_ERASE,
+			std::atoi(m.str(1).c_str())/*LBA*/,
+			""/*data*/,
+			std::atoi(m.str(2).c_str())/*erase size*/);
 	}
 	else {
-		buffer_info.cmd = INVALID_VALUE;
-		buffer_info.erase_size = INVALID_VALUE;
-		buffer_info.fname = INVALID_VALUE;
-		buffer_info.lba = INVALID_VALUE;
-		buffer_info.written_data = INVALID_VALUE;
+		setBufferInfo(buffer_num,
+			"",
+			INVALID_VALUE,
+			INVALID_VALUE,
+			"",
+			INVALID_VALUE);
 	}
-	buffers.push_back(buffer_info);
+}
+
+void BufferManager::setBufferInfo(int buffer_num,
+	string fname,
+	CMD_TYPE cmd,
+	int lba,
+	string written_data,
+	int size)
+{
+	buffers[buffer_num].fname = fname;
+	buffers[buffer_num].cmd = cmd;
+	buffers[buffer_num].lba = lba;
+	buffers[buffer_num].written_data = written_data;
+	buffers[buffer_num].erase_size = size;
 }
 
 bool BufferManager::isBufferFull() {
@@ -96,24 +117,21 @@ bool BufferManager::isBufferFull() {
 
 bool BufferManager::read(int lba, string& outputData) {
 	for (int index = getUsedBufferCount() - 1; index >= 0; index--) {
-		string data = buffers[index].fname;
-		std::smatch m;
-
-		std::regex writeRegex(R"([1-5]_W_([0-9]*)_(0x[0-9A-Fa-f]+))");
-		if (std::regex_search(data, m, writeRegex)) {
-			int bufferLba = std::atoi(m.str(1).c_str());
-			if (bufferLba == lba) {
-				outputData = m.str(2);
+		if (buffers[index].cmd == CMD_ERASE)
+		{
+			int lba_start = buffers[index].lba;
+			int lba_end = lba_start + buffers[index].erase_size - 1;
+			if (lba_start <= lba && lba <= lba_end)
+			{
+				outputData = NAND_DATA_EMPTY;
 				return true;
 			}
 		}
-		std::regex eraseRegex(R"([1-5]_E_([0-9]*)_([0-9]+))");
-		if (std::regex_search(data, m, eraseRegex)) {
-			int lbaStart = std::atoi(m.str(1).c_str());
-			int count = std::atoi(m.str(2).c_str());
-			int lbaEnd = lbaStart + count;
-			if (lba >= lbaStart && lba < lbaEnd) {
-				outputData = "0x00000000";
+		else if (buffers[index].cmd == CMD_WRITE)
+		{
+			if (lba == buffers[index].lba)
+			{
+				outputData = buffers[index].written_data;
 				return true;
 			}
 		}
@@ -125,14 +143,13 @@ void BufferManager::addWriteCommand(int lba, const string& data) {
 	if (isBufferFull()) {
 		flush();
 	}
+	
 	int index = getUsedBufferCount();
-
-	BufferInfo buffer_info;
 	std::ostringstream oss;
 	oss << index + 1 << "_W_" << lba <<"_"<< data;
-	buffer_info.fname = oss.str();
-	buffers.push_back(buffer_info);
-	
+	fillBufferInfo(oss.str(), index);
+	IncreaseBufferCnt();
+
 	writeBuffer();
 }
 
@@ -142,12 +159,10 @@ void BufferManager::addEraseCommand(int lba, int count) {
 	}
 	//로직 구현
 	int index = getUsedBufferCount();
-
-	BufferInfo buffer_info;
 	std::ostringstream oss;
 	oss << index + 1 << "_E_" << lba <<"_"<<count;
-	buffer_info.fname = oss.str();
-	buffers.push_back(buffer_info);
+	fillBufferInfo(oss.str(), index);
+	IncreaseBufferCnt();
 
 	writeBuffer();
 }
@@ -155,29 +170,24 @@ void BufferManager::addEraseCommand(int lba, int count) {
 void BufferManager::flush() {
 	vector<string> datas = nandFlashMemory->read();
 	for (int index = 0; index < getUsedBufferCount(); index++) {
-		string buffer = buffers[index].fname;
-		std::smatch m;
-
-		std::regex writeRegex(R"([1-5]_W_([0-9]*)_(0x[0-9A-Fa-f]+))");
-		if (std::regex_search(buffer, m, writeRegex)) {
-			int lba = std::atoi(m.str(1).c_str());
-			string data = m.str(2);
-			datas[lba] = data;
-			continue;
+		if (buffers[index].cmd == CMD_WRITE)
+		{
+			datas[buffers[index].lba] = buffers[index].written_data;
 		}
-		std::regex eraseRegex(R"([1-5]_E_([0-9]*)_([0-9]+))");
-		if (std::regex_search(buffer, m, eraseRegex)) {
-			int lbaStart = std::atoi(m.str(1).c_str());
-			int count = std::atoi(m.str(2).c_str());
-			int lbaEnd = lbaStart + count;
-
-			for (int lba = lbaStart; lba < lbaEnd; lba++) {
-				datas[lba] = "0x00000000";
+		else if (buffers[index].cmd == CMD_ERASE)
+		{
+			int lba_start = buffers[index].lba;
+			int lba_end = lba_start + buffers[index].erase_size - 1;
+			for (int lba = lba_start; lba <= lba_end; lba++)
+			{
+				datas[lba] = NAND_DATA_EMPTY;
 			}
-			continue;
 		}
+
+		string file_name = string(getBufferFilePrefix(index)) + BUFFER_NAME_EMPTY;
+		fillBufferInfo(file_name, index);
+		DecreaseBufferCnt();
 	}
-	buffers.clear();
 	nandFlashMemory->write(datas);
 }
 
@@ -186,5 +196,17 @@ void BufferManager::writeBuffer() {
 }
 
 int BufferManager::getUsedBufferCount() {
-	return buffers.size();
+	return valid_buf_cnt;
+}
+
+void BufferManager::IncreaseBufferCnt()
+{
+	valid_buf_cnt++;
+	if (valid_buf_cnt > BUFFER_SIZE) throw std::exception("valid_buf_cnt is over than 5!");
+}
+
+void BufferManager::DecreaseBufferCnt()
+{
+	valid_buf_cnt--;
+	if (valid_buf_cnt < 0) throw std::exception("valid_buf_cnt is lower than 0!");
 }
