@@ -7,7 +7,7 @@
 void BufferManager::init() {
 	fileHandler->createDirIfNotExist(BUFFER_DIR_NAME);
 
-	for (int buffer_num = 1; buffer_num <= BUFFER_SIZE; buffer_num++)
+	for (int buffer_num = 0; buffer_num < BUFFER_SIZE; buffer_num++)
 	{
 		if (existBufferFile(buffer_num))
 		{
@@ -41,11 +41,11 @@ void BufferManager::createBufferFile(int buffer_num)
 const char* BufferManager::getBufferFilePrefix(int buffer_num)
 {
 	switch (buffer_num) {
-	case 1: return PREFIX_BUFFER_FILE1;
-	case 2: return PREFIX_BUFFER_FILE2;
-	case 3: return PREFIX_BUFFER_FILE3;
-	case 4: return PREFIX_BUFFER_FILE4;
-	case 5: return PREFIX_BUFFER_FILE5;
+	case 0: return PREFIX_BUFFER_FILE1;
+	case 1: return PREFIX_BUFFER_FILE2;
+	case 2: return PREFIX_BUFFER_FILE3;
+	case 3: return PREFIX_BUFFER_FILE4;
+	case 4: return PREFIX_BUFFER_FILE5;
 	default: return "";
 	}
 }
@@ -75,11 +75,6 @@ void BufferManager::fillBufferInfo(string fname, int buffer_num)
 			INVALID_VALUE/*erase size*/);
 	}
 	else if (std::regex_search(fname, m, eraseRegex)) {
-		buffers[buffer_num].cmd = CMD_ERASE;
-		buffers[buffer_num].erase_size = std::atoi(m.str(2).c_str());
-		buffers[buffer_num].fname = fname;
-		buffers[buffer_num].lba = std::atoi(m.str(1).c_str());
-		buffers[buffer_num].written_data = INVALID_VALUE;
 		setBufferInfo(buffer_num,
 			fname,
 			CMD_ERASE,
@@ -143,7 +138,22 @@ void BufferManager::addWriteCommand(int lba, const string& data) {
 	if (isBufferFull()) {
 		flush();
 	}
-	
+	if (data == string("0x00000000")) {
+		addEraseCommand(lba, 1);
+		return;
+	}
+
+	int usedBufferCount = getUsedBufferCount();
+	for (int index = usedBufferCount - 1; index >= 0; index--) {
+		if (buffers[index].cmd != CMD_WRITE) break; // cmd_erase 하위에 겹치는 write가 있을리 없음.
+		int bufferLBA = buffers[index].lba;
+
+		if (bufferLBA == lba) {
+			buffers[index].written_data = data;
+			return;
+		}
+	}
+
 	int index = getUsedBufferCount();
 	std::ostringstream oss;
 	oss << index + 1 << "_W_" << lba <<"_"<< data;
@@ -158,18 +168,92 @@ void BufferManager::addEraseCommand(int lba, int count) {
 		flush();
 	}
 	//로직 구현
+
+	int usedBufferCount = getUsedBufferCount();
+
+	//영역 내의 write buffer 삭제
+	for (int index = usedBufferCount - 1; index >= 0; index--) {
+		if (buffers[index].cmd != CMD_WRITE) continue;
+		int bufferLBA = buffers[index].lba;
+
+		if (bufferLBA < lba || bufferLBA >= lba + count) continue;
+		std::ostringstream oss;
+		oss << index + 1 << "_empty";
+		fillBufferInfo(oss.str(), index);
+		DecreaseBufferCnt();
+	}
+
+	for (int index = 0; index < usedBufferCount; index++) {
+		if (buffers[index].cmd == INVALID_VALUE) {
+			for (int a = index + 1; a < usedBufferCount; a++) {
+				if (buffers[a].cmd == INVALID_VALUE) continue;
+				BufferInfo& tmp = buffers[index];
+				buffers[index] = buffers[a];
+				buffers[a] = tmp;
+			}
+		}
+	}
+
+	// 겹치는 erase lba 영역 모아서 buffer 다시 쓰기.
+	int minLBA = lba;
+	int maxLBA = lba + count - 1;
+	vector<int> targetBuffers;
+	usedBufferCount = getUsedBufferCount();
+	for (int index = 0; index < usedBufferCount; index++) {
+		if (buffers[index].cmd == CMD_ERASE) {
+			int buffersMinLBA = buffers[index].lba;
+			int buffersMaxLBA = buffers[index].lba + buffers[index].erase_size - 1;
+			if (buffersMaxLBA + 1 < minLBA) continue;
+			if (maxLBA + 1 < buffersMinLBA) continue;
+			if (buffersMaxLBA > maxLBA) maxLBA = buffersMaxLBA;
+			if (buffersMinLBA < minLBA) minLBA = buffersMinLBA;
+			targetBuffers.push_back(index);
+		}
+	}
+	targetBuffers.push_back(usedBufferCount);
+	IncreaseBufferCnt();
+	int currentLBA = minLBA;
+	int targetBufferIndex = 0;
+	while (currentLBA<= maxLBA) {
+		int index = targetBuffers[targetBufferIndex];
+		int currentMaxLBA = currentLBA + 10;
+		if (currentMaxLBA > maxLBA) currentMaxLBA = maxLBA;
+		int count = currentMaxLBA - currentLBA + 1;
+		setBufferInfo(index,
+			"",
+			CMD_ERASE,
+			currentLBA/*LBA*/,
+			"",
+			count/*erase size*/);
+		currentLBA = currentMaxLBA + 1;
+		targetBufferIndex++;
+	}
+	while (targetBufferIndex < targetBuffers.size()) {
+		int index = targetBuffers[targetBufferIndex];
+		setBufferInfo(index,
+			"",
+			INVALID_VALUE,
+			INVALID_VALUE,
+			"",
+			INVALID_VALUE);
+		DecreaseBufferCnt();
+		targetBufferIndex++;
+	}
+
+	/*
 	int index = getUsedBufferCount();
 	std::ostringstream oss;
 	oss << index + 1 << "_E_" << lba <<"_"<<count;
 	fillBufferInfo(oss.str(), index);
 	IncreaseBufferCnt();
-
+	*/
 	writeBuffer();
 }
 
 void BufferManager::flush() {
 	vector<string> datas = nandFlashMemory->read();
-	for (int index = 0; index < getUsedBufferCount(); index++) {
+	int count = getUsedBufferCount();
+	for (int index = 0; index < count; index++) {
 		if (buffers[index].cmd == CMD_WRITE)
 		{
 			datas[buffers[index].lba] = buffers[index].written_data;

@@ -117,7 +117,7 @@ TEST_F(BufferManagerFixture, TC3) {
 	EXPECT_EQ(1, manager.getUsedBufferCount());
 }
 
-TEST_F(BufferManagerFixture, DISABLED_TC4) {
+TEST_F(BufferManagerFixture, TC4) {
 	manager.addEraseCommand(0, 3);
 	manager.addEraseCommand(3, 3);
 
@@ -125,7 +125,7 @@ TEST_F(BufferManagerFixture, DISABLED_TC4) {
 	EXPECT_EQ(1, manager.getUsedBufferCount());
 }
 
-TEST_F(BufferManagerFixture, DISABLED_TC5) {
+TEST_F(BufferManagerFixture, TC5) {
 	manager.addEraseCommand(0, 3);
 	manager.addWriteCommand(3, "0x00000000");
 
@@ -133,7 +133,7 @@ TEST_F(BufferManagerFixture, DISABLED_TC5) {
 	EXPECT_EQ(1, manager.getUsedBufferCount());
 }
 
-TEST_F(BufferManagerFixture, DISABLED_TC6) {
+TEST_F(BufferManagerFixture, TC6) {
 	manager.addWriteCommand(1, "0x11112222");
 	manager.addWriteCommand(10, "0xFAFAFAFA");
 	manager.addWriteCommand(1, "0x0000DDDD");
@@ -146,7 +146,7 @@ TEST_F(BufferManagerFixture, DISABLED_TC6) {
 }
 
 
-TEST_F(BufferManagerFixture, DISABLED_TC7) {
+TEST_F(BufferManagerFixture, TC7) {
 	manager.addWriteCommand(3, "0x11112222");
 	manager.addEraseCommand(0, 5);
 	manager.addWriteCommand(4, "0x22224444");
@@ -178,7 +178,7 @@ TEST_F(BufferManagerFixture, DISABLED_TC10) {
 	manager.addEraseCommand(0, 3);
 	manager.addWriteCommand(1, "0x11111111");
 	manager.addWriteCommand(2, "0x22222222");
-	manager.addWriteCommand(3, "0ㅌ3333333");
+	manager.addWriteCommand(3, "0x33333333");
 
 	// E 0 3 이 이후에 들어온 W 명령어들에 의해 지워집니다.
 	EXPECT_EQ(3, manager.getUsedBufferCount());
