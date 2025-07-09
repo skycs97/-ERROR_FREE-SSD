@@ -10,61 +10,66 @@ using std::vector;
 TEST(CommandParserTest, Read) {
 	CommandParser cmdParser;
 	string inputCommand = "read 0";
-	vector<string> exepct = { "read", "0" };
-	EXPECT_EQ(exepct, cmdParser.getCommand(inputCommand)->getShellCommands());
+	string expected = "read";
+	auto cmd = cmdParser.parseAndMakeShellCommand(inputCommand);
+	EXPECT_EQ(expected, cmd->getCmdName());
 }
 
 TEST(CommandParserTest, ReadWithWrongArgs) {
 	CommandParser cmdParser;
 	string inputCommand = "read 0 0";
 
-	EXPECT_THROW(cmdParser.getCommand(inputCommand), TestScriptFailExcpetion);
+	EXPECT_THROW(cmdParser.parseAndMakeShellCommand(inputCommand), TestScriptFailExcpetion);
 }
 
 TEST(CommandParserTest, Write) {
 	CommandParser cmdParser;
 	string inputCommand = "write 0 0x12341234";
-	vector<string> exepct = { "write", "0", "0x12341234"};
-	EXPECT_EQ(exepct, cmdParser.getCommand(inputCommand)->getShellCommands());
+	string expected = "write";
+	auto cmd = cmdParser.parseAndMakeShellCommand(inputCommand);
+	EXPECT_EQ(expected, cmd->getCmdName());
 }
 
 TEST(CommandParserTest, WriteWithWrongArgs) {
 	CommandParser cmdParser;
 	string inputCommand = "write 0 0 0";
 
-	EXPECT_THROW(cmdParser.getCommand(inputCommand), TestScriptFailExcpetion);
+	EXPECT_THROW(cmdParser.parseAndMakeShellCommand(inputCommand), TestScriptFailExcpetion);
 }
 
 TEST(CommandParserTest, Help) {
 	CommandParser cmdParser;
 	string inputCommand = "help";
-	string exepct = "help";
-	EXPECT_EQ(exepct, cmdParser.getCommand(inputCommand)->getShellCommands()[0]);
+	string expected = "help";
+	auto cmd = cmdParser.parseAndMakeShellCommand(inputCommand);
+	EXPECT_EQ(expected, cmd->getCmdName());
+
 }
 
 TEST(CommandParserTest, HelpWithWrongArgs) {
 	CommandParser cmdParser;
 	string inputCommand = "help 0";
 
-	EXPECT_THROW(cmdParser.getCommand(inputCommand), TestScriptFailExcpetion);
+	EXPECT_THROW(cmdParser.getComparseAndMakeShellCommandmand(inputCommand), TestScriptFailExcpetion);
 }
 
 TEST(CommandParserTest, Exit) {
 	CommandParser cmdParser;
 	string inputCommand = "exit";
-	string exepct = "exit";
-	EXPECT_EQ(exepct, cmdParser.getCommand(inputCommand)->getShellCommands()[0]);
+	string expected = "exit";
+	auto cmd = cmdParser.parseAndMakeShellCommand(inputCommand);
+	EXPECT_EQ(expected, cmd->getCmdName());
 }
 
 TEST(CommandParserTest, ExitWithWrongArgs) {
 	CommandParser cmdParser;
 	string inputCommand = "exit 0";
 
-	EXPECT_THROW(cmdParser.getCommand(inputCommand), TestScriptFailExcpetion);
+	EXPECT_THROW(cmdParser.parseAndMakeShellCommand(inputCommand), TestScriptFailExcpetion);
 }
 
 TEST(CommandParserTest, InValidCommand) {
 	CommandParser cmdParser;
 	string inputCommand = "R 0";
-	EXPECT_THROW(cmdParser.getCommand(inputCommand), TestScriptFailExcpetion);
+	EXPECT_THROW(cmdParser.parseAndMakeShellCommand(inputCommand), TestScriptFailExcpetion);
 }

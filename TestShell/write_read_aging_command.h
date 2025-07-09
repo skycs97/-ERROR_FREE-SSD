@@ -1,13 +1,17 @@
 #pragma once
 #include "command.h"
+#include "command_factory.h"
 
-class WriteReadAging : public Command {
+class WriteReadAgingCommand : public Command {
 public:
-	WriteReadAging(std::vector<std::string> cmd) : Command(cmd) {
-		numOfArgs = 1;
-	};
+	WriteReadAgingCommand(const std::vector<std::string>& args);
 	void run(const CommandRunner& cmdRunner) const override;
 	void printHelp() const override;
 private:
 	string hexToString(unsigned int random_value) const;
+};
+
+class WriteReadAgingCommandFactory : public CommandFactory {
+public:
+	std::shared_ptr<Command> makeCommand(const string& cmdName, const std::vector<string>& args) override;
 };

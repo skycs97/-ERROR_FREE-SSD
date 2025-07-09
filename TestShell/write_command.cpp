@@ -1,9 +1,19 @@
 #include <iostream>
 #include "write_command.h"
 
+namespace {
+	const int numOfArgs = 2;
+}
+
+WriteCommand::WriteCommand(const std::vector<std::string>& args) : Command(CMD_WRITE, ::numOfArgs)
+{
+	LBA = args[0];
+	value = args[1];
+}
+
 void WriteCommand::run(const CommandRunner& cmdRunner) const
 {
-	string result = cmdRunner.write(ShellCommands[1], ShellCommands[2]);
+	string result = cmdRunner.write(LBA, value);
 	printResult(result);
 }
 
@@ -24,7 +34,11 @@ void WriteCommand::printHelp() const
 	std::cout << "Usage\n";
 	std::cout << " write [LBA] [value]\n";
 	std::cout << "Example\n";
-	std::cout << " write 0 0xAAAABBBBB\n";
+	std::cout << " write 0 0xAAAABBBB\n";
 	std::cout << " write 10 0x10002000\n";
 }
 
+std::shared_ptr<Command> WriteCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
+{
+	return std::make_shared<WriteCommand>(args);
+}

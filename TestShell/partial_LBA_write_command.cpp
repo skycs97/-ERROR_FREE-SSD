@@ -1,6 +1,12 @@
 #include "partial_LBA_write_command.h"
-
-bool PartialLBAWrite::checkResult(const vector<std::string>& result) const
+namespace {
+	const int numOfArgs = 0;
+};
+PartialLBAWriteCommand::PartialLBAWriteCommand(const std::vector<std::string>& cmd)
+	:Command(CMD_2_PARTIAL_LBA_WRITE, ::numOfArgs)
+{
+}
+bool PartialLBAWriteCommand::checkResult(const vector<std::string>& result) const
 {
 	string firstItem = result[0];
 
@@ -11,7 +17,8 @@ bool PartialLBAWrite::checkResult(const vector<std::string>& result) const
 	return true;
 }
 
-void PartialLBAWrite::run(const CommandRunner& cmdRunner) const
+
+void PartialLBAWriteCommand::run(const CommandRunner& cmdRunner) const
 {
 	for (int testRepeat = 0; testRepeat < REPEAT_COUNT; testRepeat++) {
 		vector<std::string> result;
@@ -33,11 +40,16 @@ void PartialLBAWrite::run(const CommandRunner& cmdRunner) const
 	std::cout << "Pass" << std::endl;
 }
 
-void PartialLBAWrite::printHelp() const
+void PartialLBAWriteCommand::printHelp() const
 {
 	std::cout << "** Partial LBA Write Command **\n";
 	std::cout << " - Write a specific value to several LBAs and then read it to check the value.\n";
 	std::cout << "Usage\n";
 	std::cout << " 2_PartialLBAWrite\n";
 	std::cout << " 2_\n";
+}
+
+std::shared_ptr<Command> PartialLBAWriteCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
+{
+	return std::make_shared<PartialLBAWriteCommand>(args);
 }

@@ -1,12 +1,21 @@
 #include "full_write_command.h"
 
+namespace {
+	const int numOfArgs = 1;
+};
+
+FullWriteCommand::FullWriteCommand(const std::vector<std::string>& args) : Command(CMD_FULLWRITE, ::numOfArgs)
+{
+	value = args[0];
+}
+
 void FullWriteCommand::run(const CommandRunner& cmdRunner) const
 {
 	string writeResult;
 	string fullWriteResult = "";
 
 	for (int lba = MIN_LBA; lba <= MAX_LBA; lba++) {
-		writeResult = cmdRunner.write(std::to_string(lba), ShellCommands[1]);
+		writeResult = cmdRunner.write(std::to_string(lba), this->value);
 		if (writeResult == ERROR)
 			fullWriteResult = ERROR;
 	}
@@ -35,4 +44,9 @@ void FullWriteCommand::printHelp() const
 	std::cout << "Example\n";
 	std::cout << " fullwrite 0xAAAABBBBB\n";
 	std::cout << " fullwrite 0x10002000\n";
+}
+
+std::shared_ptr<Command> FullWriteCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
+{
+	return std::make_shared<FullWriteCommand>(args);
 }

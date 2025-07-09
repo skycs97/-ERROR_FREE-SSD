@@ -3,7 +3,7 @@
 #include <string>
 #include "command_runner.h"
 #include "command_list.h"
-#include "command_factory.h"
+#include "command_parser.h"
 using std::string;
 using namespace testing;
 
@@ -21,7 +21,7 @@ protected:
 public:
 	SsdInterfaceMock mockStorage;
 	CommandRunner runner;
-	FactoryCommand fc;
+	CommandParser parser;
 
 	const string VALID_LBA = "10";
 	const string INVALID_LBA = "1000";
@@ -69,7 +69,7 @@ TEST_F(TestShellFixtureWithMock, CmdRunnerNoSetInterface) {
 
 TEST_F(TestShellFixtureWithMock, CommandRunReadPass) {
 
-	Command* command = fc.makeCommand("read " + VALID_LBA);
+	auto command = parser.parseAndMakeShellCommand("read " + VALID_LBA);
 
 	EXPECT_CALL(mockStorage, read(VALID_LBA))
 		.Times(1)
@@ -81,7 +81,7 @@ TEST_F(TestShellFixtureWithMock, CommandRunReadPass) {
 
 TEST_F(TestShellFixtureWithMock, CommandRunReadFail) {
 
-	Command* command = fc.makeCommand("read " + INVALID_LBA);
+	auto command = parser.parseAndMakeShellCommand("read " + INVALID_LBA);
 
 	EXPECT_CALL(mockStorage, read(INVALID_LBA))
 		.Times(1)
@@ -93,7 +93,7 @@ TEST_F(TestShellFixtureWithMock, CommandRunReadFail) {
 
 TEST_F(TestShellFixtureWithMock, CommandRunWritePass) {
 
-	Command* command = fc.makeCommand("write " + VALID_LBA + " " + TEST_VALUE);
+	auto command = parser.parseAndMakeShellCommand("write " + VALID_LBA + " " + TEST_VALUE);
 
 	EXPECT_CALL(mockStorage, write(VALID_LBA, _))
 		.Times(1)
@@ -105,7 +105,7 @@ TEST_F(TestShellFixtureWithMock, CommandRunWritePass) {
 
 TEST_F(TestShellFixtureWithMock, CommandRunWriteFail) {
 
-	Command* command = fc.makeCommand("write " + INVALID_LBA + " " + TEST_VALUE);
+	auto command = parser.parseAndMakeShellCommand("write " + INVALID_LBA + " " + TEST_VALUE);
 
 	EXPECT_CALL(mockStorage, write(INVALID_LBA, _))
 		.Times(1)
@@ -117,7 +117,7 @@ TEST_F(TestShellFixtureWithMock, CommandRunWriteFail) {
 
 TEST_F(TestShellFixtureWithMock, CommandRunFullRead) {
 
-	Command* command = fc.makeCommand("fullread");
+	auto command = parser.parseAndMakeShellCommand("fullread");
 
 	EXPECT_CALL(mockStorage, read(_))
 		.Times(100)
@@ -129,7 +129,7 @@ TEST_F(TestShellFixtureWithMock, CommandRunFullRead) {
 
 TEST_F(TestShellFixtureWithMock, CommandRunFullWrite) {
 
-	Command* command = fc.makeCommand("fullwrite " + TEST_VALUE);
+	auto command = parser.parseAndMakeShellCommand("fullwrite " + TEST_VALUE);
 
 	EXPECT_CALL(mockStorage, write(_, _))
 		.Times(100)
@@ -140,7 +140,7 @@ TEST_F(TestShellFixtureWithMock, CommandRunFullWrite) {
 }
 
 TEST_F(TestShellFixtureWithMock, CommandRunFullWriteAndReadCompare) {
-	Command* command = fc.makeCommand("1_ ");
+	auto command = parser.parseAndMakeShellCommand("1_ ");
 
 	EXPECT_CALL(mockStorage, read(_))
 		.Times(100)
@@ -153,11 +153,11 @@ TEST_F(TestShellFixtureWithMock, CommandRunFullWriteAndReadCompare) {
 	command->run(runner);
 }
 
-TEST_F(TestShellFixtureWithMock, PartialLBAWrite) {
+TEST_F(TestShellFixtureWithMock, PartialLBAWriteCommand) {
 	static const int OPERATION_CALL_COUNT = 150;
 	vector<string> user_input_command = { "2_", "2_PartialLBAWrite" };
 	for (string user_input : user_input_command) {
-		Command* command = fc.makeCommand(user_input);
+		auto command = parser.parseAndMakeShellCommand(user_input);
 
 		EXPECT_CALL(mockStorage, read(_))
 			.Times(OPERATION_CALL_COUNT)
@@ -171,8 +171,8 @@ TEST_F(TestShellFixtureWithMock, PartialLBAWrite) {
 	}
 }
 
-TEST_F(TestShellFixtureWithMock, WriteReadAging) {
-	Command* command = fc.makeCommand("3_");
+TEST_F(TestShellFixtureWithMock, WriteReadAgingCommand) {
+	auto command = parser.parseAndMakeShellCommand("3_");
 
 	EXPECT_CALL(mockStorage, read(_))
 		.Times(400)

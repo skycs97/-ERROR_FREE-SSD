@@ -1,7 +1,8 @@
 #pragma once
-#include "command_list.h"
+#include "command.h"
+#include <map>
 
-class FactoryCommand {
+class CommandFactory {
 public:
-	Command* makeCommand(const std::string& cmd);
+	virtual std::shared_ptr<Command> makeCommand(const string& cmdName, const std::vector<string>& args) = 0;
 };

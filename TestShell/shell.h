@@ -38,6 +38,5 @@ private:
 	TestShell& operator=(const TestShell& other) = delete;
 	TestShell(const TestShell& other) = delete;
 
-	Command* command = nullptr;
 	CommandParser parser;
 };

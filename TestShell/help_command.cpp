@@ -2,6 +2,11 @@
 #include <sstream>
 #include "command_factory.h"
 #include "help_command.h"
+#include "TEST_SHELL_CONFIG.h"
+
+namespace {
+	const int numOfArgs = 0;
+}
 
 std::string join(std::vector<std::string> const& strings, std::string delim)
 {
@@ -11,6 +16,10 @@ std::string join(std::vector<std::string> const& strings, std::string delim)
 	return ss.str();
 }
 
+HelpCommand::HelpCommand(const std::vector<std::string>& args) : Command(CMD_HELP, ::numOfArgs)
+{
+}
+
 void HelpCommand::printHelp() const
 {
 	std::cout << "------------------- Command Helper ------------------\n";
@@ -18,13 +27,17 @@ void HelpCommand::printHelp() const
 
 void HelpCommand::run(const CommandRunner& cmdRunner) const
 {
-	FactoryCommand factory;
-	for (const string& cmd : AVAILABLE_COMMAND_LIST) {
-		factory.makeCommand(cmd)->printHelp();
-		std::cout << std::endl;
-	}
+	//for (const string& cmd : AVAILABLE_COMMAND_LIST) {
+	//	factory.makeCommand(cmd)->printHelp();
+	//	std::cout << std::endl;
+	//}
 
 	std::cout << std::endl;
 	std::cout << "-------------------Thanks For Developers-------------------------\n";
 	std::cout << join(DEVELOPERS, ", ") << std::endl;
+}
+
+std::shared_ptr<Command> HelpCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
+{
+	return std::make_shared<HelpCommand>(args);
 }

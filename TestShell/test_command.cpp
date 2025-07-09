@@ -2,58 +2,59 @@
 #include <string>
 #include <vector>
 #include "command.h"
-#include "command_factory.h"
+#include "command_factory_complex.h"
+#include "command_parser.h"
 
 class CommandFactoryTest : public testing::Test {
 public:
-	FactoryCommand fc;
+	CommandParser parser;
 
-	Command* getCommand(const std::string& cmd) { return fc.makeCommand(cmd); }
+	std::shared_ptr<Command> parseAndMakeShellCommand(const std::string& cmd) { 
+		return parser.parseAndMakeShellCommand(cmd); 
+	}
 };
 TEST_F(CommandFactoryTest, Read) {
 	
-	Command* command = getCommand("read 0");
+	auto command = parseAndMakeShellCommand("read 0");
 
-	EXPECT_TRUE(command->getNumOfArgs() == 2);
-	EXPECT_EQ("read", command->getShellCommands().front());
+	EXPECT_TRUE(command->getNumOfArgs() == 1);
+	EXPECT_EQ("read", command->getCmdName());
 }
 
 TEST_F(CommandFactoryTest, Write) {
 
-	Command* command = getCommand("write 0 1");
+	auto command = parseAndMakeShellCommand("write 0 1");
 
-	EXPECT_TRUE(command->getNumOfArgs() == 3);
-	EXPECT_EQ("write", command->getShellCommands().front());
+	EXPECT_TRUE(command->getNumOfArgs() == 2);
+	EXPECT_EQ("write", command->getCmdName());
 }
 
 TEST_F(CommandFactoryTest, exit) {
 
-	Command* command = getCommand("exit");
+	auto command = parseAndMakeShellCommand("exit");
 
-	EXPECT_TRUE(command->getNumOfArgs() == 1);
-	EXPECT_EQ("exit", command->getShellCommands().front());
+	EXPECT_TRUE(command->getNumOfArgs() == 0);
+	EXPECT_EQ("exit", command->getCmdName());
 }
 
 TEST_F(CommandFactoryTest, help) {
+	auto command = parseAndMakeShellCommand("help");
 
-	Command* command = getCommand("help");
-
-	EXPECT_TRUE(command->getNumOfArgs() == 1);
-	EXPECT_EQ("help", command->getShellCommands().front());
+	EXPECT_TRUE(command->getNumOfArgs() == 0);
+	EXPECT_EQ("help", command->getCmdName());
 }
 
 TEST_F(CommandFactoryTest, fullwrite) {
+	auto command = parseAndMakeShellCommand("fullwrite 0xAAAABBBB");
 
-	Command* command = getCommand("fullwrite");
-
-	EXPECT_TRUE(command->getNumOfArgs() == 2);
-	EXPECT_EQ("fullwrite", command->getShellCommands().front());
+	EXPECT_TRUE(command->getNumOfArgs() == 1);
+	EXPECT_EQ("fullwrite", command->getCmdName());
 }
 
 TEST_F(CommandFactoryTest, fullread) {
 
-	Command* command = getCommand("fullread");
+	auto command = parseAndMakeShellCommand("fullread");
 
-	EXPECT_TRUE(command->getNumOfArgs() == 1);
-	EXPECT_EQ("fullread", command->getShellCommands().front());
+	EXPECT_TRUE(command->getNumOfArgs() == 0);
+	EXPECT_EQ("fullread", command->getCmdName());
 }

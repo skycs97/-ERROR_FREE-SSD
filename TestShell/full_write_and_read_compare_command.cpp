@@ -1,6 +1,14 @@
 #include "full_write_and_read_compare_command.h"
 
-void FullWriteAndReadCompare::run(const CommandRunner& cmdRunner) const
+namespace {
+	const int numOfArgs = 0;
+}
+
+FullWriteAndReadCompareCommand::FullWriteAndReadCompareCommand(const std::vector<std::string>& args) 
+	: Command(CMD_1_FULL_WRITE_AND_READ_COMPARE, ::numOfArgs){
+}
+
+void FullWriteAndReadCompareCommand::run(const CommandRunner& cmdRunner) const
 {
 	int lba = 0;
 	int testSize = 5;
@@ -52,11 +60,17 @@ bool FullWriteAndReadCompare::partialRead(const CommandRunner& cmdRunner, int lb
 	return totalResult;
 }
 
-void FullWriteAndReadCompare::printHelp() const
+void FullWriteAndReadCompareCommand::printHelp() const
 {
 	std::cout << "** Full Write And Read Compare Command **\n";
 	std::cout << " - Test command to compare after writing 5 LBAs each and reading them\n";
 	std::cout << "Usage\n";
 	std::cout << " 1_FullWriteAndReadCompare\n";
 	std::cout << " 1_\n";
+}
+
+std::shared_ptr<Command> FullWriteAndReadCompareCommandFactory::makeCommand(const string& cmdName
+																			, const std::vector<string>& args)
+{
+	return std::make_shared<FullWriteAndReadCompareCommand>(args);
 }

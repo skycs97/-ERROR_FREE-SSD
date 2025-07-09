@@ -8,14 +8,16 @@
 #include "command_runner.h"
 #include "TEST_SHELL_CONFIG.h"
 
-Command::Command(std::vector<std::string> commands) : ShellCommands(commands)
-{
-}
 
-std::vector<std::string> Command::getShellCommands(void) {
-	return ShellCommands;
+Command::Command(const string& cmdName, const int numOfArgs) : cmdName(cmdName), numOfArgs(numOfArgs)
+{
 }
 
 int Command::getNumOfArgs(void) {
 	return numOfArgs;
+}
+
+string Command::getCmdName(void)
+{
+	return cmdName;
 }
