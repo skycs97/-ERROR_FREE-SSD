@@ -129,10 +129,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ArgumentParser.cpp" />
+    <ClCompile Include="argument_parser.cpp" />
     <ClCompile Include="buffer_manager.cpp" />
     <ClCompile Include="buffer_manager_test.cpp" />
-    <ClCompile Include="FileHandler_test.cpp" />
+    <ClCompile Include="file_handler_test.cpp" />
     <ClCompile Include="file_handler_mock.h" />
     <ClCompile Include="nand_eraser.cpp" />
     <ClCompile Include="nand_flash_memory_impl.cpp" />
@@ -146,29 +146,29 @@
     <ClCompile Include="nand_writer.cpp" />
     <ClCompile Include="nand_writer_test.cpp" />
     <ClCompile Include="ssd.cpp" />
-    <ClCompile Include="SSDCommand.cpp" />
+    <ClCompile Include="ssd_command.cpp" />
     <ClCompile Include="ssd_test.cpp" />
     <None Include="packages.config" />
     <ClCompile Include="nand_reader.cpp" />
     <ClCompile Include="nand_reader_test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FileHandler.cpp" />
+    <ClCompile Include="file_handler.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="OutputHandler.cpp" />
-    <ClCompile Include="OutputHandler_test.cpp" />
+    <ClCompile Include="output_handler.cpp" />
+    <ClCompile Include="output_handler_test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ArgumentParser.h" />
+    <ClInclude Include="argument_parser.h" />
     <ClInclude Include="buffer_manager.h" />
-    <ClInclude Include="FileHandler.h" />
+    <ClInclude Include="file_handler.h" />
     <ClInclude Include="global_config.h" />
     <ClInclude Include="nand_eraser.h" />
     <ClInclude Include="nand_flash_memory_impl.h" />
     <ClInclude Include="nand_flush.h" />
-    <ClInclude Include="OutputHandler.h" />
+    <ClInclude Include="output_handler.h" />
     <ClInclude Include="ssd.h" />
-    <ClInclude Include="SSDCommand.h" />
+    <ClInclude Include="ssd_command.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="nand_flash_memory.h" />

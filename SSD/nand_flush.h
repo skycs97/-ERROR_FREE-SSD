@@ -2,7 +2,7 @@
 
 #include <string>
 #include "nand_flash_memory.h"
-#include "SSDCommand.h"
+#include "ssd_command.h"
 #include "buffer_manager.h"
 
 using std::string;

@@ -1,6 +1,6 @@
 #include "gmock/gmock.h"
-#include "FileHandler.h"
-#include "OutputHandler.h"
+#include "file_handler.h"
+#include "output_handler.h"
 
 #include <string>
 

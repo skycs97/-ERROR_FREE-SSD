@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include <string>
 #include <cstdlib>
-#include "ArgumentParser.h"
+#include "argument_parser.h"
 
 using std::string;
 

@@ -1,7 +1,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <iomanip>
-#include "FileHandler.h"
+#include "file_handler.h"
 
 using std::string;
 using std::ofstream;

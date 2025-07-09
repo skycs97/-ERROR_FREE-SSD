@@ -1,5 +1,5 @@
 #include "gmock/gmock.h"
-#include "OutputHandler.h"
+#include "output_handler.h"
 #include "file_handler_mock.h"
 
 using namespace testing;

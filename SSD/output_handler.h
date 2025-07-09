@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "FileHandler.h"
+#include "file_handler.h"
 #include "global_config.h"
 
 using std::string;
