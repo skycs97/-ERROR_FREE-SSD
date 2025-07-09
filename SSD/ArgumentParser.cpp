@@ -8,7 +8,7 @@ using std::string;
 
 bool ArgumentParser::read_cmd_handler(int argc, const char* argv[])
 {
-	eCmd = READ_CMD;
+	eCmd = CMD_READ;
 	checkArgNum(argc);
 
 	nAddr = atoi(argv[ARG_IDX_ADDR]);
@@ -19,7 +19,7 @@ bool ArgumentParser::read_cmd_handler(int argc, const char* argv[])
 
 bool ArgumentParser::write_cmd_handler(int argc, const char* argv[])
 {
-	eCmd = WRITE_CMD;
+	eCmd = CMD_WRITE;
 	checkArgNum(argc);
 
 	nAddr = atoi(argv[ARG_IDX_ADDR]);
@@ -33,7 +33,7 @@ bool ArgumentParser::write_cmd_handler(int argc, const char* argv[])
 
 bool ArgumentParser::erase_cmd_handler(int argc, const char* argv[])
 {
-	eCmd = ERASE_CMD;
+	eCmd = CMD_ERASE;
 	checkArgNum(argc);
 
 	nAddr = atoi(argv[ARG_IDX_ADDR]);
@@ -63,7 +63,7 @@ bool ArgumentParser::parse_args(int argc, const char* argv[])
 	return etc_cmd_handler(argc, argv);
 }
 
-ArgumentParser::CMD_TYPE ArgumentParser::getCmdType()
+CMD_TYPE ArgumentParser::getCmdType()
 {
 	return eCmd;
 }
@@ -85,15 +85,15 @@ string ArgumentParser::getData()
 
 void ArgumentParser::checkArgNum(int argc)
 {
-	if (eCmd == READ_CMD)
+	if (eCmd == CMD_READ)
 	{
 		if (argc != READ_CORRECT_ARG_SIZE) throw std::invalid_argument("number of argument is incorrect");
 	}
-	else if (eCmd == WRITE_CMD)
+	else if (eCmd == CMD_WRITE)
 	{
 		if (argc != WRITE_CORRECT_ARG_SIZE) throw std::invalid_argument("number of argument is incorrect");
 	}
-	else if (eCmd == ERASE_CMD)
+	else if (eCmd == CMD_ERASE)
 	{
 		if (argc != ERASE_CORRECT_ARG_SIZE) throw std::invalid_argument("number of argument is incorrect");
 	}

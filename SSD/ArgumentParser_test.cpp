@@ -19,7 +19,7 @@ TEST_F(ArgumentParserFixture, ReadCommandTest) {
 
 	parser.parse_args(3, argv);
 
-	EXPECT_EQ(ArgumentParser::READ_CMD, parser.getCmdType());
+	EXPECT_EQ(CMD_READ, parser.getCmdType());
 	EXPECT_EQ(10, parser.getAddr());
 }
 
@@ -52,7 +52,7 @@ TEST_F(ArgumentParserFixture, WriteCommandTest) {
 
 	parser.parse_args(4, argv);
 
-	EXPECT_EQ(ArgumentParser::WRITE_CMD, parser.getCmdType());
+	EXPECT_EQ(CMD_WRITE, parser.getCmdType());
 	EXPECT_EQ(20, parser.getAddr());
 	EXPECT_EQ("0xAAAABBBB", parser.getData());
 }

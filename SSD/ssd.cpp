@@ -34,18 +34,18 @@ void SSD::run(int argc, const char* argv[])
 
 		argumentParser->parse_args(argc, argv);
 		switch (argumentParser->getCmdType()) {
-		case ArgumentParser::READ_CMD: {
+		case CMD_READ: {
 			int addr = argumentParser->getAddr();
 			result = reader->read(addr);
 			break;
 		}
-		case ArgumentParser::WRITE_CMD: {
+		case CMD_WRITE: {
 			int addr = argumentParser->getAddr();
 			string data = argumentParser->getData();
 			writer->write(addr, data);
 			break;
 		}
-		case ArgumentParser::ERASE_CMD: {
+		case CMD_ERASE: {
 			int addr = argumentParser->getAddr();
 			int size = argumentParser->getSize();
 			eraser->erase(addr, size);
