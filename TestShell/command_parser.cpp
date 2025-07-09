@@ -36,7 +36,7 @@ std::pair<string, vector<string>> CommandParser::splitCmd(const std::string& use
 	if (cmd->getShellCommands().size() != cmd->getNumOfArgs())
 		throw TestScriptFailExcpetion("Invalid command");;
 	ss >> word;
-	string cmdName = word;
+	string cmdName = convertShortCommand(word);
 
 	while (ss >> word) {
 		args.push_back(word);
@@ -54,4 +54,18 @@ std::shared_ptr<Command> CommandParser::makeCommand(const std::string& cmdName, 
 	}
 
 	return factory->makeCommand(cmdName, args);
+}
+
+bool CommandParser::isShortedCommand(const std::string cmdName) {
+	if (shortCommandToCommand.find(cmdName) != shortCommandToCommand.end()) {
+		return true;
+	}
+
+	return false;
+}
+std::string CommandParser::convertShortCommand(const std::string cmdName) {
+	if (isShortedCommand(cmdName)) {
+		return shortCommandToCommand.at(cmdName);
+	}
+	return cmdName;
 }

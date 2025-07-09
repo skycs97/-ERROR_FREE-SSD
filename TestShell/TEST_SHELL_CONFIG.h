@@ -42,7 +42,11 @@ const vector<string> AVAILABLE_COMMAND_LIST = {
 	CMD_3_WRITE_READ_AGING
 };
 
-
+const std::map<string, string> shortCommandToCommand = {
+	{CMD_1_FULL_WRITE_AND_READ_COMPARE_SHORT, CMD_1_FULL_WRITE_AND_READ_COMPARE},
+	{CMD_2_PARTIAL_LBA_WRITE_SHORT, CMD_2_PARTIAL_LBA_WRITE},
+	{CMD_3_WRITE_READ_AGING_SHORT, CMD_3_WRITE_READ_AGING}
+};
 
 static const int MAX_LBA = 99;
 static const int MIN_LBA = 0;
