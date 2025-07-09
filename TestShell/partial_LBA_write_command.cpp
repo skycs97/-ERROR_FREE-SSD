@@ -20,6 +20,8 @@ bool PartialLBAWriteCommand::checkResult(const vector<std::string>& result) cons
 
 void PartialLBAWriteCommand::run(const CommandRunner& cmdRunner) const
 {
+	printProcess();
+
 	for (int testRepeat = 0; testRepeat < REPEAT_COUNT; testRepeat++) {
 		vector<std::string> result;
 
@@ -47,6 +49,12 @@ void PartialLBAWriteCommand::printHelp() const
 	std::cout << "Usage\n";
 	std::cout << " 2_PartialLBAWrite\n";
 	std::cout << " 2_\n";
+}
+
+void PartialLBAWriteCommand::printProcess() const
+{
+	std::cout << std::left << std::setw(25) << cmdName;
+	std::cout << "  ___   " << "Run..";
 }
 
 std::shared_ptr<Command> PartialLBAWriteCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)

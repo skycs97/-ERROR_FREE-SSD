@@ -16,6 +16,8 @@ WriteReadAgingCommand::WriteReadAgingCommand(const std::vector<std::string>& arg
 
 void WriteReadAgingCommand::run(const CommandRunner& cmdRunner) const
 {
+	printProcess();
+
 	string lba0 = "0";
 	string lba99 = "99";
 	std::mt19937 generator(std::chrono::system_clock::now().time_since_epoch().count());
@@ -59,6 +61,12 @@ void WriteReadAgingCommand::printHelp() const
 	std::cout << "Usage\n";
 	std::cout << " 3_WriteReadAging\n";
 	std::cout << " 3_\n";
+}
+
+void WriteReadAgingCommand::printProcess() const
+{
+	std::cout << std::left << std::setw(25) << cmdName;
+	std::cout << "  ___   " << "Run..";
 }
 
 std::shared_ptr<Command> WriteReadAgingCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)

@@ -24,7 +24,6 @@ public:
 
 private:
 	void printTestResult(const string& result);
-	void printTestProcess(const string& command);
 	void runShellScript(const string& input);
 
 	bool parseAndRunCommand(const string& input);

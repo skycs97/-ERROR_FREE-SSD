@@ -10,6 +10,8 @@ FullWriteAndReadCompareCommand::FullWriteAndReadCompareCommand(const std::vector
 
 void FullWriteAndReadCompareCommand::run(const CommandRunner& cmdRunner) const
 {
+	printProcess();
+
 	int lba = 0;
 	int testSize = 5;
 	std::vector<string> testValue = { "0xA5A5A5A5", "0x5A5A5A5A", "0xFFFFFFFF", "0xF0F0F0F0", "0x0F0F0F0F" };
@@ -67,6 +69,12 @@ void FullWriteAndReadCompareCommand::printHelp() const
 	std::cout << "Usage\n";
 	std::cout << " 1_FullWriteAndReadCompare\n";
 	std::cout << " 1_\n";
+}
+
+void FullWriteAndReadCompareCommand::printProcess() const
+{
+	std::cout << std::left << std::setw(25) << cmdName;
+	std::cout << "  ___   " << "Run..";
 }
 
 std::shared_ptr<Command> FullWriteAndReadCompareCommandFactory::makeCommand(const string& cmdName

@@ -9,6 +9,7 @@ public:
 	void printHelp() const override;
 private:
 	string hexToString(unsigned int random_value) const;
+	void printProcess() const;
 };
 
 class WriteReadAgingCommandFactory : public CommandFactory {

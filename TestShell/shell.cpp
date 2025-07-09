@@ -45,7 +45,6 @@ void TestShell::runShellScript(const string& filename) {
 	while (getline(inputFile, input)) {
 		if (isEmptyInput(input))
 			break;
-		printTestProcess(input);
 
 		if (parseAndRunCommand(input) == false) {
 			break;
@@ -59,12 +58,6 @@ void TestShell::runShellScript(const string& filename) {
 bool TestShell::isFileOpenFail(const ifstream& inputFile)
 {
 	return !(inputFile.is_open());
-}
-
-void TestShell::printTestProcess(const string& command)
-{
-	std::cout << std::left << std::setw(30) << command;
-	std::cout << "  ___   " << "Run..";
 }
 
 void TestShell::printTestResult(const string& result)
