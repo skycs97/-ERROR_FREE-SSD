@@ -67,13 +67,6 @@ vector<string> FileHandler::read(const string& file_name) {
 	return lines;
 }
 
-void FileHandler::createDirIfNotExist(const string& dir_path)
-{
-	if (!(CreateDirectoryA(dir_path.c_str(), NULL) || GetLastError() == ERROR_ALREADY_EXISTS)) {
-		throw std::exception("Fail to create buffer directory.");
-	}
-}
-
 bool FileHandler::isExist(const string& dir_path, const string& file_name)
 {
 	WIN32_FIND_DATAA findFileData;
@@ -175,4 +168,44 @@ vector<string> FileHandler::findFileUsingPrefix(const string& path, const string
 
 	FindClose(hFind);
 	return matchingFiles;
+}
+
+bool FileHandler::createDirectory(const string& path)
+{
+	if (!(CreateDirectoryA(path.c_str(), NULL) || GetLastError() == ERROR_ALREADY_EXISTS)) return false;
+	return true;
+}
+
+bool FileHandler::createFile(const string& path)
+{
+	return false;
+}
+
+char* FileHandler::readFile(const string& path, int& size)
+{
+	return nullptr;
+}
+
+bool FileHandler::isFileExistByMatchLength(const string& dir_path, const string& file_name, int len)
+{
+	WIN32_FIND_DATAA findFileData;
+	HANDLE hFind = FindFirstFileA(dir_path.c_str(), &findFileData);
+
+	if (hFind == INVALID_HANDLE_VALUE) {
+		throw std::exception("Can't open buffer directory.");
+	}
+
+	bool found = false;
+	do {
+		if (!(findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+			if (strncmp(findFileData.cFileName, file_name.c_str(), len) == 0) {
+				found = true;
+				break;
+			}
+		}
+	} while (FindNextFileA(hFind, &findFileData));
+
+	FindClose(hFind);
+
+	return found;
 }

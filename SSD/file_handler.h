@@ -20,14 +20,17 @@ public:
 	virtual void createInitNandFile(const string& file_name);
 	virtual void write(const string& file_name, const vector<string>& output_string);
 	virtual vector<string> read(const string& file_name);
-
-	virtual void createDirIfNotExist(const string& dir_path);
 	virtual bool isExist(const string& dir_path, const string& file_name);
 	virtual bool isExist(const string& dir_path, const string& file_name, int len);
 	virtual void createEmptyFile(const string& file_path);
 	virtual void rename(const string& old_name, const string& new_name) const;
 	virtual vector<string> findFileUsingPrefix(const string& path, const string& prefix);
 
+
+	bool createDirectory(const string& path);
+	bool createFile(const string& path);
+	char* readFile(const string& path, int& size);
+	bool isFileExistByMatchLength(const string& dir_path, const string& file_name, int len);
 private:
 
 };
