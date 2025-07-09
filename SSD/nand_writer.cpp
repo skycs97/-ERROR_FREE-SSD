@@ -2,8 +2,11 @@
 
 string NandWriter::write(int lba, string data)
 {
-	bufferManager->addWriteCommand(lba, data); 
-	// (buffer 동작시 아래 로직은 지웁니다.)
+	if (BUFFER_ENABLE) {
+		bufferManager->addWriteCommand(lba, data);
+		return "";
+	}
+
 	vector<string> datas = nandFlashMemory->read();
 	datas[lba] = data;
 	return nandFlashMemory->write(datas);
