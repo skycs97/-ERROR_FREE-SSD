@@ -18,6 +18,8 @@ public:
 
 	string read(int LBA);
 private:
+	bool isInvalidAddress(int nLBA);
+
 	NandFlashMemory* nandFlashMemory;
 	BufferManager* bufferManager;
 	ArgumentParser parser;

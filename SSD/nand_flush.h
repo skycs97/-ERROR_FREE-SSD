@@ -16,6 +16,7 @@ public:
 
 	bool flush();
 private:
+	
 	NandFlashMemory* nandFlashMemory;
 	BufferManager* bufferManager;
 	ArgumentParser parser;

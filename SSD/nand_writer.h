@@ -19,6 +19,8 @@ public:
 	virtual bool parseArg(int argc, const char* argv[]) override;
 	virtual string run() override;
 private:
+	bool isInvalidAddress(int nLBA);
+
 	NandFlashMemory* nandFlashMemory;
 	BufferManager* bufferManager;
 	ArgumentParser parser;

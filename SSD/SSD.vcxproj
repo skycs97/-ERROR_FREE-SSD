@@ -130,7 +130,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ArgumentParser.cpp" />
-    <ClCompile Include="ArgumentParser_test.cpp" />
     <ClCompile Include="buffer_manager.cpp" />
     <ClCompile Include="buffer_manager_test.cpp" />
     <ClCompile Include="FileHandler_test.cpp" />
