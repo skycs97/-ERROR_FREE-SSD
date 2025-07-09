@@ -75,10 +75,6 @@ bool TestShell::parseAndRunCommand(const string& input) {
 		command = parser.getCommand(input);
 		command->run(runner);
 	}
-	catch (std::invalid_argument& e) {
-		printTestResult(e.what());
-		result = false;
-	}
 	catch (TestScriptFailExcpetion& e) {
 		printTestResult(e.what());
 		result = false;
