@@ -75,11 +75,6 @@ void BufferManager::fillBufferInfo(string fname, int buffer_num, bool need_file_
 			INVALID_VALUE/*erase size*/);
 	}
 	else if (std::regex_search(fname, m, eraseRegex)) {
-		buffers[buffer_num].cmd = CMD_ERASE;
-		buffers[buffer_num].erase_size = std::atoi(m.str(2).c_str());
-		buffers[buffer_num].fname = fname;
-		buffers[buffer_num].lba = std::atoi(m.str(1).c_str());
-		buffers[buffer_num].written_data = INVALID_VALUE;
 		setBufferInfo(buffer_num,
 			fname,
 			CMD_ERASE,
@@ -109,11 +104,11 @@ void BufferManager::setBufferInfo(int buffer_num,
 	string written_data,
 	int size)
 {
-	buffers[buffer_num].fname = fname;
-	buffers[buffer_num].cmd = cmd;
-	buffers[buffer_num].lba = lba;
-	buffers[buffer_num].written_data = written_data;
-	buffers[buffer_num].erase_size = size;
+	buffers[buffer_num - 1].fname = fname;
+	buffers[buffer_num - 1].cmd = cmd;
+	buffers[buffer_num - 1].lba = lba;
+	buffers[buffer_num - 1].written_data = written_data;
+	buffers[buffer_num - 1].erase_size = size;
 }
 
 bool BufferManager::isBufferFull() {
