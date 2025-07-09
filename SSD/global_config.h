@@ -9,6 +9,9 @@
 #define ARG_IDX_ADDR	2
 #define ARG_IDX_DATA	3
 #define MIN_ARG_CNT     2
+#define READ_CORRECT_ARG_SIZE	3
+#define WRITE_CORRECT_ARG_SIZE	4
+#define ERASE_CORRECT_ARG_SIZE	4
 
 // File
 #define NAND_FILENAME "ssd_nand.txt"

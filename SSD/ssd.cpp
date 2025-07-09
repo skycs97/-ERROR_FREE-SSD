@@ -23,7 +23,7 @@ SSD::~SSD() {
 
 void SSD::run(int argc, const char* argv[])
 {
-	string data = "";
+	string result = "";
 	try {
 		outputHandler->getFileHandler()->init();
 
@@ -31,12 +31,12 @@ void SSD::run(int argc, const char* argv[])
 		switch (argumentParser->getCmdType()) {
 		case ArgumentParser::READ_CMD: {
 			int addr = argumentParser->getAddr();
-			data = reader->read(addr);
+			result = reader->read(addr);
 			break;
 		}
 		case ArgumentParser::WRITE_CMD: {
 			int addr = argumentParser->getAddr();
-			data = argumentParser->getData();
+			string data = argumentParser->getData();
 			writer->write(addr, data);
 			break;
 		}
@@ -44,7 +44,7 @@ void SSD::run(int argc, const char* argv[])
 			int addr = argumentParser->getAddr();
 			int size = argumentParser->getSize();
 			eraser->erase(addr, size);
-			data = "COMPLETE_ERASE";
+			result = "COMPLETE_ERASE";
 			break;
 		}
 		default: {
@@ -54,7 +54,7 @@ void SSD::run(int argc, const char* argv[])
 		}
 	}
 	catch (std::exception e) {
-		data = "ERROR";
+		result = "ERROR";
 	}
-	outputHandler->output(data);
+	outputHandler->output(result);
 }
