@@ -72,3 +72,11 @@ TEST_F(TestShellFixtureWithReal, EraseInRange) {
 	eraseCommand->run(runner);
 }
 #endif
+
+TEST_F(TestShellFixtureWithReal, CmdRunnerFlush) {
+	auto writeCommand = parser.parseAndMakeShellCommand("flush");
+	EXPECT_TRUE(writeCommand != nullptr);
+
+	writeCommand->run(runner);
+}
+#endif
