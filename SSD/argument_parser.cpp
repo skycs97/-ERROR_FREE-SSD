@@ -2,57 +2,9 @@
 #include <stdexcept>
 #include <string>
 #include <cstdlib>
-#include "argument_parser.h"
+#include "ArgumentParser.h"
 
 using std::string;
-
-int ArgumentParser::getEraseStartLBA() {
-	return nEraseStartLBA; 
-}
-
-int ArgumentParser::getEraseLBACount() {
-	return nEraseLBACount; 
-}
-
-void ArgumentParser::setCmdType(CMD_TYPE cmdType) { 
-	nCmdType = cmdType; 
-}
-
-void ArgumentParser::setLBA(int addr) { 
-	nLBA = addr; 
-}
-
-void ArgumentParser::setData(const string& data) { 
-	strData = data; 
-}
-
-void ArgumentParser::setEraseStartLBAAddr(int startAddr) { 
-	nEraseStartLBA = startAddr; 
-}
-
-void ArgumentParser::setEraseLBACount(int nCount) { 
-	nEraseLBACount = nCount; 
-}
-
-CMD_TYPE ArgumentParser::getCmdType()
-{
-	return nCmdType;
-}
-
-int ArgumentParser::getLBA()
-{
-	return nLBA;
-}
-
-int ArgumentParser::getLBACount()
-{
-	return nLBACount;
-}
-
-string ArgumentParser::getData()
-{
-	return strData;
-}
 
 // stoul에서 변환 실패 시 std::invalid_argument 예외, 범위 초과 시 std::out_of_range 예외를 발생
 unsigned long ArgumentParser::parseHexAddress(const std::string& hexAddress)

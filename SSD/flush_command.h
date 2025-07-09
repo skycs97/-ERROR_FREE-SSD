@@ -11,10 +11,8 @@ public:
 	FlushCommand(NandFlashMemory* nandFlashMemory, BufferManager* bufferManager) :
 		nandFlashMemory{ nandFlashMemory }, bufferManager{ bufferManager } {
 	}
-	virtual bool parseArg(int argc, const char* argv[]) override;
+	virtual void parseArg(int argc, const char* argv[]) override;
 	virtual string run() override;
-
-	bool flush();
 private:
 	
 	NandFlashMemory* nandFlashMemory;

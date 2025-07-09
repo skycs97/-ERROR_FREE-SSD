@@ -5,13 +5,15 @@
 
 using namespace testing;
 
-static const int VALID_RANGE_LBA = 53;
-static const string VALID_DATA = "0xAAAABBBB";
-static const string INIT_DATA = "0x00000000";
-
 class WriteCommandFixture : public Test
 {
 public:
+	static constexpr int ARGC = 4;
+	const char* VALID_LBA = "53";
+	const char* VALID_DATA = "0xAAAABBBB";
+	const char* INIT_DATA = "0x00000000";
+	const char* VALID_ARGV[ARGC] = { "ssd.exe", "W", VALID_LBA, VALID_DATA};
+
 	FileHandlerMock mockedFileHandler;
 	NandFlashMemoryMock nand;
 	BufferManager bufferManager{ &nand, &mockedFileHandler };
@@ -31,6 +33,7 @@ TEST_F(WriteCommandFixture, ValidCase)
 		.WillRepeatedly(Return(""));
 
 	string expected = "";
-	string actual = writeCommand.write(VALID_RANGE_LBA, VALID_DATA);
+	writeCommand.parseArg(ARGC, VALID_ARGV);
+	string actual = writeCommand.run();
 	EXPECT_EQ(expected, actual);
 }
