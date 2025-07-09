@@ -11,7 +11,7 @@ bool BufferManager::isBufferFull() {
 bool BufferManager::read(int lba, string& outputData) {
 	readBuffer();
 	for (int index = getUsedBufferCount() - 1; index >= 0; index--) {
-		string data = bufferData.at(index);
+		string data = buffers.at(index);
 		std::smatch m;
 
 		std::regex writeRegex(R"([1-5]_W_([0-9]*)_(0x[0-9A-Fa-f]+))");
@@ -45,7 +45,7 @@ void BufferManager::addWriteCommand(int lba, const string& data) {
 
 	std::ostringstream oss;
 	oss << index + 1 << "_W_" << lba <<"_"<< data;
-	bufferData.push_back(oss.str());
+	buffers.push_back(oss.str());
 	
 	writeBuffer();
 }
@@ -60,13 +60,38 @@ void BufferManager::addEraseCommand(int lba, int count) {
 
 	std::ostringstream oss;
 	oss << index + 1 << "_E_" << lba <<"_"<<count;
-	bufferData.push_back(oss.str());
+	buffers.push_back(oss.str());
 
 	writeBuffer();
 }
 
 void BufferManager::flush() {
-	bufferData.clear();
+	vector<string> datas = nandFlashMemory->read();
+	for (int index = 0; index < getUsedBufferCount(); index++) {
+		string buffer = buffers.at(index);
+		std::smatch m;
+
+		std::regex writeRegex(R"([1-5]_W_([0-9]*)_(0x[0-9A-Fa-f]+))");
+		if (std::regex_search(buffer, m, writeRegex)) {
+			int lba = std::atoi(m.str(1).c_str());
+			string data = m.str(2);
+			datas[lba] = data;
+			continue;
+		}
+		std::regex eraseRegex(R"([1-5]_E_([0-9]*)_([0-9]+))");
+		if (std::regex_search(buffer, m, eraseRegex)) {
+			int lbaStart = std::atoi(m.str(1).c_str());
+			int count = std::atoi(m.str(2).c_str());
+			int lbaEnd = lbaStart + count;
+
+			for (int lba = lbaStart; lba < lbaEnd; lba++) {
+				datas[lba] = "0x00000000";
+			}
+			continue;
+		}
+	}
+	buffers.clear();
+	nandFlashMemory->write(datas);
 }
 
 void BufferManager::writeBuffer() {
@@ -78,5 +103,5 @@ void BufferManager::readBuffer() {
 }
 
 int BufferManager::getUsedBufferCount() {
-	return bufferData.size();
+	return buffers.size();
 }

@@ -31,7 +31,7 @@ public:
 private:
 	NandFlashMemory* nandFlashMemory;
 	FileHandler* fileHandler;
-	vector<string> bufferData;
+	vector<string> buffers;
 
 	//버퍼가 5개가 가득 찬 경우 true를 리턴합니다.
 	bool isBufferFull();
