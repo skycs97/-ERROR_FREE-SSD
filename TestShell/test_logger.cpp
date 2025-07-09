@@ -107,7 +107,7 @@ TEST_F(LoggerTest, AppendLogsToExistingFile) {
 	EXPECT_NE(after.find(__DATE__), std::string::npos);
 }
 
-//10KB 로그파일을 계속 생성하기 때문에, 필요시 Enable.
+//Default : DISABLE
 TEST_F(LoggerTest, DISABLED_AppendLogsOver10KB) {
 
 	int numOfUntilLogfiles = getNumOfFiles("until_", ".log");
@@ -125,7 +125,7 @@ TEST_F(LoggerTest, DISABLED_AppendLogsOver10KB) {
 	EXPECT_EQ(expect_zip, getNumOfFiles("until_", ".zip"));
 }
 
-//10KB 로그파일을 계속 생성하기 때문에, 필요시 Enable.
+//Default : DISABLE
 TEST_F(LoggerTest, DISABLED_AppendLogsOver30KB) {
 
 	int numOfUntilLogfiles = getNumOfFiles("until_", ".log");
