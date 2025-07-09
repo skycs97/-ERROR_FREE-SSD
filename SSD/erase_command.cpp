@@ -41,5 +41,5 @@ string EraseCommand::run()
 	}
 	nandFlashMemory->write(datas);
 
-	return "COMPLETE_ERASE";
+	return "";
 }
