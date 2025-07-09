@@ -143,9 +143,11 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="nand_flush.cpp" />
     <ClCompile Include="nand_writer.cpp" />
     <ClCompile Include="nand_writer_test.cpp" />
     <ClCompile Include="ssd.cpp" />
+    <ClCompile Include="SSDCommand.cpp" />
     <ClCompile Include="ssd_test.cpp" />
     <None Include="packages.config" />
     <ClCompile Include="nand_reader.cpp" />
@@ -164,8 +166,10 @@
     <ClInclude Include="global_config.h" />
     <ClInclude Include="nand_eraser.h" />
     <ClInclude Include="nand_flash_memory_impl.h" />
+    <ClInclude Include="nand_flush.h" />
     <ClInclude Include="OutputHandler.h" />
     <ClInclude Include="ssd.h" />
+    <ClInclude Include="SSDCommand.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="nand_flash_memory.h" />

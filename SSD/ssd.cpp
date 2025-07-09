@@ -1,6 +1,7 @@
 ﻿#include "ssd.h"
 #include "buffer_manager.h"
 #include <stdexcept>
+#include "SSDCommand.h"
 
 SSD::SSD(FileHandler* fileHandler) {
 	// Create result IO instance
@@ -8,13 +9,13 @@ SSD::SSD(FileHandler* fileHandler) {
 
 	// Create nand IO instance
 	nand = new NandFlashMemoryImpl(fileHandler);
-	BufferManager* bufferManager = new BufferManager(nand, fileHandler);
+	bufferManager = new BufferManager(nand, fileHandler);
 	reader = new NandReader(nand, bufferManager);
 	writer = new NandWriter(nand, bufferManager);
 	eraser = new NandEraser(nand, bufferManager);
 
 	argumentParser = new ArgumentParser();
-
+	factory = new SSDCommandFactory();
 	// FIXME: 내부적으로 std::exception 사용하나, 현재 위치는 try-catch 문 밖
 	bufferManager->init();
 }
@@ -23,6 +24,7 @@ SSD::~SSD() {
 	delete reader;
 	delete writer;
 	delete nand;
+	delete bufferManager;
 }
 
 void SSD::run(int argc, const char* argv[])
@@ -32,30 +34,12 @@ void SSD::run(int argc, const char* argv[])
 		outputHandler->getFileHandler()->init();
 		
 
-		argumentParser->parse_args(argc, argv);
-		switch (argumentParser->getCmdType()) {
-		case CMD_READ: {
-			int addr = argumentParser->getAddr();
-			result = reader->read(addr);
-			break;
-		}
-		case CMD_WRITE: {
-			int addr = argumentParser->getAddr();
-			string data = argumentParser->getData();
-			writer->write(addr, data);
-			break;
-		}
-		case CMD_ERASE: {
-			int addr = argumentParser->getAddr();
-			int size = argumentParser->getSize();
-			eraser->erase(addr, size);
-			result = "COMPLETE_ERASE";
-			break;
-		}
-		default: {
-			throw std::invalid_argument("unknown type");
-			return;
-		}
+		SSDCommand* cmd = nullptr;
+		
+		if (argc > 2) {
+			cmd = factory->createCommand(string((argv[ARG_IDX_CMD])), nand, bufferManager);
+			cmd->parseArg(argc, argv);
+			result = cmd->run();
 		}
 	}
 	catch (std::exception e) {

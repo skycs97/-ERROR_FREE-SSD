@@ -26,7 +26,7 @@ bool ArgumentParser::write_cmd_handler(int argc, const char* argv[])
 	checkOutOfRange(nAddr);
 
 	parseHexAddress(string(argv[ARG_IDX_DATA]));
-	dwData = argv[ARG_IDX_DATA];
+	strData = argv[ARG_IDX_DATA];
 
 	return true;
 }
@@ -80,7 +80,7 @@ int ArgumentParser::getSize()
 
 string ArgumentParser::getData()
 {
-	return dwData;
+	return strData;
 }
 
 void ArgumentParser::checkArgNum(int argc)

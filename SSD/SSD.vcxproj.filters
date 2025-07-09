@@ -81,6 +81,12 @@
     <ClCompile Include="FileHandler_test.cpp">
       <Filter>테스트 파일</Filter>
     </ClCompile>
+    <ClCompile Include="nand_flush.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SSDCommand.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -120,6 +126,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="nand_eraser.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="nand_flush.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SSDCommand.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
