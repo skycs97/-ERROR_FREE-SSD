@@ -19,15 +19,15 @@ bool NandReader::parseArg(int argc, const char* argv[])
 	if (argc != READ_CORRECT_ARG_SIZE) throw std::invalid_argument("number of argument is incorrect");
 
 	parser.setCmdType(ArgumentParser::READ_CMD);
-	parser.setAddr(atoi(argv[ARG_IDX_ADDR]));
+	parser.setLBA(atoi(argv[ARG_IDX_ADDR]));
 
-	if ((parser.getAddr() < MIN_LBA) || (parser.getAddr() > MAX_LBA)) throw std::invalid_argument("Out of range");
+	if ((parser.getLBA() < MIN_LBA) || (parser.getLBA() > MAX_LBA)) throw std::invalid_argument("Out of range");
 
 	return true;
 }
 
 string NandReader::run()
 {
-	int addr = parser.getAddr();
+	int addr = parser.getLBA();
 	return read(addr);	
 }

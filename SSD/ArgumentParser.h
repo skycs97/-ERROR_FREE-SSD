@@ -13,18 +13,18 @@ public:
 	bool parse_args(int argc, const char* argv[]);
 
 	CMD_TYPE getCmdType();
-	int getAddr();
-	int getSize();
+	int getLBA();
+	int getLBACount();
 	string getData();
-	int getEraseStartAddr() { return nEraseStartAddr; }
-	int getEraseLBACount() { return nEraseCount; }
+	int getEraseStartLBA() { return nEraseStartLBA; }
+	int getEraseLBACount() { return nEraseLBACount; }
 
 
 	void setCmdType(CMD_TYPE cmdType) { eCmd = cmdType; }
-	void setAddr(int addr) { nAddr = addr; }
+	void setLBA(int addr) { nLBA = addr; }
 	void setData(const string& data) { strData = data; }
-	void setEraseStartAddr(int startAddr) { nEraseStartAddr = startAddr; }
-	void setEraseCount(int nCount) { nEraseCount = nCount; }
+	void setEraseStartLBAAddr(int startAddr) { nEraseStartLBA = startAddr; }
+	void setEraseCount(int nCount) { nEraseLBACount = nCount; }
 	// stoul에서 변환 실패 시 std::invalid_argument 예외, 범위 초과 시 std::out_of_range 예외를 발생
 	unsigned long parseHexAddress(const std::string& hexAddress);
 
@@ -43,9 +43,9 @@ private:
 
 	CMD_TYPE eCmd = NONE_CMD;
 	CMD_TYPE eCmd = NONE_CMD;
-	int nAddr = -1;
-	int nSize = -1;
+	int nLBA = -1;
+	int nLBACount = -1;
 	string strData = "";
-	int nEraseStartAddr = -1;
-	int nEraseCount = -1;
+	int nEraseStartLBA = -1;
+	int nEraseLBACount = -1;
 };

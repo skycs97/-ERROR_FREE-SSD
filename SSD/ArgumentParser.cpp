@@ -11,8 +11,8 @@ bool ArgumentParser::read_cmd_handler(int argc, const char* argv[])
 	eCmd = CMD_READ;
 	checkArgNum(argc);
 
-	nAddr = atoi(argv[ARG_IDX_ADDR]);
-	checkOutOfRange(nAddr);
+	nLBA = atoi(argv[ARG_IDX_ADDR]);
+	checkOutOfRange(nLBA);
 
 	return true;
 }
@@ -22,8 +22,8 @@ bool ArgumentParser::write_cmd_handler(int argc, const char* argv[])
 	eCmd = CMD_WRITE;
 	checkArgNum(argc);
 
-	nAddr = atoi(argv[ARG_IDX_ADDR]);
-	checkOutOfRange(nAddr);
+	nLBA = atoi(argv[ARG_IDX_ADDR]);
+	checkOutOfRange(nLBA);
 
 	parseHexAddress(string(argv[ARG_IDX_DATA]));
 	strData = argv[ARG_IDX_DATA];
@@ -36,11 +36,11 @@ bool ArgumentParser::erase_cmd_handler(int argc, const char* argv[])
 	eCmd = CMD_ERASE;
 	checkArgNum(argc);
 
-	nAddr = atoi(argv[ARG_IDX_ADDR]);
-	checkOutOfRange(nAddr);
+	nLBA = atoi(argv[ARG_IDX_ADDR]);
+	checkOutOfRange(nLBA);
 
-	nSize = atoi(argv[ARG_IDX_DATA]);
-	checkEraseRange(nAddr, nSize);
+	nLBACount = atoi(argv[ARG_IDX_DATA]);
+	checkEraseRange(nLBA, nLBACount);
 
 	return true;
 }
@@ -68,14 +68,14 @@ CMD_TYPE ArgumentParser::getCmdType()
 	return eCmd;
 }
 
-int ArgumentParser::getAddr()
+int ArgumentParser::getLBA()
 {
-	return nAddr;
+	return nLBA;
 }
 
-int ArgumentParser::getSize()
+int ArgumentParser::getLBACount()
 {
-	return nSize;
+	return nLBACount;
 }
 
 string ArgumentParser::getData()
@@ -106,7 +106,7 @@ void ArgumentParser::checkOutOfRange(int lba)
 
 void ArgumentParser::checkEraseRange(int lba, int size)
 {
-	if (nAddr + nSize - 1 > MAX_LBA) throw std::invalid_argument("The erase range exceeds the MAX_LBA");
+	if (nLBA + nLBACount - 1 > MAX_LBA) throw std::invalid_argument("The erase range exceeds the MAX_LBA");
 }
 
 bool ArgumentParser::isReadCmd(const char* argv[])
