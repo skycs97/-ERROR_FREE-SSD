@@ -3,6 +3,11 @@
 // SSD
 #define MAX_LBA 99
 #define MIN_LBA 0
+#define CMD_INVALID	0xFFFF
+#define CMD_READ	1
+#define CMD_WRITE	2
+#define CMD_ERASE	3
+#define CMD_FLUSH	4
 
 // ArgumentParser
 #define ARG_IDX_CMD		1
