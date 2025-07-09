@@ -10,4 +10,5 @@ public:
 
 	void run(const CommandRunner& cmdRunner) const override;
 	void printHelp() const override;
+	void printResult(const string& result, const string& lba) const;
 };

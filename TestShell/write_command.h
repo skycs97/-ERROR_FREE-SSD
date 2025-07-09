@@ -9,5 +9,6 @@ public:
 	};
 
 	void run(const CommandRunner& cmdRunner) const override;
+	void printResult(const string& result) const;
 	void printHelp() const override;
 };

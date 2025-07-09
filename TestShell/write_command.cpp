@@ -3,10 +3,20 @@
 
 void WriteCommand::run(const CommandRunner& cmdRunner) const
 {
-	std::vector<string> result;
-	result.push_back(cmdRunner.write(ShellCommands[1], ShellCommands[2]));
+	string result = cmdRunner.write(ShellCommands[1], ShellCommands[2]);
+	printResult(result);
 }
 
+void WriteCommand::printResult(const string& result) const
+{
+	std::cout << "[Write] ";
+	if (result == "")
+		std::cout << DONE;
+	else
+		std::cout << ERROR;
+
+	std::cout << std::endl << std::endl;
+}
 void WriteCommand::printHelp() const
 {
 	std::cout << "** Write Command **\n";
