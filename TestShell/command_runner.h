@@ -10,7 +10,7 @@ public:
 	string read(const string& LBA) const;
 	string write(const string& LBA, const string& value) const;
 	string erase(const string& startLBA, const string& LBARange) const;
-
+	string flush() const;
 	bool isSetSsdInterface() const;
 	void setStorage(SsdInterface* ssdInterface);
 private:

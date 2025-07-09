@@ -23,6 +23,7 @@ const std::string CMD_EXIT = "exit";
 const std::string CMD_HELP = "help";
 const std::string CMD_FULLWRITE = "fullwrite";
 const std::string CMD_FULLREAD = "fullread";
+const std::string CMD_FLUSH = "flush";
 const std::string CMD_1_FULL_WRITE_AND_READ_COMPARE_SHORT = "1_";
 const std::string CMD_1_FULL_WRITE_AND_READ_COMPARE = "1_FullWriteAndReadCompare";
 const std::string CMD_2_PARTIAL_LBA_WRITE_SHORT = "2_";
@@ -39,6 +40,7 @@ const vector<string> AVAILABLE_COMMAND_LIST = {
 	CMD_EXIT,
 	CMD_FULLWRITE,
 	CMD_FULLREAD,
+	CMD_FLUSH,
 	CMD_1_FULL_WRITE_AND_READ_COMPARE,
 	CMD_2_PARTIAL_LBA_WRITE,
 	CMD_3_WRITE_READ_AGING,

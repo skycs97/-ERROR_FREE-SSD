@@ -133,6 +133,7 @@
     <ClCompile Include="erase_command.cpp" />
     <ClCompile Include="erase_range_command.cpp" />
     <ClCompile Include="exit_command.cpp" />
+    <ClCompile Include="flush_command.cpp" />
     <ClCompile Include="full_read_command.cpp" />
     <ClCompile Include="full_write_and_read_compare_command.cpp" />
     <ClCompile Include="full_write_command.cpp" />
@@ -161,6 +162,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="flush_command.h" />
     <ClInclude Include="ssd_impl.h" />
     <ClInclude Include="write_read_aging_command.h" />
     <ClInclude Include="command.h" />

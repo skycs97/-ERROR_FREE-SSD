@@ -13,6 +13,7 @@ public:
 	MOCK_METHOD(string, read, (const string&), (override));
 	MOCK_METHOD(string, write, (const string&, const string&), (override));
 	MOCK_METHOD(string, erase, (const string&, const string&), (override));
+	MOCK_METHOD(string, flush, (), (override));
 };
 
 class TestShellFixtureWithMock : public Test {
@@ -124,6 +125,18 @@ TEST_F(TestShellFixtureWithMock, CommandRunFullRead) {
 	EXPECT_CALL(mockStorage, read(_))
 		.Times(100)
 		.WillRepeatedly(Return("0xAAAABBBB"));
+	EXPECT_TRUE(command != nullptr);
+
+	command->run(runner);
+}
+
+TEST_F(TestShellFixtureWithMock, CommandRunFlush) {
+
+	auto command = parser.parseAndMakeShellCommand("flush");
+
+	EXPECT_CALL(mockStorage, flush)
+		.Times(1)
+		.WillRepeatedly(Return(""));
 	EXPECT_TRUE(command != nullptr);
 
 	command->run(runner);

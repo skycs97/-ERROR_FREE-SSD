@@ -7,6 +7,7 @@ public:
 	string write(const string& index, const string& data) override;
 	string erase(const string& startIndex, const string& range) override;
 
+	string flush() override;
 private:
 	const string ssdOutputPath = "ssd_output.txt";
 	const string ssdExcutable = R"(..\x64\Release\ssd.exe)";
