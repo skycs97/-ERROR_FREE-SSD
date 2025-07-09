@@ -36,7 +36,7 @@ void FullWriteAndReadCompareCommand::run(const CommandRunner& cmdRunner) const
 	std::cout << "Pass" << std::endl;
 }
 
-bool FullWriteAndReadCompare::partialWrite(const CommandRunner& cmdRunner, int lba, int testSize, string data) const
+bool FullWriteAndReadCompareCommand::partialWrite(const CommandRunner& cmdRunner, int lba, int testSize, string data) const
 {
 	int totalResult = true;
 	for (int i = 0; i < testSize; i++) {
@@ -48,7 +48,7 @@ bool FullWriteAndReadCompare::partialWrite(const CommandRunner& cmdRunner, int l
 	return totalResult;
 }
 
-bool FullWriteAndReadCompare::partialRead(const CommandRunner& cmdRunner, int lba, int testSize) const
+bool FullWriteAndReadCompareCommand::partialRead(const CommandRunner& cmdRunner, int lba, int testSize) const
 {
 	int totalResult = true;
 	for (int i = 0; i < testSize; i++) {

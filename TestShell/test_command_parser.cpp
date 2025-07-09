@@ -50,7 +50,7 @@ TEST(CommandParserTest, HelpWithWrongArgs) {
 	CommandParser cmdParser;
 	string inputCommand = "help 0";
 
-	EXPECT_THROW(cmdParser.getComparseAndMakeShellCommandmand(inputCommand), TestScriptFailExcpetion);
+	EXPECT_THROW(cmdParser.parseAndMakeShellCommand(inputCommand), TestScriptFailExcpetion);
 }
 
 TEST(CommandParserTest, Exit) {
