@@ -29,6 +29,8 @@ const std::string CMD_2_PARTIAL_LBA_WRITE_SHORT = "2_";
 const std::string CMD_2_PARTIAL_LBA_WRITE = "2_PartialLBAWrite";
 const std::string CMD_3_WRITE_READ_AGING_SHORT = "3_";
 const std::string CMD_3_WRITE_READ_AGING = "3_WriteReadAging";
+const std::string CMD_ERASE = "erase";
+const std::string CMD_ERASE_RANGE = "erase_range";
 
 const vector<string> AVAILABLE_COMMAND_LIST = {
 	CMD_HELP,
@@ -39,7 +41,9 @@ const vector<string> AVAILABLE_COMMAND_LIST = {
 	CMD_FULLREAD,
 	CMD_1_FULL_WRITE_AND_READ_COMPARE,
 	CMD_2_PARTIAL_LBA_WRITE,
-	CMD_3_WRITE_READ_AGING
+	CMD_3_WRITE_READ_AGING,
+	CMD_ERASE,
+	CMD_ERASE_RANGE
 };
 
 const std::map<string, string> shortCommandToCommand = {

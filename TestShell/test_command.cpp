@@ -59,4 +59,20 @@ TEST_F(CommandFactoryTest, fullread) {
 	EXPECT_TRUE(command->getNumOfArgs() == 0);
 	EXPECT_EQ("fullread", command->getCmdName());
 }
+
+TEST_F(CommandFactoryTest, Erase) {
+
+	auto command = parseAndMakeShellCommand("erase 0 1");
+
+	EXPECT_TRUE(command->getNumOfArgs() == 2);
+	EXPECT_EQ("erase", command->getCmdName());
+}
+
+TEST_F(CommandFactoryTest, EraseInRage) {
+
+	auto command = parseAndMakeShellCommand("erase_range 0 1");
+
+	EXPECT_TRUE(command->getNumOfArgs() == 2);
+	EXPECT_EQ("erase_range", command->getCmdName());
+}
 #endif

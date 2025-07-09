@@ -6,6 +6,8 @@ public:
 	CommandFactoryComplex() {
 		addFactory(CMD_HELP, new HelpCommandFactory());
 		addFactory(CMD_READ, new ReadCommandFactory());
+		addFactory(CMD_ERASE, new EraseCommandFactory());
+		addFactory(CMD_ERASE_RANGE, new EraseRangeCommandFactory());
 		addFactory(CMD_WRITE, new WriteCommandFactory());
 		addFactory(CMD_EXIT, new ExitCommandFactory());
 		addFactory(CMD_FULLREAD, new FullReadCommandFactory());
