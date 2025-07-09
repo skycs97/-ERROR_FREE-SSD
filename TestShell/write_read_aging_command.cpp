@@ -5,7 +5,16 @@
 #include "command_runner.h"
 #include "write_read_aging_command.h"
 
-void WriteReadAging::run(const CommandRunner& cmdRunner) const
+namespace {
+	const int numOfArgs = 0;
+}
+
+WriteReadAgingCommand::WriteReadAgingCommand(const std::vector<std::string>& args)
+	:Command(CMD_3_WRITE_READ_AGING, ::numOfArgs)
+{
+}
+
+void WriteReadAgingCommand::run(const CommandRunner& cmdRunner) const
 {
 	string lba0 = "0";
 	string lba99 = "99";
@@ -43,11 +52,16 @@ string WriteReadAging::hexToString(unsigned int random_value) const
 	return ss.str();
 }
 
-void WriteReadAging::printHelp() const
+void WriteReadAgingCommand::printHelp() const
 {
 	std::cout << "** Write Read Aging Command **\n";
 	std::cout << " - A test that writes a random value to LBA 0 and 99 and then reads it to confirm, repeated 200 times..\n";
 	std::cout << "Usage\n";
 	std::cout << " 3_WriteReadAging\n";
 	std::cout << " 3_\n";
+}
+
+std::shared_ptr<Command> WriteReadAgingCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
+{
+	return std::make_shared<WriteReadAgingCommand>(args);
 }

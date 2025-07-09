@@ -6,19 +6,52 @@
 #include "command_parser.h"
 #include "command_list.h"
 #include "command_factory.h"
+#include "TEST_SHELL_CONFIG.h"
 
 using std::string;
 
-Command* CommandParser::getCommand(const std::string& command)
+std::shared_ptr<Command> CommandParser::parseAndMakeShellCommand(const std::string& userInputCommand)
 {
-	FactoryCommand fc;
-	Command* cmd = fc.makeCommand(command);
+	auto splited_cmd = splitCmd(userInputCommand);
+	string cmdName = splited_cmd.first;
+	vector<string> args = splited_cmd.second;
+
+	auto cmd = makeCommand(cmdName, args);
 
 	if (cmd == nullptr)
 		throw TestScriptFailExcpetion("Invalid command");;
+		throw std::invalid_argument("Invalid command");
+	if (cmd->getNumOfArgs() != args.size())
+		throw std::invalid_argument("invliad arguments");
+
+	return cmd;
+}
+
+std::pair<string, vector<string>> CommandParser::splitCmd(const std::string& userInputCommand)
+{
+	std::istringstream ss(userInputCommand);
+	std::string word;
+	std::vector<std::string> args;
 
 	if (cmd->getShellCommands().size() != cmd->getNumOfArgs())
 		throw TestScriptFailExcpetion("Invalid command");;
+	ss >> word;
+	string cmdName = word;
 
-	return cmd;
+	while (ss >> word) {
+		args.push_back(word);
+	}
+
+	return std::make_pair(cmdName, args);
+}
+
+std::shared_ptr<Command> CommandParser::makeCommand(const std::string& cmdName, const std::vector<std::string>& args)
+{
+	auto factory = factoryComplex.getFactory(cmdName);
+
+	if (factory == nullptr) {
+		return nullptr;
+	}
+
+	return factory->makeCommand(cmdName, args);
 }

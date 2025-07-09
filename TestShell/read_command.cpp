@@ -1,10 +1,19 @@
 #include <iostream>
 #include "read_command.h"
 
+namespace {
+	const int numOfArgs = 1;
+}
+
+ReadCommand::ReadCommand(const std::vector<std::string>& args) : Command(CMD_READ, ::numOfArgs)
+{
+	LBA = args[0];
+}
+
 void ReadCommand::run(const CommandRunner& cmdRunner) const
 {
-	string result = cmdRunner.read(ShellCommands[1]);
-	printResult(result, ShellCommands[1]);
+	string result = cmdRunner.read(LBA);
+	printResult(result, LBA);
 }
 
 void ReadCommand::printResult(const string& result, const string& lba) const
@@ -24,4 +33,9 @@ void ReadCommand::printHelp() const
 	std::cout << "Example\n";
 	std::cout << " read 0\n";
 	std::cout << " read 10\n";
+}
+
+std::shared_ptr<Command> ReadCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
+{
+	return std::make_shared<ReadCommand>(args);
 }

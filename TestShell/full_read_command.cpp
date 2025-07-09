@@ -1,5 +1,14 @@
 #include <iomanip>
 #include "full_read_command.h"
+#include <iomanip>
+#include <string>
+namespace {
+	const int numOfArgs = 0;
+}
+
+FullReadCommand::FullReadCommand(const std::vector<std::string>& args) : Command(CMD_FULLREAD, ::numOfArgs)
+{
+}
 
 void FullReadCommand::run(const CommandRunner& cmdRunner) const
 {
@@ -23,4 +32,9 @@ void FullReadCommand::printHelp() const
 	std::cout << " - LBA (" << MIN_LBA << " ~ " << MAX_LBA << ")\n\n";
 	std::cout << "Usage\n";
 	std::cout << " fullread\n";
+}
+
+std::shared_ptr<Command> FullReadCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
+{
+	return std::make_shared<FullReadCommand>(args);
 }

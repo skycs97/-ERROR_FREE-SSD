@@ -7,16 +7,15 @@
 
 class Command {
 public:
-	Command(std::vector<std::string> commands);
-	std::vector<std::string> getShellCommands(void);
+	Command(const string& cmdName, const int numOfArgs);
 	int getNumOfArgs(void);
+	string getCmdName(void);
 
 	virtual void run(const CommandRunner& cmdRunner) const = 0;
 	virtual void printHelp(void) const = 0;
-
-	std::vector<std::string> ShellCommands;
-
-	int numOfArgs = 0;
+protected:
+	int numOfArgs;
+	string cmdName;
 };
 
 class TestScriptFailExcpetion : public std::exception {

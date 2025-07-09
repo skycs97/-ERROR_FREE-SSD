@@ -1,11 +1,10 @@
 #pragma once
 #include "command.h"
+#include "command_factory.h"
 
-class PartialLBAWrite : public Command {
+class PartialLBAWriteCommand : public Command {
 public:
-	PartialLBAWrite(std::vector<std::string> cmd) : Command(cmd) {
-		numOfArgs = 1;
-	};
+	PartialLBAWriteCommand(const std::vector<std::string>& cmd);
 	void run(const CommandRunner& cmdRunner) const override;
 	void printHelp() const override;
 private:
@@ -14,4 +13,9 @@ private:
 	std::vector<std::string> TestLbaList = { "4","0","3","1","2" };
 
 	bool checkResult(const std::vector<std::string>& result) const;
+};
+
+class PartialLBAWriteCommandFactory : public CommandFactory {
+public:
+	std::shared_ptr<Command> makeCommand(const string& cmdName, const std::vector<string>& args) override;
 };

@@ -75,7 +75,7 @@ void TestShell::printTestResult(const string& result)
 bool TestShell::parseAndRunCommand(const string& input) {
 	bool result = true;
 	try {
-		command = parser.getCommand(input);
+		auto command = parser.parseAndMakeShellCommand(input);
 		command->run(runner);
 	}
 	catch (TestScriptFailExcpetion& e) {
