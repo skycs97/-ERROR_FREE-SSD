@@ -1,6 +1,6 @@
-#include "nand_eraser.h"
+#include "erase_command.h"
 
-void NandEraser::erase(int lba, int size)
+void EraseCommand::erase(int lba, int size)
 {
 	if (BUFFER_ENABLE)
 	{
@@ -16,7 +16,7 @@ void NandEraser::erase(int lba, int size)
 	nandFlashMemory->write(datas);
 	return;
 }
-bool NandEraser::parseArg(int argc, const char* argv[])
+bool EraseCommand::parseArg(int argc, const char* argv[])
 {
 	if (argc != ERASE_CORRECT_ARG_SIZE) throw std::invalid_argument("number of argument is incorrect");
 
@@ -32,22 +32,22 @@ bool NandEraser::parseArg(int argc, const char* argv[])
 	return true;
 }
 
-bool NandEraser::isInvalidAddress(int nLBA) {
+bool EraseCommand::isInvalidAddress(int nLBA) {
 	if ((nLBA < MIN_LBA) || (nLBA > MAX_LBA)) return true;
 	return false;
 }
 
-bool NandEraser::isInvalidEraseCount(int nEraseLBACount) {
+bool EraseCommand::isInvalidEraseCount(int nEraseLBACount) {
 	if ((nEraseLBACount < 1) || (nEraseLBACount > 10)) return true;
 	return false;
 }
 
-bool NandEraser::isInvalidEraseRange(int nEraseStartLBA, int nEraseLBACount) {
+bool EraseCommand::isInvalidEraseRange(int nEraseStartLBA, int nEraseLBACount) {
 	if ((nEraseStartLBA + nEraseLBACount - 1) > MAX_LBA) return true;
 	return false;
 }
 
-string NandEraser::run()
+string EraseCommand::run()
 {
 	if (BUFFER_ENABLE)
 	{

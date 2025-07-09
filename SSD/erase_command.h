@@ -8,9 +8,9 @@
 
 using std::string;
 
-class NandEraser : public SSDCommand {
+class EraseCommand : public SSDCommand {
 public:
-	NandEraser(NandFlashMemory* nandFlashMemory, BufferManager* bufferManager)
+	EraseCommand(NandFlashMemory* nandFlashMemory, BufferManager* bufferManager)
 		: nandFlashMemory{ nandFlashMemory }, bufferManager{ bufferManager } {
 	}
 	virtual bool parseArg(int argc, const char* argv[]) override;

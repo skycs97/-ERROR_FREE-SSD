@@ -1,7 +1,7 @@
 #pragma once
-#include "nand_reader.h"
-#include "nand_writer.h"
-#include "nand_eraser.h"
+#include "read_command.h"
+#include "write_command.h"
+#include "erase_command.h"
 #include "nand_flash_memory.h"
 #include "nand_flash_memory_impl.h"
 #include "output_handler.h"
@@ -16,10 +16,6 @@ public:
 
 	void run(int argc, const char* argv[]);
 private:
-
-	NandReader* reader;
-	NandWriter* writer;
-	NandEraser* eraser;
 	NandFlashMemory* nand;
 	BufferManager* bufferManager;
 	OutputHandler* outputHandler;

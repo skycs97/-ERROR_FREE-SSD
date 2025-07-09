@@ -134,7 +134,7 @@
     <ClCompile Include="buffer_manager_test.cpp" />
     <ClCompile Include="file_handler_test.cpp" />
     <ClCompile Include="file_handler_mock.h" />
-    <ClCompile Include="nand_eraser.cpp" />
+    <ClCompile Include="erase_command.cpp" />
     <ClCompile Include="nand_flash_memory_impl.cpp" />
     <ClCompile Include="nand_flash_memory_impl_test.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> %(AdditionalOptions)</AdditionalOptions>
@@ -142,15 +142,15 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
-    <ClCompile Include="nand_flush.cpp" />
-    <ClCompile Include="nand_writer.cpp" />
-    <ClCompile Include="nand_writer_test.cpp" />
+    <ClCompile Include="flush_command.cpp" />
+    <ClCompile Include="write_command.cpp" />
+    <ClCompile Include="write_command_test.cpp" />
     <ClCompile Include="ssd.cpp" />
     <ClCompile Include="ssd_command.cpp" />
     <ClCompile Include="ssd_test.cpp" />
     <None Include="packages.config" />
-    <ClCompile Include="nand_reader.cpp" />
-    <ClCompile Include="nand_reader_test.cpp" />
+    <ClCompile Include="read_command.cpp" />
+    <ClCompile Include="read_command_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="file_handler.cpp" />
@@ -163,9 +163,9 @@
     <ClInclude Include="buffer_manager.h" />
     <ClInclude Include="file_handler.h" />
     <ClInclude Include="global_config.h" />
-    <ClInclude Include="nand_eraser.h" />
+    <ClInclude Include="erase_command.h" />
     <ClInclude Include="nand_flash_memory_impl.h" />
-    <ClInclude Include="nand_flush.h" />
+    <ClInclude Include="flush_command.h" />
     <ClInclude Include="output_handler.h" />
     <ClInclude Include="ssd.h" />
     <ClInclude Include="ssd_command.h" />
@@ -173,8 +173,8 @@
   <ItemGroup>
     <ClInclude Include="nand_flash_memory.h" />
     <ClInclude Include="nand_flash_memory_mock.h" />
-    <ClInclude Include="nand_reader.h" />
-    <ClInclude Include="nand_writer.h" />
+    <ClInclude Include="read_command.h" />
+    <ClInclude Include="write_command.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

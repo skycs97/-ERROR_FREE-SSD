@@ -1,14 +1,14 @@
 #include "ssd_command.h"
-#include "nand_flush.h"
+#include "flush_command.h"
 
 using std::string;
 
-bool NandFlush::flush()
+bool FlushCommand::flush()
 {
 	return false;
 }
 
-bool NandFlush::parseArg(int argc, const char* argv[])
+bool FlushCommand::parseArg(int argc, const char* argv[])
 {
 	if (argc != FLUSH_CORRECT_ARG_SIZE) throw std::invalid_argument("number of argument is incorrect");
 	parser.setCmdType(CMD_FLUSH);
@@ -16,7 +16,7 @@ bool NandFlush::parseArg(int argc, const char* argv[])
 	return true;
 }
 
-string NandFlush::run()
+string FlushCommand::run()
 {
 	return "NOT IMPLEMENTED YET";
 }

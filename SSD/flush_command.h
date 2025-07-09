@@ -6,9 +6,9 @@
 #include "buffer_manager.h"
 
 using std::string;
-class NandFlush : public SSDCommand {
+class FlushCommand : public SSDCommand {
 public:
-	NandFlush(NandFlashMemory* nandFlashMemory, BufferManager* bufferManager) :
+	FlushCommand(NandFlashMemory* nandFlashMemory, BufferManager* bufferManager) :
 		nandFlashMemory{ nandFlashMemory }, bufferManager{ bufferManager } {
 	}
 	virtual bool parseArg(int argc, const char* argv[]) override;
