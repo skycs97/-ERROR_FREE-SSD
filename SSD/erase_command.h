@@ -26,7 +26,6 @@ private:
 
 	NandFlashMemory* nandFlashMemory;
 	BufferManager* bufferManager;
-	ArgumentParser parser;	
 	int startLBA;
 	int count;
 };

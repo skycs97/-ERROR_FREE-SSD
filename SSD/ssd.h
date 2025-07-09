@@ -6,7 +6,6 @@
 #include "nand_flash_memory_impl.h"
 #include "output_handler.h"
 #include "file_handler.h"
-#include "argument_parser.h"
 
 class SSD
 {
@@ -19,6 +18,5 @@ private:
 	NandFlashMemory* nand;
 	BufferManager* bufferManager;
 	OutputHandler* outputHandler;
-	ArgumentParser* argumentParser;
 	SSDCommandFactory* factory;
 };

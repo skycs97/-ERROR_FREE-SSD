@@ -18,10 +18,10 @@ public:
 	virtual string run() override;
 private:
 	bool isInvalidAddress();
+	void validDataOrThrow();
 
 	NandFlashMemory* nandFlashMemory;
 	BufferManager* bufferManager;
-	ArgumentParser parser;
 
 	int lba = 0;
 	string data;
