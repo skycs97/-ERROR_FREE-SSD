@@ -47,13 +47,7 @@ std::pair<string, vector<string>> CommandParser::splitCmd(const std::string& use
 
 std::shared_ptr<Command> CommandParser::makeCommand(const std::string& cmdName, const std::vector<std::string>& args)
 {
-	auto factory = factoryComplex.getFactory(cmdName);
-
-	if (factory == nullptr) {
-		return nullptr;
-	}
-
-	return factory->makeCommand(cmdName, args);
+	return factoryComplex.makeCommand(cmdName, args);
 }
 
 bool CommandParser::isShortedCommand(const std::string cmdName) {
