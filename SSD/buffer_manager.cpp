@@ -34,7 +34,7 @@ void BufferManager::createBufferFile(int buffer_num)
 	string file_path = BUFFER_DIR_NAME "\\";
 	file_path += file_name;
 	fileHandler->createEmptyFile(file_path);
-	fillBufferInfo(file_name, buffer_num);
+	fillBufferInfo(file_name, buffer_num, false);
 	return;
 }
 
@@ -56,11 +56,11 @@ void BufferManager::updateBufferState(int buffer_num)
 	
 	if (buffer_fname.size() > 1) throw std::exception("There are many buffer files in same prefix.");
 	
-	fillBufferInfo(buffer_fname.front(), buffer_num);
+	fillBufferInfo(buffer_fname.front(), buffer_num, false);
 	IncreaseBufferCnt();
 }
 
-void BufferManager::fillBufferInfo(string fname, int buffer_num)
+void BufferManager::fillBufferInfo(string fname, int buffer_num, bool need_file_change)
 {
 	std::smatch m;
 	std::regex writeRegex(R"([1-5]_W_([0-9]*)_(0x[0-9A-Fa-f]+))");
@@ -94,6 +94,11 @@ void BufferManager::fillBufferInfo(string fname, int buffer_num)
 			INVALID_VALUE,
 			"",
 			INVALID_VALUE);
+	}
+
+	if (need_file_change)
+	{
+		writeBuffer(fname, buffer_num);
 	}
 }
 
@@ -147,10 +152,8 @@ void BufferManager::addWriteCommand(int lba, const string& data) {
 	int index = getUsedBufferCount();
 	std::ostringstream oss;
 	oss << index + 1 << "_W_" << lba <<"_"<< data;
-	fillBufferInfo(oss.str(), index);
+	fillBufferInfo(oss.str(), index, true);
 	IncreaseBufferCnt();
-
-	writeBuffer();
 }
 
 void BufferManager::addEraseCommand(int lba, int count) {
@@ -161,10 +164,8 @@ void BufferManager::addEraseCommand(int lba, int count) {
 	int index = getUsedBufferCount();
 	std::ostringstream oss;
 	oss << index + 1 << "_E_" << lba <<"_"<<count;
-	fillBufferInfo(oss.str(), index);
+	fillBufferInfo(oss.str(), index, true);
 	IncreaseBufferCnt();
-
-	writeBuffer();
 }
 
 void BufferManager::flush() {
@@ -185,14 +186,17 @@ void BufferManager::flush() {
 		}
 
 		string file_name = string(getBufferFilePrefix(index)) + BUFFER_NAME_EMPTY;
-		fillBufferInfo(file_name, index);
+		fillBufferInfo(file_name, index, true);
 		DecreaseBufferCnt();
 	}
 	nandFlashMemory->write(datas);
 }
 
-void BufferManager::writeBuffer() {
-	//bufferData의 string을 이름으로 하는 file들 생성
+void BufferManager::writeBuffer(const string& new_name, int buffer_num) {
+	vector<string> old_name = fileHandler->findFileUsingPrefix(BUFFER_DIR_NAME, getBufferFilePrefix(buffer_num));
+	if (old_name.size() > 1) throw std::exception("There are many buffer files in same prefix.");
+
+	fileHandler->rename(old_name.front(), new_name);
 }
 
 int BufferManager::getUsedBufferCount() {
