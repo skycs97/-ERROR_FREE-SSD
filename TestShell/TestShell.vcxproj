@@ -130,6 +130,8 @@
     <ClCompile Include="command_factory_complex.cpp" />
     <ClCompile Include="command_runner.cpp" />
     <ClCompile Include="command_parser.cpp" />
+    <ClCompile Include="erase_command.cpp" />
+    <ClCompile Include="erase_range_command.cpp" />
     <ClCompile Include="exit_command.cpp" />
     <ClCompile Include="full_read_command.cpp" />
     <ClCompile Include="full_write_and_read_compare_command.cpp" />
@@ -165,6 +167,8 @@
     <ClInclude Include="command_factory_complex.h" />
     <ClInclude Include="command_list.h" />
     <ClInclude Include="command_runner.h" />
+    <ClInclude Include="erase_command.h" />
+    <ClInclude Include="erase_range_command.h" />
     <ClInclude Include="exit_command.h" />
     <ClInclude Include="full_read_command.h" />
     <ClInclude Include="full_write_and_read_compare_command.h" />

@@ -79,6 +79,12 @@
     <ClCompile Include="logger.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="erase_command.cpp">
+      <Filter>소스 파일\cmds</Filter>
+    </ClCompile>
+    <ClCompile Include="erase_range_command.cpp">
+      <Filter>소스 파일\cmds</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="command_parser.h">
@@ -131,6 +137,12 @@
     </ClInclude>
     <ClInclude Include="logger.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="erase_command.h">
+      <Filter>헤더 파일\cmds</Filter>
+    </ClInclude>
+    <ClInclude Include="erase_range_command.h">
+      <Filter>헤더 파일\cmds</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
