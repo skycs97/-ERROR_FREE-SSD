@@ -1,5 +1,4 @@
 #pragma once
-
 #include "command.h"
 
 class ReadCommand : public Command {
