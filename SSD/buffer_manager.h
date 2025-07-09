@@ -46,7 +46,8 @@ public:
 private:
 	NandFlashMemory* nandFlashMemory;
 	FileHandler* fileHandler;
-	vector<BufferInfo> buffers;
+	vector<BufferInfo> buffers{ BUFFER_SIZE };
+	int valid_buf_cnt{ 0 };
 
 	// Buffer 파일 존재 여부를 반환합니다.
 	bool existBufferFile(int buffer_num);
@@ -60,11 +61,24 @@ private:
 	// 버퍼 상태 업데이트
 	void updateBufferState(int buffer_num);
 
-	void fillBufferInfo(string fname);
+	void fillBufferInfo(string fname, int buffer_num);
+
+	void setBufferInfo(
+		int buffer_num,
+		string fname,
+		CMD_TYPE cmd,
+		int lba,
+		string written_data,
+		int size
+	);
 
 	// 버퍼가 5개가 가득 찬 경우 true를 리턴합니다.
 	bool isBufferFull();
 
 	//fileHandler에 새로 버퍼를 기록합니다.
 	void writeBuffer();
+
+	void IncreaseBufferCnt();
+
+	void DecreaseBufferCnt();
 };
