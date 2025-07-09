@@ -4,6 +4,55 @@
 #include <sstream>
 #include <iomanip>
 
+void BufferManager::init() {
+	fileHandler->createDirIfNotExist(BUFFER_DIR_NAME);
+
+	for (int buffer_num = 1; buffer_num <= BUFFER_SIZE; buffer_num++)
+	{
+		if (existBufferFile(buffer_num))
+		{
+			updateBufferState(buffer_num);
+		}
+		else
+		{
+			createBufferFile(buffer_num);
+		}
+	}
+}
+
+bool BufferManager::existBufferFile(int buffer_num)
+{
+	string dir_path = BUFFER_DIR_NAME "\\*";
+	string file_name = getBufferFilePreFix(buffer_num);
+	if (fileHandler->isExist(dir_path, file_name)) return true;
+	return false;
+}
+
+void BufferManager::createBufferFile(int buffer_num)
+{
+	string file_path = BUFFER_DIR_NAME "\\";
+	file_path += string(getBufferFilePreFix(buffer_num)) + BUFFER_NAME_EMPTY;
+	fileHandler->createEmptyFile(file_path);
+	return;
+}
+
+const char* BufferManager::getBufferFilePreFix(int buffer_num)
+{
+	switch (buffer_num) {
+	case 1: return PREFIX_BUFFER_FILE1;
+	case 2: return PREFIX_BUFFER_FILE2;
+	case 3: return PREFIX_BUFFER_FILE3;
+	case 4: return PREFIX_BUFFER_FILE4;
+	case 5: return PREFIX_BUFFER_FILE5;
+	default: return "";
+	}
+}
+
+void BufferManager::updateBufferState(int buffer_num)
+{
+	// TODO
+}
+
 bool BufferManager::isBufferFull() {
 	return getUsedBufferCount() == BUFFER_SIZE;
 }
