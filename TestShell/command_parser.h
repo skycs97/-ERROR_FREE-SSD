@@ -8,5 +8,7 @@ public:
 private:
 	std::pair<string, vector<string>> splitCmd(const std::string& command);
 	std::shared_ptr<Command> makeCommand(const std::string& cmdName, const std::vector<std::string>& args);
+	bool isShortedCommand(const std::string cmdName);
+	std::string convertShortCommand(const std::string cmdName);
 	CommandFactoryComplex factoryComplex;
 };
