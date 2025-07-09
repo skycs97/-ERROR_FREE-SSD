@@ -1,3 +1,4 @@
+#ifdef _DEBUG
 #include "gmock/gmock.h"
 #include <string>
 #include <vector>
@@ -58,3 +59,4 @@ TEST_F(CommandFactoryTest, fullread) {
 	EXPECT_TRUE(command->getNumOfArgs() == 0);
 	EXPECT_EQ("fullread", command->getCmdName());
 }
+#endif

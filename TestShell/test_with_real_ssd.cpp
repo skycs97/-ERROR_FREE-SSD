@@ -1,3 +1,4 @@
+#ifdef _DEBUG
 #include "gmock/gmock.h"
 #include "ssd_interface.h"
 #include <string>
@@ -51,3 +52,4 @@ TEST_F(TestShellFixtureWithReal, CmdRunnerRealReadFail) {
 
 	readCommand->run(runner);
 }
+#endif
