@@ -12,16 +12,6 @@ using std::string;
 class ArgumentParser {
 public:
 
-	/*
-	enum CMD_TYPE {
-		NONE_CMD = 0,
-		READ_CMD = 1,
-		WRITE_CMD = 2,
-		ERASE_CMD = 3,
-		FLUSH_CMD = 4,
-	};
-	*/
-
 	CMD_TYPE getCmdType();
 	int getLBA();
 	int getLBACount();
