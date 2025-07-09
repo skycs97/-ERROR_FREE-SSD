@@ -154,3 +154,32 @@ TEST_F(BufferManagerFixture, DISABLED_TC7) {
 	// E 0 5 에 의해 W 3 0x11112222 가 지워집니다.
 	EXPECT_EQ(2, manager.getUsedBufferCount());
 }
+
+TEST_F(BufferManagerFixture, DISABLED_TC8) {
+	manager.addEraseCommand(0, 2);
+	manager.addWriteCommand(2, "0x11112222");
+	manager.addEraseCommand(3, 2);
+
+	// E 0 5 
+	// W 2 0x11112222 로 최적화가 됩니다.
+	EXPECT_EQ(2, manager.getUsedBufferCount());
+}
+
+TEST_F(BufferManagerFixture, TC9) {
+	manager.addEraseCommand(0, 2);
+	manager.addWriteCommand(2, "0x11112222");
+	manager.addEraseCommand(3, 9);
+
+	// TC8과 달리 최적화가 되지 않아 그대로 버퍼에 담깁니다.
+	EXPECT_EQ(3, manager.getUsedBufferCount());
+}
+
+TEST_F(BufferManagerFixture, DISABLED_TC10) {
+	manager.addEraseCommand(0, 3);
+	manager.addWriteCommand(1, "0x11111111");
+	manager.addWriteCommand(2, "0x22222222");
+	manager.addWriteCommand(3, "0ㅌ3333333");
+
+	// E 0 3 이 이후에 들어온 W 명령어들에 의해 지워집니다.
+	EXPECT_EQ(3, manager.getUsedBufferCount());
+}
