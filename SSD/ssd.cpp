@@ -10,7 +10,7 @@ SSD::SSD(FileHandler* fileHandler) {
 	BufferManager* bufferManager = new BufferManager(nand, fileHandler);
 	reader = new NandReader(nand, bufferManager);
 	writer = new NandWriter(nand, bufferManager);
-	eraser = new NandEraser(nand);
+	eraser = new NandEraser(nand, bufferManager);
 
 	argumentParser = new ArgumentParser();
 }

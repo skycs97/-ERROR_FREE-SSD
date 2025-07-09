@@ -2,6 +2,12 @@
 
 void NandEraser::erase(int lba, int size)
 {
+	if (BUFFER_ENABLE)
+	{
+		bufferManager->addEraseCommand(lba, size);
+		return;
+	}
+
 	vector<string> datas = nandFlashMemory->read();
 	for (int i = lba; i < lba + size; i++)
 	{
