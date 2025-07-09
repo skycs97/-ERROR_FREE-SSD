@@ -19,3 +19,4 @@
 
 // Buffer
 #define BUFFER_ENABLE false
+#define BUFFER_SIZE 5
