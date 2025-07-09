@@ -46,7 +46,7 @@ TEST_F(CommandFactoryTest, fullwrite) {
 
 	Command* command = getCommand("fullwrite");
 
-	EXPECT_TRUE(command->getNumOfArgs() == 1);
+	EXPECT_TRUE(command->getNumOfArgs() == 2);
 	EXPECT_EQ("fullwrite", command->getShellCommands().front());
 }
 
