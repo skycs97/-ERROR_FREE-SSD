@@ -40,9 +40,9 @@ void FullWriteAndReadCompare::run(const CommandRunner& cmdRunner) const
 	}
 
 	if (result.size())
-		std::cout << "FullWriteAndReadCompare Fail" << std::endl;
-	else
-		std::cout << "FullWriteAndReadCompare Pass" << std::endl;
+		throw TestScriptFailExcpetion();
+
+	std::cout << "Pass" << std::endl;
 }
 
 void FullWriteAndReadCompare::printHelp() const

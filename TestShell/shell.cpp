@@ -1,21 +1,17 @@
 #include "shell.h"
 
-void TestShell::runShell() {
+void TestShell::runShell(int argc, char* argv[]) {
 	string input;
+
+	if (isFilePathExist(argc))
+		runShellScript(argv[1]);
 
 	while (1) {
 		input = getUserInput();
 		if (isEmptyInput(input))
 			continue;
 
-		try {
-			command = parser.getCommand(input);
-			command->run(runner);
-		}
-		catch (std::invalid_argument& e) {
-			std::cout << e.what() << std::endl;
-		}
-
+		parseAndRunCommand(input);
 	}
 }
 
@@ -28,4 +24,65 @@ string TestShell::getUserInput() {
 
 bool TestShell::isEmptyInput(const string& input) {
 	return (input == "");
+}
+
+bool TestShell::isFilePathExist(int argc) {
+	return (argc == 2);
+}
+
+void TestShell::runShellScript(const string& filename) {
+	ifstream  inputFile(filename);
+
+	if (isFileOpenFail(inputFile)) {
+		std::cout << "Error: could not open file " << filename << std::endl;
+		exit(1);
+	}
+
+	string input;
+	while (getline(inputFile, input)) {
+		if (isEmptyInput(input))
+			break;
+		printTestProcess(input);
+
+		if (parseAndRunCommand(input) == false)
+			exit(1);
+	}
+
+	inputFile.close();
+
+	exit(0);
+}
+
+bool TestShell::isFileOpenFail(const ifstream& inputFile)
+{
+	return !(inputFile.is_open());
+}
+
+void TestShell::printTestProcess(const string& command)
+{
+	std::cout << std::left << std::setw(30) << command;
+	std::cout << "  ___   " << "Run..";
+}
+
+void TestShell::printTestResult(const string& result)
+{
+	std::cout << result << std::endl;
+}
+
+bool TestShell::parseAndRunCommand(const string& input) {
+	bool result = true;
+	try {
+		command = parser.getCommand(input);
+		command->run(runner);
+	}
+	catch (std::invalid_argument& e) {
+		printTestResult(e.what());
+		result = false;
+	}
+	catch (TestScriptFailExcpetion& e) {
+		printTestResult(e.what());
+		result = false;
+	}
+
+	return result;
 }

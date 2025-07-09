@@ -38,9 +38,9 @@ void WriteReadAging::run(const CommandRunner& cmdRunner) const
 	}
 
 	if (result.size())
-		std::cout << "WriteReadAging Fail" << std::endl;
-	else
-		std::cout << "WriteReadAging Pass" << std::endl;
+		throw TestScriptFailExcpetion();
+
+	std::cout << "Pass" << std::endl;
 }
 
 void WriteReadAging::printHelp() const
