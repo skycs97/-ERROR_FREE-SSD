@@ -19,6 +19,11 @@ public:
 	void erase(int lba, int size);
 
 private:
+
+	bool isInvalidAddress(int nLBA);
+	bool isInvalidEraseCount(int nEraseLBACount);
+	bool isInvalidEraseRange(int nEraseStartAddr, int nEraseLBACount);
+
 	NandFlashMemory* nandFlashMemory;
 	BufferManager* bufferManager;
 	ArgumentParser parser;	

@@ -17,7 +17,7 @@ public:
 	int getSize();
 	string getData();
 	int getEraseStartAddr() { return nEraseStartAddr; }
-	int getEraseCount() { return nEraseCount; }
+	int getEraseLBACount() { return nEraseCount; }
 
 
 	void setCmdType(CMD_TYPE cmdType) { eCmd = cmdType; }
