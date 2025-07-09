@@ -5,6 +5,7 @@
 
 ssd_output.txt
 ssd_nand.txt
+/buffer/
 
 # User-specific files
 *.rsuser

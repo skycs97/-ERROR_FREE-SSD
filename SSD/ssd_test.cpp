@@ -61,7 +61,7 @@ public:
 	const char* READ_COMMAND = "r";
 	const char* WRITE_COMMAND = "w";
 	const char* WRITE_SUCCESS = "";
-	const char* ERROR = "ERROR";
+	const char* ERROR_MESSAGE = "ERROR";
 };
 
 TEST_F(SSDFixture, run_with_r_1)
@@ -80,7 +80,7 @@ TEST_F(SSDFixture, run_with_r_110)
 	int argc = 3;
 	const char* argv[] = { "ssd.exe", READ_COMMAND, INVALID_READ_ADDR };
 
-	EXPECT_CALL(mockedFileHandler, write(OUTPUT_FILENAME, vector<string>{ERROR}))
+	EXPECT_CALL(mockedFileHandler, write(OUTPUT_FILENAME, vector<string>{ERROR_MESSAGE}))
 		.Times(1);
 
 	ssd.run(argc, argv);
@@ -107,7 +107,7 @@ TEST_F(SSDFixture, run_with_w_1_0xzzzzFFFF)
 	int argc = 4;
 	const char* argv[] = { "ssd.exe", WRITE_COMMAND, WRITE_ADDR, INVALID_WRITE_VALUE };
 
-	vector<string> expectedOutput = { ERROR };
+	vector<string> expectedOutput = { ERROR_MESSAGE };
 	EXPECT_CALL(mockedFileHandler, write(OUTPUT_FILENAME, expectedOutput))
 		.Times(1);
 

@@ -13,6 +13,7 @@ class SSD
 public:
 	SSD(FileHandler* fileHandler);
 	~SSD();
+
 	void run(int argc, const char* argv[]);
 private:
 

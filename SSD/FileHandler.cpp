@@ -66,3 +66,47 @@ vector<string> FileHandler::read(const string& file_name) {
 	readfile.close();
 	return lines;
 }
+
+void FileHandler::createDirIfNotExist(const string& dir_path)
+{
+	if (!(CreateDirectoryA(dir_path.c_str(), NULL) || GetLastError() == ERROR_ALREADY_EXISTS)) {
+		throw std::exception("Fail to create buffer directory.");
+	}
+}
+
+bool FileHandler::isExist(const string& dir_path, const string& file_name)
+{
+	WIN32_FIND_DATAA findFileData;
+	HANDLE hFind = FindFirstFileA(dir_path.c_str(), &findFileData);
+
+	if (hFind == INVALID_HANDLE_VALUE) {
+		throw std::exception("Can't open buffer directory.");
+	}
+
+	bool found = false;
+	do {
+		if (!(findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+			if (strncmp(findFileData.cFileName, file_name.c_str(), 2) == 0) {
+				found = true;
+				break;
+			}
+		}
+	} while (FindNextFileA(hFind, &findFileData));
+
+	FindClose(hFind);
+
+	return found;
+}
+
+void FileHandler::createEmptyFile(const string& file_path)
+{
+	std::ofstream outFile(file_path.c_str());
+	if (!outFile) {
+		throw std::exception("Fail to create buffer file.");
+	}
+
+	outFile << "";
+	outFile.close();
+
+	return;
+}

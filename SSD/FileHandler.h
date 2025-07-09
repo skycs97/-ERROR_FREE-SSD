@@ -1,5 +1,8 @@
 #pragma once
 #include <string>
+#include <cstring>
+#include <Windows.h>
+#include <stdexcept>
 #include <fstream>
 #include <vector>
 #include "global_config.h"
@@ -18,5 +21,10 @@ public:
 	virtual void write(const string& file_name, const vector<string>& output_string);
 	virtual vector<string> read(const string& file_name);
 
+	void createDirIfNotExist(const string& dir_path);
+	bool isExist(const string& dir_path, const string& file_name);
+	void createEmptyFile(const string& file_path);
+
 private:
+
 };

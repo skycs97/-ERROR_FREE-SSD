@@ -1,7 +1,11 @@
 ﻿#pragma once
 #include <string>
 #include <vector>
+#include <cstring>
+#include <Windows.h>
+#include <stdexcept>
 #include "nand_flash_memory_impl.h"
+
 using std::string;
 using std::vector;
 
@@ -10,6 +14,8 @@ public:
 	BufferManager(NandFlashMemory* nandFlashMemory, FileHandler* fileHandler)
 		: nandFlashMemory{ nandFlashMemory }, fileHandler{ fileHandler } {
 	}
+
+	void init();
 
 	// lba 데이터가 버퍼에 없으면 false 를 리턴하고, 
 	// 있으면 outputData에 데이터를 담고 true를 리턴합니다.
@@ -33,7 +39,19 @@ private:
 	FileHandler* fileHandler;
 	vector<string> buffers;
 
-	//버퍼가 5개가 가득 찬 경우 true를 리턴합니다.
+	// Buffer 파일 존재 여부를 반환합니다.
+	bool existBufferFile(int buffer_num);
+
+	// Buffer Empty 파일을 생성합니다.
+	void createBufferFile(int buffer_num);
+
+	// Buffer 파일의 Prefix 매크로 반환합니다.
+	const char* getBufferFilePreFix(int buffer_num);
+
+	// 버퍼 상태 업데이트
+	void updateBufferState(int buffer_num);
+
+	// 버퍼가 5개가 가득 찬 경우 true를 리턴합니다.
 	bool isBufferFull();
 
 	//fileHandler에 새로 버퍼를 기록합니다.
