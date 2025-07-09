@@ -21,10 +21,10 @@ public:
 	virtual void write(const string& file_name, const vector<string>& output_string);
 	virtual vector<string> read(const string& file_name);
 
-	void createDirIfNotExist(const string& dir_path);
-	bool isExist(const string& dir_path, const string& file_name);
-	void createEmptyFile(const string& file_path);
-	void rename(const string& old_name, const string& new_name) const;
+	virtual void createDirIfNotExist(const string& dir_path);
+	virtual bool isExist(const string& dir_path, const string& file_name);
+	virtual void createEmptyFile(const string& file_path);
+	virtual void rename(const string& old_name, const string& new_name) const;
 	vector<string> findFileUsingPrefix(const string& path, const string& prefix);
 
 private:
