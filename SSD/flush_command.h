@@ -17,5 +17,4 @@ private:
 	
 	NandFlashMemory* nandFlashMemory;
 	BufferManager* bufferManager;
-	ArgumentParser parser;
 };

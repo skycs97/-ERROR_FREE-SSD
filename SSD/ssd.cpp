@@ -10,7 +10,6 @@ SSD::SSD(FileHandler* fileHandler) {
 	// Create nand IO instance
 	nand = new NandFlashMemoryImpl(fileHandler);
 	bufferManager = new BufferManager(nand, fileHandler);
-	argumentParser = new ArgumentParser();
 	factory = new SSDCommandFactory();
 	// FIXME: 내부적으로 std::exception 사용하나, 현재 위치는 try-catch 문 밖
 	bufferManager->init();
