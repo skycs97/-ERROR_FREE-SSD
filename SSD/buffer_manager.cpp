@@ -23,7 +23,7 @@ void BufferManager::init() {
 bool BufferManager::existBufferFile(int buffer_num)
 {
 	string dir_path = BUFFER_DIR_NAME "\\*";
-	string file_name = getBufferFilePreFix(buffer_num);
+	string file_name = getBufferFilePrefix(buffer_num);
 	if (fileHandler->isExist(dir_path, file_name)) return true;
 	return false;
 }
@@ -31,12 +31,12 @@ bool BufferManager::existBufferFile(int buffer_num)
 void BufferManager::createBufferFile(int buffer_num)
 {
 	string file_path = BUFFER_DIR_NAME "\\";
-	file_path += string(getBufferFilePreFix(buffer_num)) + BUFFER_NAME_EMPTY;
+	file_path += string(getBufferFilePrefix(buffer_num)) + BUFFER_NAME_EMPTY;
 	fileHandler->createEmptyFile(file_path);
 	return;
 }
 
-const char* BufferManager::getBufferFilePreFix(int buffer_num)
+const char* BufferManager::getBufferFilePrefix(int buffer_num)
 {
 	switch (buffer_num) {
 	case 1: return PREFIX_BUFFER_FILE1;
@@ -50,7 +50,35 @@ const char* BufferManager::getBufferFilePreFix(int buffer_num)
 
 void BufferManager::updateBufferState(int buffer_num)
 {
-	// TODO
+	vector<string> buffer_fname = fileHandler->findFileUsingPrefix(BUFFER_DIR_NAME, getBufferFilePrefix(buffer_num));
+	
+	if (buffer_fname.size() > 1) throw std::exception("There are many buffer files in same prefix.");
+	
+	fillBufferInfo(buffer_fname.front());
+}
+
+void BufferManager::fillBufferInfo(string fname)
+{
+	BufferInfo buffer_info;
+	std::smatch m;
+	std::regex writeRegex(R"([1-5]_W_([0-9]*)_(0x[0-9A-Fa-f]+))");
+	std::regex eraseRegex(R"([1-5]_E_([0-9]*)_([0-9]+))");
+
+	if (std::regex_search(fname, m, writeRegex)) {
+		buffer_info.cmd = CMD_WRITE;
+		buffer_info.erase_size = INVALID_VALUE;
+		buffer_info.fname = fname;
+		buffer_info.lba = std::atoi(m.str(1).c_str());
+		buffer_info.written_data = m.str(2);
+	}
+	else if (std::regex_search(fname, m, eraseRegex)) {
+		buffer_info.cmd = CMD_ERASE;
+		buffer_info.erase_size = std::atoi(m.str(2).c_str());
+		buffer_info.fname = fname;
+		buffer_info.lba = std::atoi(m.str(1).c_str());
+		buffer_info.written_data = INVALID_VALUE;
+	}
+	buffers.push_back(buffer_info);
 }
 
 bool BufferManager::isBufferFull() {
@@ -59,7 +87,7 @@ bool BufferManager::isBufferFull() {
 
 bool BufferManager::read(int lba, string& outputData) {
 	for (int index = getUsedBufferCount() - 1; index >= 0; index--) {
-		string data = buffers.at(index);
+		string data = buffers[index].fname;
 		std::smatch m;
 
 		std::regex writeRegex(R"([1-5]_W_([0-9]*)_(0x[0-9A-Fa-f]+))");
@@ -90,9 +118,11 @@ void BufferManager::addWriteCommand(int lba, const string& data) {
 	}
 	int index = getUsedBufferCount();
 
+	BufferInfo buffer_info;
 	std::ostringstream oss;
 	oss << index + 1 << "_W_" << lba <<"_"<< data;
-	buffers.push_back(oss.str());
+	buffer_info.fname = oss.str();
+	buffers.push_back(buffer_info);
 	
 	writeBuffer();
 }
@@ -104,9 +134,11 @@ void BufferManager::addEraseCommand(int lba, int count) {
 	//로직 구현
 	int index = getUsedBufferCount();
 
+	BufferInfo buffer_info;
 	std::ostringstream oss;
 	oss << index + 1 << "_E_" << lba <<"_"<<count;
-	buffers.push_back(oss.str());
+	buffer_info.fname = oss.str();
+	buffers.push_back(buffer_info);
 
 	writeBuffer();
 }
@@ -114,7 +146,7 @@ void BufferManager::addEraseCommand(int lba, int count) {
 void BufferManager::flush() {
 	vector<string> datas = nandFlashMemory->read();
 	for (int index = 0; index < getUsedBufferCount(); index++) {
-		string buffer = buffers.at(index);
+		string buffer = buffers[index].fname;
 		std::smatch m;
 
 		std::regex writeRegex(R"([1-5]_W_([0-9]*)_(0x[0-9A-Fa-f]+))");

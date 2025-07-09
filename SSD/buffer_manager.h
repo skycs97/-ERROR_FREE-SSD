@@ -11,6 +11,15 @@ using std::vector;
 
 class BufferManager {
 public:
+	struct BufferInfo
+	{
+		string fname;
+		CMD_TYPE cmd;
+		int lba;
+		string written_data;
+		int erase_size;
+	};
+
 	BufferManager(NandFlashMemory* nandFlashMemory, FileHandler* fileHandler)
 		: nandFlashMemory{ nandFlashMemory }, fileHandler{ fileHandler } {
 	}
@@ -37,7 +46,7 @@ public:
 private:
 	NandFlashMemory* nandFlashMemory;
 	FileHandler* fileHandler;
-	vector<string> buffers;
+	vector<BufferInfo> buffers;
 
 	// Buffer 파일 존재 여부를 반환합니다.
 	bool existBufferFile(int buffer_num);
@@ -46,10 +55,12 @@ private:
 	void createBufferFile(int buffer_num);
 
 	// Buffer 파일의 Prefix 매크로 반환합니다.
-	const char* getBufferFilePreFix(int buffer_num);
+	const char* getBufferFilePrefix(int buffer_num);
 
 	// 버퍼 상태 업데이트
 	void updateBufferState(int buffer_num);
+
+	void fillBufferInfo(string fname);
 
 	// 버퍼가 5개가 가득 찬 경우 true를 리턴합니다.
 	bool isBufferFull();

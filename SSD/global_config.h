@@ -8,6 +8,7 @@
 #define CMD_WRITE	2
 #define CMD_ERASE	3
 #define CMD_FLUSH	4
+#define INVALID_VALUE	0xFFFF
 
 // ArgumentParser
 #define ARG_IDX_CMD		1
@@ -35,3 +36,5 @@
 #define PREFIX_BUFFER_FILE4	"4_"
 #define PREFIX_BUFFER_FILE5	"5_"
 #define BUFFER_NAME_EMPTY	"empty"
+
+typedef int CMD_TYPE;

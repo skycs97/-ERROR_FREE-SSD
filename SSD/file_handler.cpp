@@ -1,4 +1,4 @@
-#include <fstream>
+﻿#include <fstream>
 #include <stdexcept>
 #include <iomanip>
 #include "file_handler.h"
@@ -120,4 +120,35 @@ void FileHandler::rename(const string& old_name, const string& new_name) const
 	else {
 		throw std::runtime_error("rename fail");
 	}
+}
+
+vector<string> FileHandler::findFileUsingPrefix(const string& path, const string& prefix)
+{
+	std::vector<std::string> matchingFiles;
+
+	std::string searchPattern = path + "\\*";  // 모든 파일 탐색
+	WIN32_FIND_DATAA findData;
+	HANDLE hFind = FindFirstFileA(searchPattern.c_str(), &findData);
+
+	if (hFind == INVALID_HANDLE_VALUE) {
+		throw std::exception("Invalid path");
+	}
+
+	do {
+		const char* fileName = findData.cFileName;
+
+		// "." 또는 ".." 는 스킵
+		if (strcmp(fileName, ".") == 0 || strcmp(fileName, "..") == 0) {
+			continue;
+		}
+
+		// 파일 이름이 prefix로 시작하는지 확인
+		if (strncmp(fileName, prefix.c_str(), prefix.length()) == 0) {
+			matchingFiles.push_back(fileName);
+		}
+
+	} while (FindNextFileA(hFind, &findData) != 0);
+
+	FindClose(hFind);
+	return matchingFiles;
 }
