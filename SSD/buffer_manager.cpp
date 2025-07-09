@@ -30,9 +30,11 @@ bool BufferManager::existBufferFile(int buffer_num)
 
 void BufferManager::createBufferFile(int buffer_num)
 {
+	string file_name = string(getBufferFilePrefix(buffer_num)) + BUFFER_NAME_EMPTY;
 	string file_path = BUFFER_DIR_NAME "\\";
-	file_path += string(getBufferFilePrefix(buffer_num)) + BUFFER_NAME_EMPTY;
+	file_path += file_name;
 	fileHandler->createEmptyFile(file_path);
+	fillBufferInfo(file_name);
 	return;
 }
 
@@ -76,6 +78,13 @@ void BufferManager::fillBufferInfo(string fname)
 		buffer_info.erase_size = std::atoi(m.str(2).c_str());
 		buffer_info.fname = fname;
 		buffer_info.lba = std::atoi(m.str(1).c_str());
+		buffer_info.written_data = INVALID_VALUE;
+	}
+	else {
+		buffer_info.cmd = INVALID_VALUE;
+		buffer_info.erase_size = INVALID_VALUE;
+		buffer_info.fname = INVALID_VALUE;
+		buffer_info.lba = INVALID_VALUE;
 		buffer_info.written_data = INVALID_VALUE;
 	}
 	buffers.push_back(buffer_info);
