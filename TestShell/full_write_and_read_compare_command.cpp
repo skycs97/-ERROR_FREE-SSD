@@ -2,47 +2,54 @@
 
 void FullWriteAndReadCompare::run(const CommandRunner& cmdRunner) const
 {
-	std::vector<string> result;
 	int lba = 0;
 	int testSize = 5;
 	std::vector<string> testValue = { "0xA5A5A5A5", "0x5A5A5A5A", "0xFFFFFFFF", "0xF0F0F0F0", "0x0F0F0F0F" };
-	string writeSuccess = "";
-	string res;
 
 	while (lba <= MAX_LBA) {
-		for (int i = 0; i < testSize; i++) {
-			if (writeSuccess == (res = cmdRunner.write(std::to_string(lba + i), testValue[0])))
-				continue;
-			result.push_back(res);
-		}
 
-		for (int i = 0; i < testSize; i++) {
-			if (testValue[0] == (res = cmdRunner.read(std::to_string(lba + i))))
-				continue;
-			result.push_back(res);
-		}
+		if (partialWrite(cmdRunner, lba, testSize, testValue[0]) == false)
+			throw TestScriptFailExcpetion(FAIL);
+
+		if (partialRead(cmdRunner, lba, testSize) == false)
+			throw TestScriptFailExcpetion(FAIL);
 
 		lba += testSize;
 
-		for (int i = 0; i < testSize; i++) {
-			if (writeSuccess == (res = cmdRunner.write(std::to_string(lba + i), testValue[i])))
-				continue;
-			result.push_back(res);
-		}
+		if (partialWrite(cmdRunner, lba, testSize, testValue[0]) == false)
+			throw TestScriptFailExcpetion(FAIL);
 
-		for (int i = 0; i < testSize; i++) {
-			if (testValue[i] == (res = cmdRunner.read(std::to_string(lba + i))))
-				continue;
-			result.push_back(res);
-		}
+		if (partialRead(cmdRunner, lba, testSize) == false)
+			throw TestScriptFailExcpetion(FAIL);
 
 		lba += testSize;
 	}
 
-	if (result.size())
-		throw TestScriptFailExcpetion("Fail");
-
 	std::cout << "Pass" << std::endl;
+}
+
+bool FullWriteAndReadCompare::partialWrite(const CommandRunner& cmdRunner, int lba, int testSize, string data) const
+{
+	int totalResult = true;
+	for (int i = 0; i < testSize; i++) {
+		if (WRITESUCCESS == cmdRunner.write(std::to_string(lba + i), data))
+			continue;
+		totalResult = false;
+	}
+
+	return totalResult;
+}
+
+bool FullWriteAndReadCompare::partialRead(const CommandRunner& cmdRunner, int lba, int testSize) const
+{
+	int totalResult = true;
+	for (int i = 0; i < testSize; i++) {
+		if (ERROR != cmdRunner.read(std::to_string(lba + i)))
+			continue;
+		totalResult = false;
+	}
+
+	return totalResult;
 }
 
 void FullWriteAndReadCompare::printHelp() const
