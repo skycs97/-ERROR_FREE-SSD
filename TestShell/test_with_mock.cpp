@@ -1,3 +1,4 @@
+#ifdef _DEBUG
 #include "gmock/gmock.h"
 #include "ssd_interface.h"
 #include <string>
@@ -188,3 +189,4 @@ TEST_F(TestShellFixtureWithMock, WriteReadAgingCommand) {
 
 	command->run(runner);
 }
+#endif

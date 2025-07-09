@@ -1,8 +1,9 @@
+#ifdef _DEBUG
 #include "gmock/gmock.h"
 #include <string>
 #include <vector>
 #include "command_parser.h"
-
+#include "command_list.h"
 using namespace testing;
 using std::string;
 using std::vector;
@@ -73,3 +74,4 @@ TEST(CommandParserTest, InValidCommand) {
 	string inputCommand = "R 0";
 	EXPECT_THROW(cmdParser.parseAndMakeShellCommand(inputCommand), TestScriptFailExcpetion);
 }
+#endif

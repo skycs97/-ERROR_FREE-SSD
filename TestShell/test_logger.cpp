@@ -1,3 +1,4 @@
+#ifdef _DEBUG
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -5,6 +6,7 @@
 
 #include "gmock/gmock.h"
 #include "logger.h"
+
 
 namespace {
 	const std::string TEST_LOG_FILE = "latest.log";
@@ -144,3 +146,4 @@ TEST_F(LoggerTest, DISABLED_AppendLogsOver30KB) {
 	EXPECT_EQ(expect_until, getNumOfFiles("until_", ".log"));
 	EXPECT_EQ(expect_zip, getNumOfFiles("until_", ".zip"));
 }
+#endif
