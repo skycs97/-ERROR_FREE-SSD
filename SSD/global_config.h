@@ -30,7 +30,7 @@
 #define OUTPUT_FILENAME "ssd_output.txt"
 
 // Buffer
-#define BUFFER_ENABLE true
+#define BUFFER_ENABLE false
 #define BUFFER_DIR_NAME	"buffer"
 #define BUFFER_SIZE 5
 #define PREFIX_BUFFER_FILE1	"1_"

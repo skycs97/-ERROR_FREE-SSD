@@ -10,6 +10,7 @@ public:
 	MOCK_METHOD(vector<string>, read, (const string&), (override));
 	MOCK_METHOD(void, createDirIfNotExist, (const string&), (override));
 	MOCK_METHOD(bool, isExist, (const string&, const string&), (override));
+	MOCK_METHOD(bool, isExist, (const string&, const string&, int), (override));
 	MOCK_METHOD(void, createEmptyFile, (const string&), (override));
 	MOCK_METHOD(void, rename, (const string&, const string&), (override, const));
 	MOCK_METHOD(vector<string>, findFileUsingPrefix, (const string&, const string&), (override));
