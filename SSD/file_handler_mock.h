@@ -12,5 +12,6 @@ public:
 	MOCK_METHOD(bool, isExist, (const string&, const string&), (override));
 	MOCK_METHOD(void, createEmptyFile, (const string&), (override));
 	MOCK_METHOD(void, rename, (const string&, const string&), (override, const));
+	MOCK_METHOD(vector<string>, findFileUsingPrefix, (const string&, const string&), (override));
 
 };
