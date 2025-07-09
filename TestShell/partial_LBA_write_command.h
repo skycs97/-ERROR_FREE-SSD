@@ -13,6 +13,7 @@ private:
 	std::vector<std::string> TestLbaList = { "4","0","3","1","2" };
 
 	bool checkResult(const std::vector<std::string>& result) const;
+	void printProcess() const;
 };
 
 class PartialLBAWriteCommandFactory : public CommandFactory {
