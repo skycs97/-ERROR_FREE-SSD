@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="ArgumentParser.cpp" />
     <ClCompile Include="ArgumentParser_test.cpp" />
+    <ClCompile Include="buffer_manager.cpp" />
     <ClCompile Include="file_handler_mock.h" />
     <ClCompile Include="nand_flash_memory_impl.cpp" />
     <ClCompile Include="nand_flash_memory_impl_test.cpp">
@@ -153,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArgumentParser.h" />
+    <ClInclude Include="buffer_manager.h" />
     <ClInclude Include="FileHandler.h" />
     <ClInclude Include="global_config.h" />
     <ClInclude Include="nand_flash_memory_impl.h" />

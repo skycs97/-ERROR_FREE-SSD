@@ -1,6 +1,7 @@
 #include "gmock/gmock.h"
 #include "nand_writer.h"
 #include "nand_flash_memory_mock.h"
+#include "file_handler_mock.h"
 
 using namespace testing;
 
@@ -11,8 +12,10 @@ static const string INIT_DATA = "0x00000000";
 class WriterFixture : public Test
 {
 public:
+	FileHandlerMock mockedFileHandler;
 	NandFlashMemoryMock nand;
-	NandWriter writer{ &nand };
+	BufferManager bufferManager{ &nand, &mockedFileHandler };
+	NandWriter writer{ &nand, &bufferManager };
 	vector<string> dummy_data{ MAX_LBA, INIT_DATA };
 };
 
