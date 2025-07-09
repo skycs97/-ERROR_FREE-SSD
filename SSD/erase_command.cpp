@@ -3,8 +3,8 @@
 void EraseCommand::parseArg(int argc, const char* argv[])
 {
 	if (argc != ERASE_CORRECT_ARG_SIZE) throw std::invalid_argument("number of argument is incorrect");
-	int startLBA = atoi(argv[ARG_IDX_ERASE_START_ADDR]);
-	int count = atoi(argv[ARG_IDX_ERASE_COUNT]);
+	startLBA = atoi(argv[ARG_IDX_ERASE_START_ADDR]);
+	count = atoi(argv[ARG_IDX_ERASE_COUNT]);
 	if (isInvalidAddress()) throw std::invalid_argument("Out of range");
 
 	if (isInvalidEraseCount()) throw std::invalid_argument("Invalid erase LBA count");
