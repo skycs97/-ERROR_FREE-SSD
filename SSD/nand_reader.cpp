@@ -18,7 +18,7 @@ bool NandReader::parseArg(int argc, const char* argv[])
 {
 	if (argc != READ_CORRECT_ARG_SIZE) throw std::invalid_argument("number of argument is incorrect");
 
-	parser.setCmdType(ArgumentParser::READ_CMD);
+	parser.setCmdType(CMD_READ);
 	parser.setLBA(atoi(argv[ARG_IDX_ADDR]));
 
 	if (isInvalidAddress(parser.getLBA())) throw std::invalid_argument("Out of range");

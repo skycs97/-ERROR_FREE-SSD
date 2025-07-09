@@ -15,7 +15,7 @@ int ArgumentParser::getEraseLBACount() {
 }
 
 void ArgumentParser::setCmdType(CMD_TYPE cmdType) { 
-	eCmd = cmdType; 
+	nCmdType = cmdType; 
 }
 
 void ArgumentParser::setLBA(int addr) { 
@@ -34,9 +34,9 @@ void ArgumentParser::setEraseLBACount(int nCount) {
 	nEraseLBACount = nCount; 
 }
 
-ArgumentParser::CMD_TYPE ArgumentParser::getCmdType()
+CMD_TYPE ArgumentParser::getCmdType()
 {
-	return eCmd;
+	return nCmdType;
 }
 
 int ArgumentParser::getLBA()

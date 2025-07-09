@@ -11,7 +11,7 @@ bool NandFlush::flush()
 bool NandFlush::parseArg(int argc, const char* argv[])
 {
 	if (argc != FLUSH_CORRECT_ARG_SIZE) throw std::invalid_argument("number of argument is incorrect");
-	parser.setCmdType(ArgumentParser::FLUSH_CMD);
+	parser.setCmdType(CMD_FLUSH);
 
 	return true;
 }

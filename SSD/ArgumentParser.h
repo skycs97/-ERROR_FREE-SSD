@@ -7,8 +7,12 @@
 
 using std::string;
 
+#define CMD_TYPE int
+
 class ArgumentParser {
 public:
+
+	/*
 	enum CMD_TYPE {
 		NONE_CMD = 0,
 		READ_CMD = 1,
@@ -16,6 +20,7 @@ public:
 		ERASE_CMD = 3,
 		FLUSH_CMD = 4,
 	};
+	*/
 
 	CMD_TYPE getCmdType();
 	int getLBA();
@@ -34,7 +39,7 @@ public:
 	unsigned long parseHexAddress(const std::string& hexAddress);
 
 private:
-	CMD_TYPE eCmd = NONE_CMD;
+	CMD_TYPE nCmdType = CMD_INVALID;
 	int nLBA = -1;
 	int nLBACount = -1;
 	string strData = "";

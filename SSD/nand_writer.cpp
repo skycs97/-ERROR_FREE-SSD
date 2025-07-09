@@ -16,7 +16,7 @@ bool NandWriter::parseArg(int argc, const char* argv[])
 {
 	if (argc != WRITE_CORRECT_ARG_SIZE) throw std::invalid_argument("number of argument is incorrect");
 
-	parser.setCmdType(ArgumentParser::WRITE_CMD);
+	parser.setCmdType(CMD_WRITE);
 	parser.setLBA(atoi(argv[ARG_IDX_ADDR]));
 
 	if (isInvalidAddress(parser.getLBA())) throw std::invalid_argument("Out of range");
