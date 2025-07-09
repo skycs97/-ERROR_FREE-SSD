@@ -22,12 +22,12 @@ bool NandEraser::parseArg(int argc, const char* argv[])
 
 	parser.setCmdType(ArgumentParser::ERASE_CMD);
 
-	parser.setEraseStartAddr(atoi(argv[ARG_IDX_ERASE_START_ADDR]));
-	if (isInvalidAddress(parser.getAddr())) throw std::invalid_argument("Out of range");
+	parser.setEraseStartLBAAddr(atoi(argv[ARG_IDX_ERASE_START_ADDR]));
+	if (isInvalidAddress(parser.getLBA())) throw std::invalid_argument("Out of range");
 
 	parser.setEraseCount(atoi(argv[ARG_IDX_ERASE_COUNT]));
 	if (isInvalidEraseCount(parser.getEraseLBACount())) throw std::invalid_argument("Invalid erase LBA count");
-	if (isInvalidEraseRange(parser.getEraseStartAddr(), parser.getEraseLBACount())) throw std::invalid_argument("The erase range exceeds the MAX_LBA");
+	if (isInvalidEraseRange(parser.getEraseStartLBA(), parser.getEraseLBACount())) throw std::invalid_argument("The erase range exceeds the MAX_LBA");
 
 	return true;
 }
@@ -42,8 +42,8 @@ bool NandEraser::isInvalidEraseCount(int nEraseLBACount) {
 	return true;
 }
 
-bool NandEraser::isInvalidEraseRange(int nEraseStartAddr, int nEraseLBACount) {
-	if ((nEraseStartAddr + nEraseLBACount - 1) > MAX_LBA) return false;
+bool NandEraser::isInvalidEraseRange(int nEraseStartLBA, int nEraseLBACount) {
+	if ((nEraseStartLBA + nEraseLBACount - 1) > MAX_LBA) return false;
 	return true;
 }
 
@@ -51,12 +51,12 @@ string NandEraser::run()
 {
 	if (BUFFER_ENABLE)
 	{
-		bufferManager->addEraseCommand(parser.getEraseStartAddr(), parser.getEraseLBACount());
+		bufferManager->addEraseCommand(parser.getEraseStartLBA(), parser.getEraseLBACount());
 		return "";
 	}
 
 	vector<string> datas = nandFlashMemory->read();
-	for (int i = parser.getEraseStartAddr(); i < parser.getEraseStartAddr() + parser.getEraseLBACount(); i++)
+	for (int i = parser.getEraseStartLBA(); i < parser.getEraseStartLBA() + parser.getEraseLBACount(); i++)
 	{
 		datas[i] = "0x00000000";
 	}

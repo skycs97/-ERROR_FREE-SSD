@@ -22,7 +22,7 @@ private:
 
 	bool isInvalidAddress(int nLBA);
 	bool isInvalidEraseCount(int nEraseLBACount);
-	bool isInvalidEraseRange(int nEraseStartAddr, int nEraseLBACount);
+	bool isInvalidEraseRange(int nEraseStartLBA, int nEraseLBACount);
 
 	NandFlashMemory* nandFlashMemory;
 	BufferManager* bufferManager;
