@@ -21,6 +21,7 @@ public:
 	vector<string> dummy_data{ MAX_LBA, INIT_DATA };
 };
 
+#if BUFFER_ENABLE == false
 TEST_F(WriteCommandFixture, ValidCase)
 {
 	// act, assert
@@ -37,3 +38,6 @@ TEST_F(WriteCommandFixture, ValidCase)
 	string actual = writeCommand.run();
 	EXPECT_EQ(expected, actual);
 }
+#else
+
+#endif

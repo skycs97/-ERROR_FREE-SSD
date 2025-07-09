@@ -86,6 +86,7 @@ TEST_F(SSDFixture, run_with_r_110)
 	ssd.run(argc, argv);
 }
 
+#if BUFFER_ENABLE == false
 TEST_F(SSDFixture, run_with_w_1_0x00001111)
 {
 	int argc = 4;
@@ -101,6 +102,23 @@ TEST_F(SSDFixture, run_with_w_1_0x00001111)
 
 	ssd.run(argc, argv);
 }
+#else
+TEST_F(SSDFixture, run_with_w_1_0x00001111)
+{
+	int argc = 4;
+	const char* argv[] = { "ssd.exe", WRITE_COMMAND, WRITE_ADDR, VALID_WRITE_VALUE };
+
+	nandData[1] = VALID_NAND_DATA;
+	EXPECT_CALL(mockedFileHandler, write(NAND_FILENAME, nandData))
+		.Times(0);
+
+	vector<string> expectedOutput = { WRITE_SUCCESS };
+	EXPECT_CALL(mockedFileHandler, write(OUTPUT_FILENAME, expectedOutput))
+		.Times(1);
+
+	ssd.run(argc, argv);
+}
+#endif
 
 TEST_F(SSDFixture, run_with_w_1_0xzzzzFFFF)
 {
