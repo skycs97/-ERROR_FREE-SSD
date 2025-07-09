@@ -13,3 +13,6 @@
 // File
 #define NAND_FILENAME "ssd_nand.txt"
 #define OUTPUT_FILENAME "ssd_output.txt"
+
+// Buffer
+#define BUFFER_ENABLE false
