@@ -6,74 +6,67 @@
 
 void BufferManager::init() {
 	fileHandler->createDirIfNotExist(BUFFER_DIR_NAME);
-
-	for (int buffer_num = 1; buffer_num <= BUFFER_SIZE; buffer_num++)
+	for (int buf_idx = 0; buf_idx < BUFFER_SIZE; buf_idx++)
 	{
-		if (existBufferFile(buffer_num))
-		{
-			updateBufferState(buffer_num);
-		}
-		else
-		{
-			createBufferFile(buffer_num);
-		}
+		if (existBufferFile(buf_idx)) updateBufferState(buf_idx);
+		else createBufferFile(buf_idx);
 	}
 }
 
-bool BufferManager::existBufferFile(int buffer_num)
+bool BufferManager::existBufferFile(int buf_idx)
 {
 	string dir_path = BUFFER_DIR_NAME "\\*";
-	string empty_file_name = string(getBufferFilePrefix(buffer_num)) + BUFFER_NAME_EMPTY;
+	string empty_file_name = string(getBufferFilePrefix(buf_idx)) + BUFFER_NAME_EMPTY;
 	if (fileHandler->isExist(dir_path, empty_file_name)) return false;
 
-	string file_name = getBufferFilePrefix(buffer_num);
+	string file_name = getBufferFilePrefix(buf_idx);
 	if (fileHandler->isExist(dir_path, file_name, 2)) return true;
 	return false;
 }
 
-void BufferManager::createBufferFile(int buffer_num)
+void BufferManager::createBufferFile(int buf_idx)
 {
-	string file_name = string(getBufferFilePrefix(buffer_num)) + BUFFER_NAME_EMPTY;
+	string file_name = string(getBufferFilePrefix(buf_idx)) + BUFFER_NAME_EMPTY;
 	string file_path = BUFFER_DIR_NAME "\\";
 	file_path += file_name;
 	fileHandler->createEmptyFile(file_path);
-	fillBufferInfo(file_name, buffer_num, false);
+	fillBufferInfo(file_name, buf_idx, false);
 	return;
 }
 
-const char* BufferManager::getBufferFilePrefix(int buffer_num)
+const char* BufferManager::getBufferFilePrefix(int buf_idx)
 {
-	switch (buffer_num) {
-	case 1: return PREFIX_BUFFER_FILE1;
-	case 2: return PREFIX_BUFFER_FILE2;
-	case 3: return PREFIX_BUFFER_FILE3;
-	case 4: return PREFIX_BUFFER_FILE4;
-	case 5: return PREFIX_BUFFER_FILE5;
+	switch (buf_idx) {
+	case 0: return PREFIX_BUFFER_FILE1;
+	case 1: return PREFIX_BUFFER_FILE2;
+	case 2: return PREFIX_BUFFER_FILE3;
+	case 3: return PREFIX_BUFFER_FILE4;
+	case 4: return PREFIX_BUFFER_FILE5;
 	default: return "";
 	}
 }
 
-void BufferManager::updateBufferState(int buffer_num)
+void BufferManager::updateBufferState(int buf_idx)
 {
-	vector<string> buffer_fname = fileHandler->findFileUsingPrefix(BUFFER_DIR_NAME, getBufferFilePrefix(buffer_num));
+	vector<string> buffer_fname = fileHandler->findFileUsingPrefix(BUFFER_DIR_NAME, getBufferFilePrefix(buf_idx));
 	
 	if (buffer_fname.size() > 1) throw std::exception("There are many buffer files in same prefix.");
 	
-	fillBufferInfo(buffer_fname.front(), buffer_num, false);
+	fillBufferInfo(buffer_fname.front(), buf_idx, false);
 	IncreaseBufferCnt();
 }
 
-void BufferManager::fillBufferInfo(string fname, int buffer_num, bool need_file_change)
+void BufferManager::fillBufferInfo(string fname, int buf_idx, bool need_file_change)
 {
-	if (buffer_num < 1 || buffer_num > 5) throw std::exception("invalid buffer_num.");
+	if (buf_idx < 0 || buf_idx >= BUFFER_SIZE) throw std::exception("invalid buffer index.");
 
 	std::smatch m;
 	std::regex writeRegex(R"([1-5]_W_([0-9]*)_(0x[0-9A-Fa-f]+))");
 	std::regex eraseRegex(R"([1-5]_E_([0-9]*)_([0-9]+))");
-	string old_name = buffers[buffer_num - 1].fname;
+	string old_name = buffers[buf_idx].fname;
 
 	if (std::regex_search(fname, m, writeRegex)) {
-		setBufferInfo(buffer_num,
+		setBufferInfo(buf_idx,
 			fname,
 			CMD_WRITE,
 			std::atoi(m.str(1).c_str())/*LBA*/,
@@ -81,7 +74,7 @@ void BufferManager::fillBufferInfo(string fname, int buffer_num, bool need_file_
 			INVALID_VALUE/*erase size*/);
 	}
 	else if (std::regex_search(fname, m, eraseRegex)) {
-		setBufferInfo(buffer_num,
+		setBufferInfo(buf_idx,
 			fname,
 			CMD_ERASE,
 			std::atoi(m.str(1).c_str())/*LBA*/,
@@ -89,7 +82,7 @@ void BufferManager::fillBufferInfo(string fname, int buffer_num, bool need_file_
 			std::atoi(m.str(2).c_str())/*erase size*/);
 	}
 	else {
-		setBufferInfo(buffer_num,
+		setBufferInfo(buf_idx,
 			fname,
 			INVALID_VALUE,
 			INVALID_VALUE,
@@ -103,20 +96,20 @@ void BufferManager::fillBufferInfo(string fname, int buffer_num, bool need_file_
 	}
 }
 
-void BufferManager::setBufferInfo(int buffer_num,
+void BufferManager::setBufferInfo(int buf_idx,
 	string fname,
 	CMD_TYPE cmd,
 	int lba,
 	string written_data,
 	int size)
 {
-	if (buffer_num < 1 || buffer_num > 5) throw std::exception("invalid buffer_num.");
+	if (buf_idx < 0 || buf_idx >= BUFFER_SIZE) throw std::exception("invalid buffer_num.");
 
-	buffers[buffer_num - 1].fname = fname;
-	buffers[buffer_num - 1].cmd = cmd;
-	buffers[buffer_num - 1].lba = lba;
-	buffers[buffer_num - 1].written_data = written_data;
-	buffers[buffer_num - 1].erase_size = size;
+	buffers[buf_idx].fname = fname;
+	buffers[buf_idx].cmd = cmd;
+	buffers[buf_idx].lba = lba;
+	buffers[buf_idx].written_data = written_data;
+	buffers[buf_idx].erase_size = size;
 }
 
 bool BufferManager::isBufferFull() {
@@ -124,22 +117,22 @@ bool BufferManager::isBufferFull() {
 }
 
 bool BufferManager::read(int lba, string& outputData) {
-	for (int index = getUsedBufferCount() - 1; index >= 0; index--) {
-		if (buffers[index].cmd == CMD_ERASE)
+	for (int buf_idx = getUsedBufferCount() - 1; buf_idx >= 0; buf_idx--) {
+		if (buffers[buf_idx].cmd == CMD_ERASE)
 		{
-			int lba_start = buffers[index].lba;
-			int lba_end = lba_start + buffers[index].erase_size - 1;
+			int lba_start = buffers[buf_idx].lba;
+			int lba_end = lba_start + buffers[buf_idx].erase_size - 1;
 			if (lba_start <= lba && lba <= lba_end)
 			{
 				outputData = NAND_DATA_EMPTY;
 				return true;
 			}
 		}
-		else if (buffers[index].cmd == CMD_WRITE)
+		else if (buffers[buf_idx].cmd == CMD_WRITE)
 		{
-			if (lba == buffers[index].lba)
+			if (lba == buffers[buf_idx].lba)
 			{
-				outputData = buffers[index].written_data;
+				outputData = buffers[buf_idx].written_data;
 				return true;
 			}
 		}
@@ -152,10 +145,10 @@ void BufferManager::addWriteCommand(int lba, const string& data) {
 		flush();
 	}
 	
-	int added_buf_num = getUsedBufferCount() + 1;
+	int new_buf_idx = getUsedBufferCount();
 	std::ostringstream oss;
-	oss << added_buf_num << "_W_" << lba <<"_"<< data;
-	fillBufferInfo(oss.str(), added_buf_num, true);
+	oss << new_buf_idx + 1 << "_W_" << lba <<"_"<< data;
+	fillBufferInfo(oss.str(), new_buf_idx, true);
 	IncreaseBufferCnt();
 }
 
@@ -164,34 +157,33 @@ void BufferManager::addEraseCommand(int lba, int count) {
 		flush();
 	}
 	//로직 구현
-	int added_buf_num = getUsedBufferCount() + 1;
+	int new_buf_idx = getUsedBufferCount();
 	std::ostringstream oss;
-	oss << added_buf_num + 1 << "_E_" << lba <<"_"<<count;
-	fillBufferInfo(oss.str(), added_buf_num, true);
+	oss << new_buf_idx + 1 << "_E_" << lba <<"_"<<count;
+	fillBufferInfo(oss.str(), new_buf_idx, true);
 	IncreaseBufferCnt();
 }
 
 void BufferManager::flush() {
 	vector<string> datas = nandFlashMemory->read();
 	int buf_cnt = getUsedBufferCount();
-	for (int index = 0; index < buf_cnt; index++) {
-		if (buffers[index].cmd == CMD_WRITE)
+	for (int buf_idx = 0; buf_idx < buf_cnt; buf_idx++) {
+		if (buffers[buf_idx].cmd == CMD_WRITE)
 		{
-			datas[buffers[index].lba] = buffers[index].written_data;
+			datas[buffers[buf_idx].lba] = buffers[buf_idx].written_data;
 		}
-		else if (buffers[index].cmd == CMD_ERASE)
+		else if (buffers[buf_idx].cmd == CMD_ERASE)
 		{
-			int lba_start = buffers[index].lba;
-			int lba_end = lba_start + buffers[index].erase_size - 1;
+			int lba_start = buffers[buf_idx].lba;
+			int lba_end = lba_start + buffers[buf_idx].erase_size - 1;
 			for (int lba = lba_start; lba <= lba_end; lba++)
 			{
 				datas[lba] = NAND_DATA_EMPTY;
 			}
 		}
 
-		int added_buf_num = index + 1;
-		string file_name = string(getBufferFilePrefix(added_buf_num)) + BUFFER_NAME_EMPTY;
-		fillBufferInfo(file_name, added_buf_num, true);
+		string file_name = string(getBufferFilePrefix(buf_idx)) + BUFFER_NAME_EMPTY;
+		fillBufferInfo(file_name, buf_idx, true);
 		DecreaseBufferCnt();
 	}
 	nandFlashMemory->write(datas);

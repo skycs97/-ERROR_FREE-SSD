@@ -50,21 +50,21 @@ private:
 	int valid_buf_cnt{ 0 };
 
 	// Buffer 파일 존재 여부를 반환합니다.
-	bool existBufferFile(int buffer_num);
+	bool existBufferFile(int buf_idx);
 
 	// Buffer Empty 파일을 생성합니다.
-	void createBufferFile(int buffer_num);
+	void createBufferFile(int buf_idx);
 
 	// Buffer 파일의 Prefix 매크로 반환합니다.
-	const char* getBufferFilePrefix(int buffer_num);
+	const char* getBufferFilePrefix(int buf_idx);
 
 	// 버퍼 상태 업데이트
-	void updateBufferState(int buffer_num);
+	void updateBufferState(int buf_idx);
 
-	void fillBufferInfo(string fname, int buffer_num, bool need_file_change);
+	void fillBufferInfo(string fname, int buf_idx, bool need_file_change);
 
 	void setBufferInfo(
-		int buffer_num,
+		int buf_idx,
 		string fname,
 		CMD_TYPE cmd,
 		int lba,
