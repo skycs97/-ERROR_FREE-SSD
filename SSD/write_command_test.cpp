@@ -39,5 +39,18 @@ TEST_F(WriteCommandFixture, ValidCase)
 	EXPECT_EQ(expected, actual);
 }
 #else
+TEST_F(WriteCommandFixture, ValidCase)
+{
+	// act, assert
+	EXPECT_CALL(nand, read())
+		.Times(0);
 
+	EXPECT_CALL(nand, write(_))
+		.Times(0);
+
+	string expected = "";
+	writeCommand.parseArg(ARGC, VALID_ARGV);
+	string actual = writeCommand.run();
+	EXPECT_EQ(expected, actual);
+}
 #endif
