@@ -19,6 +19,7 @@
 #define READ_CORRECT_ARG_SIZE	3
 #define WRITE_CORRECT_ARG_SIZE	4
 #define ERASE_CORRECT_ARG_SIZE	4
+#define FLUSH_CORRECT_ARG_SIZE	2
 
 // File
 #define NAND_FILENAME	"ssd_nand.txt"

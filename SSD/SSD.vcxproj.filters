@@ -48,9 +48,6 @@
     <ClCompile Include="nand_writer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ArgumentParser_test.cpp">
-      <Filter>테스트 파일</Filter>
-    </ClCompile>
     <ClCompile Include="ArgumentParser.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>

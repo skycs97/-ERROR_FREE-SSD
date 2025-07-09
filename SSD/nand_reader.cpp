@@ -21,9 +21,14 @@ bool NandReader::parseArg(int argc, const char* argv[])
 	parser.setCmdType(ArgumentParser::READ_CMD);
 	parser.setLBA(atoi(argv[ARG_IDX_ADDR]));
 
-	if ((parser.getLBA() < MIN_LBA) || (parser.getLBA() > MAX_LBA)) throw std::invalid_argument("Out of range");
+	if (isInvalidAddress(parser.getLBA())) throw std::invalid_argument("Out of range");
 
 	return true;
+}
+
+bool NandReader::isInvalidAddress(int nLBA) {
+	if ((nLBA < MIN_LBA) || (nLBA > MAX_LBA)) return true;
+	return false;
 }
 
 string NandReader::run()
