@@ -10,5 +10,6 @@ void FlushCommand::parseArg(int argc, const char* argv[])
 
 string FlushCommand::run()
 {
-	return "NOT IMPLEMENTED YET";
+	bufferManager->flush();
+	return "";
 }
