@@ -47,5 +47,5 @@ string NandEraser::run()
 	}
 	nandFlashMemory->write(datas);
 
-	return "";
+	return "COMPLETE_ERASE";
 }
