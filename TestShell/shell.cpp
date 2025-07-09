@@ -3,8 +3,11 @@
 void TestShell::runShell(int argc, char* argv[]) {
 	string input;
 
-	if (isFilePathExist(argc))
-		runShellScript(argv[1]);
+	if (isRunShellScript(argc) == true) {
+		string filePath = argv[1];
+		runShellScript(filePath);
+		return;
+	}
 
 	while (1) {
 		input = getUserInput();
@@ -26,7 +29,7 @@ bool TestShell::isEmptyInput(const string& input) {
 	return (input == "");
 }
 
-bool TestShell::isFilePathExist(int argc) {
+bool TestShell::isRunShellScript(int argc) {
 	return (argc == 2);
 }
 
@@ -35,7 +38,7 @@ void TestShell::runShellScript(const string& filename) {
 
 	if (isFileOpenFail(inputFile)) {
 		std::cout << "Error: could not open file " << filename << std::endl;
-		exit(1);
+		return;
 	}
 
 	string input;
@@ -44,13 +47,13 @@ void TestShell::runShellScript(const string& filename) {
 			break;
 		printTestProcess(input);
 
-		if (parseAndRunCommand(input) == false)
-			exit(1);
+		if (parseAndRunCommand(input) == false) {
+			break;
+		}
 	}
 
 	inputFile.close();
-
-	exit(0);
+	return;
 }
 
 bool TestShell::isFileOpenFail(const ifstream& inputFile)
