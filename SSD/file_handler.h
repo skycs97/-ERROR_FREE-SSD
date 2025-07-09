@@ -25,7 +25,7 @@ public:
 	virtual bool isExist(const string& dir_path, const string& file_name);
 	virtual void createEmptyFile(const string& file_path);
 	virtual void rename(const string& old_name, const string& new_name) const;
-	vector<string> findFileUsingPrefix(const string& path, const string& prefix);
+	virtual vector<string> findFileUsingPrefix(const string& path, const string& prefix);
 
 private:
 
