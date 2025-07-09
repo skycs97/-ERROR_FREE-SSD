@@ -15,3 +15,13 @@ CommandFactory* CommandFactoryComplex::getFactory(const string& cmdName)
 
 	return this->factoryComplex.at(cmdName);
 }
+
+std::shared_ptr<Command> CommandFactoryComplex::makeCommand(const string& cmdName, const vector<string>& args) {
+	auto factory = getFactory(cmdName);
+	
+	if (factory == nullptr) {
+		return nullptr;
+	}
+
+	return factory->makeCommand(cmdName, args);
+}
