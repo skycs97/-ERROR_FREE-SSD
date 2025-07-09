@@ -1,7 +1,10 @@
 ﻿#pragma once
 #include <string>
+#include <vector>
 #include "nand_flash_memory_impl.h"
 using std::string;
+using std::vector;
+
 class BufferManager {
 public:
 	BufferManager(NandFlashMemory* nandFlashMemory, FileHandler* fileHandler)
@@ -28,10 +31,14 @@ public:
 private:
 	NandFlashMemory* nandFlashMemory;
 	FileHandler* fileHandler;
+	vector<string> bufferData;
 
 	//버퍼가 5개가 가득 찬 경우 true를 리턴합니다.
 	bool isBufferFull();
 
-	//fileHandler를 통해 버퍼를 업데이트 합니다.
-	void updateBuffer();
+	//fileHandler에 새로 버퍼를 기록합니다.
+	void writeBuffer();
+
+	//fileHandler 로부터 버퍼를 가져옵니다.
+	void readBuffer();
 };

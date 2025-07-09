@@ -19,6 +19,14 @@ TEST_F(BufferManagerFixture, WriteAndReadTest) {
 	EXPECT_EQ("0x11112222", output);
 }
 
+TEST_F(BufferManagerFixture, EraseAndReadTest) {
+	manager.addEraseCommand(7, 5);
+
+	string output = "";
+	EXPECT_TRUE(manager.read(10, output));
+	EXPECT_EQ("0x00000000", output);
+}
+
 TEST_F(BufferManagerFixture, ReadFailTest) {
 	string output = "";
 	EXPECT_FALSE(manager.read(10, output));
@@ -46,7 +54,7 @@ TEST_F(BufferManagerFixture, SimpleTC3) {
 	EXPECT_EQ(0, manager.getUsedBufferCount());
 }
 
-TEST_F(BufferManagerFixture, DISABLED_TC1) {
+TEST_F(BufferManagerFixture, TC1) {
 	manager.addEraseCommand(0, 5);
 	manager.addEraseCommand(7, 5);
 	manager.addEraseCommand(15, 5);
@@ -55,7 +63,7 @@ TEST_F(BufferManagerFixture, DISABLED_TC1) {
 	EXPECT_EQ(3, manager.getUsedBufferCount());
 }
 
-TEST_F(BufferManagerFixture, DISABLED_TC2) {
+TEST_F(BufferManagerFixture, TC2) {
 	manager.addWriteCommand(0, "0x11112222");
 	manager.addWriteCommand(1, "0x22223333");
 	manager.addWriteCommand(2, "0x33334444");
