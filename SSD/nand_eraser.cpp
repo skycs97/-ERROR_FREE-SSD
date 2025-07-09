@@ -20,7 +20,7 @@ bool NandEraser::parseArg(int argc, const char* argv[])
 {
 	if (argc != ERASE_CORRECT_ARG_SIZE) throw std::invalid_argument("number of argument is incorrect");
 
-	parser.setCmdType(ArgumentParser::ERASE_CMD);
+	parser.setCmdType(CMD_ERASE);
 
 	parser.setEraseStartLBAAddr(atoi(argv[ARG_IDX_ERASE_START_ADDR]));
 	if (isInvalidAddress(parser.getLBA())) throw std::invalid_argument("Out of range");
