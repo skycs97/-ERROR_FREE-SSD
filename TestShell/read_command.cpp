@@ -3,10 +3,18 @@
 
 void ReadCommand::run(const CommandRunner& cmdRunner) const
 {
-	std::vector<string> result;
-	result.push_back(cmdRunner.read(ShellCommands[1]));
+	string result = cmdRunner.read(ShellCommands[1]);
+	printResult(result, ShellCommands[1]);
 }
 
+void ReadCommand::printResult(const string& result, const string& lba) const
+{
+	std::cout << "[Read] ";
+	if (result != ERROR)
+		std::cout << lba << " : ";
+	std::cout << result
+		<< std::endl << std::endl;
+}
 void ReadCommand::printHelp() const
 {
 	std::cout << "** Read Command **\n";

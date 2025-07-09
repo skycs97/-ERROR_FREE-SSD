@@ -2,10 +2,27 @@
 
 void FullWriteCommand::run(const CommandRunner& cmdRunner) const
 {
-	std::vector<string> result;
+	string writeResult;
+	string fullWriteResult = "";
+
 	for (int lba = MIN_LBA; lba <= MAX_LBA; lba++) {
-		result.push_back(cmdRunner.write(ShellCommands[1], ShellCommands[2]));
+		writeResult = cmdRunner.write(std::to_string(lba), ShellCommands[1]);
+		if (writeResult == ERROR)
+			fullWriteResult = ERROR;
 	}
+
+	printResult(fullWriteResult);
+}
+
+void FullWriteCommand::printResult(const string& result) const
+{
+	std::cout << "[Full Write] ";
+	if (result == "")
+		std::cout << DONE;
+	else
+		std::cout << ERROR;
+
+	std::cout << std::endl << std::endl;
 }
 
 void FullWriteCommand::printHelp() const
