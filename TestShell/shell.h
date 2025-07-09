@@ -23,12 +23,12 @@ public:
 	void runShell(int argc, char* argv[]);
 
 private:
-	void runShellScript(const string& input);
 	void printTestResult(const string& result);
 	void printTestProcess(const string& command);
+	void runShellScript(const string& input);
 
 	bool parseAndRunCommand(const string& input);
-	bool isFilePathExist(int argc);
+	bool isRunShellScript(int argc);
 	bool isEmptyInput(const string& input);
 	bool isFileOpenFail(const ifstream& inputFile);
 
