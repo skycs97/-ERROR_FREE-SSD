@@ -9,8 +9,11 @@ class CommandRunner {
 public:
 	string read(const string& LBA) const;
 	string write(const string& LBA, const string& value) const;
+	string erase(const string& startLBA, const string& LBARange) const;
+
 	bool isSetSsdInterface() const;
 	void setStorage(SsdInterface* ssdInterface);
 private:
 	SsdInterface* ssdInterface = nullptr;
+	static const int MAX_ERASE_RANGE = 10;
 };

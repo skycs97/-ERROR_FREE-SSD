@@ -1,5 +1,7 @@
 #pragma once
 #include "read_command.h"
+#include "erase_command.h"
+#include "erase_range_command.h"
 #include "write_command.h"
 #include "exit_command.h"
 #include "help_command.h"
