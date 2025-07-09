@@ -14,7 +14,7 @@ string NandWriter::write(int lba, string data)
 
 bool NandWriter::parseArg(int argc, const char* argv[])
 {
-	if (argc != 4) throw std::invalid_argument("number of argument is incorrect");
+	if (argc != WRITE_CORRECT_ARG_SIZE) throw std::invalid_argument("number of argument is incorrect");
 
 	parser.setCmdType(ArgumentParser::WRITE_CMD);
 	parser.setLBA(atoi(argv[ARG_IDX_ADDR]));
