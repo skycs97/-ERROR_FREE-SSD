@@ -20,7 +20,7 @@ class BufferInfo
 protected:
 public:
 
-	virtual string getFileName(int buf_idx) = 0;
+	virtual string getFileName(int bufIndex) = 0;
 	virtual void updateInternalBufferInfos(vector<InternalBufferInfo>) = 0;
 };
 
@@ -34,7 +34,7 @@ public:
 		lba = std::atoi(m.str(1).c_str());
 		written_data = m.str(2);
 	}
-	string getFileName(int buf_idx) override;
+	string getFileName(int bufIndex) override;
 	void updateInternalBufferInfos(vector<InternalBufferInfo>) override;
 	string written_data;
 	int lba;
@@ -50,7 +50,7 @@ public:
 		lba = std::atoi(m.str(1).c_str())/*LBA*/;
 		size = std::atoi(m.str(2).c_str())/*erase size*/;
 	}
-	string getFileName(int buf_idx) override;
+	string getFileName(int bufIndex) override;
 	void updateInternalBufferInfos(vector<InternalBufferInfo>) override;
 	int size;
 	int lba;
@@ -59,7 +59,7 @@ public:
 class EmptyBufferInfo : public BufferInfo {
 public:
 	EmptyBufferInfo(){}
-	string getFileName(int buf_idx) override;
+	string getFileName(int bufIndex) override;
 	void updateInternalBufferInfos(vector<InternalBufferInfo>) override;
 };
 
@@ -90,15 +90,9 @@ public:
 	// erase 커맨드에 대한 내용을 버퍼에 씁니다.
 	// 만일 버퍼가 가득차면 flush 수행 후에 버퍼에 씁니다.
 	void addEraseCommand(int lba, int count);
-
 	// 모든 버퍼의 내용을 nand에 기록합니다.
 	void flush();
 
-	void fillEmptyBuffers();
-
-	void writeAllBufferFiles(std::vector<std::string>& old_names);
-
-	void updateNandData(std::vector<std::string>& datas);
 
 	// empty가 아닌 버퍼의 개수를 리턴합니다.
 	int getUsedBufferCount();
@@ -110,12 +104,12 @@ private:
 	int valid_buf_cnt{ 0 };
 
 	// init step
-	bool existBufferFile(int buf_idx);
-	void createEmptyBufferFile(int buf_idx);
-	string getBufferFilePrefix(int buf_idx);
-	void updateBufferState(int buf_idx);
+	bool existBufferFile(int bufIndex);
+	void createEmptyBufferFile(int bufIndex);
+	string getBufferFilePrefix(int bufIndex);
+	void updateBufferState(int bufIndex);
 	void updateInternalBufferState();
-	void fillBufferInfo(string fname, int buf_idx);
+	void fillBufferInfo(string fname, int bufIndex);
 	CMD_TYPE getBufferTypeFromFilenames(const string& fname);
 	void IncreaseBufferCnt();
 
@@ -123,6 +117,16 @@ private:
 	void flushInternalBuffers();
 
 	void writeBufferFile(const string& old_name, const string& new_name);
-	void updateBuffer();
+	void updateBufferByInternalBuffer();
+	int createWriteBuffer(const string& internalBuffer, int bufIndex, int internalBufferIdx);
+	int createEraseBufferAndPassedWriteBuffer(int eraseStartLBA, int eraseCount, int bufIndex, std::vector<int>& writeLBAs);
 	vector<string> getOldFileNames();
+
+	void setInternalBufferWrite(int lba, const std::string& data);
+	void SetInternalBufferErase(int lba, int count);
+	void WriteUpdatedBufferFiles();
+	void writeEmptyBufferFiles();
+	void fillEmptyBuffers();
+	void writeAllBufferFiles(std::vector<std::string>& old_names);
+	void updateNandData(std::vector<std::string>& datas);
 };

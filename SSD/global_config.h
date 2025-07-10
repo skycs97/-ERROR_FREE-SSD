@@ -35,5 +35,6 @@
 #define BUFFER_DIR_NAME	"buffer"
 #define BUFFER_SIZE 5
 #define BUFFER_NAME_EMPTY	"empty"
+#define BUFFER_EMPTY 0xFFFF
 
 typedef int CMD_TYPE;
