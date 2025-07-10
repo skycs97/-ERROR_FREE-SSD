@@ -1,5 +1,6 @@
 #include <iostream>
 #include "erase_command.h"
+#include "logger.h"
 
 namespace {
 	const int numOfArgs = 2;
@@ -21,6 +22,9 @@ void EraseCommand::run(const CommandRunner& cmdRunner) const
 
 	string result = cmdRunner.erase(startLBA, LBARange);
 	printResult(result, startLBA + LBARange);
+
+	//logger.print(__func__,);
+	LOGGING_SHELL(startLBA + " to " + LBARange + " , Result : " + result);
 }
 
 void EraseCommand::printResult(const string& result, const string& lba) const

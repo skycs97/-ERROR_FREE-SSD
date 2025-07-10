@@ -1,5 +1,6 @@
 #include <iostream>
 #include "erase_range_command.h"
+#include "logger.h"
 
 namespace {
 	const int numOfArgs = 2;
@@ -22,6 +23,8 @@ void EraseRangeCommand::run(const CommandRunner& cmdRunner) const
 	string result = cmdRunner.erase(startLBA, std::to_string(rangeNum));
 
 	printResult(result, startLBA + endLBA);
+
+	LOGGING_SHELL( startLBA + "to " + endLBA + " , Result : " + result);
 }
 
 void EraseRangeCommand::printResult(const string& result, const string& lba) const

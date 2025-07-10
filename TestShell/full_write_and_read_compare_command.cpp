@@ -1,4 +1,5 @@
 #include "full_write_and_read_compare_command.h"
+#include "logger.h"
 
 namespace {
 	const int numOfArgs = 0;
@@ -19,6 +20,7 @@ void FullWriteAndReadCompareCommand::run(const CommandRunner& cmdRunner) const
 	std::vector<string> testValue;
 
 	while (lba <= MAX_LBA) {
+		LOGGING_SHELL( " LBA : " + std::to_string(lba));
 
 		testValue = getTestData(testSize, random);
 
@@ -29,6 +31,9 @@ void FullWriteAndReadCompareCommand::run(const CommandRunner& cmdRunner) const
 			throw CommandRunFailException(FAIL);
 
 		lba += testSize;
+
+		LOGGING_SHELL( 
+			"Test Value: " + testValue[0] + ", " + testValue[1] + ", " + testValue[2] + ", " + testValue[3] + ", " + testValue[4]);
 	}
 
 	printPass();

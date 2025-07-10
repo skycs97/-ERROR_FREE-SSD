@@ -1,5 +1,6 @@
 #include <iostream>
 #include "exit_command.h"
+#include "logger.h"
 
 namespace {
 	const int numOfArgs = 0;
@@ -11,6 +12,7 @@ ExitCommand::ExitCommand(const std::vector<std::string>& args) : Command(CMD_EXI
 
 void ExitCommand::run(const CommandRunner& cmdRunner) const
 {
+	LOGGING_SHELL( "");
 	exit(0);
 }
 

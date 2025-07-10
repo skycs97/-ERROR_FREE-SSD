@@ -95,3 +95,29 @@ void Logger::checkRenameFIles() {
 
 	openLogFile();
 }
+
+std::string Logger::parse_function(std::string funcSig) {
+	std::string sig(funcSig);
+
+	size_t paramStart = sig.find('(');
+	if (paramStart == std::string::npos) return "";
+
+	std::string beforeParams = sig.substr(0, paramStart);
+
+	size_t lastScope = beforeParams.rfind("::");
+	if (lastScope == std::string::npos) return "";
+
+	size_t classStart = beforeParams.rfind(' ', lastScope);
+	if (classStart == std::string::npos) classStart = 0;
+	else classStart += 1;
+
+	std::string classAndFunc = beforeParams.substr(classStart);
+
+	size_t pos = 0;
+	while ((pos = classAndFunc.find("::", pos)) != std::string::npos) {
+		classAndFunc.replace(pos, 2, ".");
+		pos += 1;
+	}
+
+	return classAndFunc + "()";
+}

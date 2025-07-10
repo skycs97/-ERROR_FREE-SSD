@@ -5,11 +5,13 @@
 #include <sstream>
 #include "ssd_impl.h"
 #include "TEST_SHELL_CONFIG.h"
+#include "logger.h"
 
 string SsdImpl::read(const string& LBA)
 {
     string cmd = makeReadCommand(LBA);
 
+    LOGGING_SHELL(cmd);
     return executeSsd(cmd);
 }
 
@@ -17,6 +19,7 @@ string SsdImpl::write(const string& LBA, const string& data)
 {
     string cmd = makeWriteCommand(LBA, data);
 
+    LOGGING_SHELL(cmd);
     return executeSsd(cmd);
 }
 
@@ -30,12 +33,14 @@ string SsdImpl::erase(const string& startLBA, const string& range)
 
     string cmd = makeEraseCommand(startLBA, range);
 
+    LOGGING_SHELL(cmd);
     return executeSsd(cmd);
 }
 
 string SsdImpl::flush() {
     string cmd = makeFlushCommand();
 
+    LOGGING_SHELL(cmd);
     return executeSsd(cmd);
 }
 

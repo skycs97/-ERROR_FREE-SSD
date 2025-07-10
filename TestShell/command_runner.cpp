@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include "command_runner.h"
+#include "logger.h"
 
 string CommandRunner::read(const string& LBA) const
 {
@@ -7,6 +8,7 @@ string CommandRunner::read(const string& LBA) const
 
 	string result = ssdInterface->read(LBA);
 
+	LOGGING_SHELL( "LBA :" + LBA + ", Result : " + result);
 	return result;
 }
 
@@ -23,6 +25,7 @@ string CommandRunner::write(const string& LBA, const string& value) const
 
 	string result = ssdInterface->write(LBA, value);
 
+	LOGGING_SHELL( "LBA :" +LBA+ " , Result : " + result);
 	return result;
 }
 
@@ -32,6 +35,7 @@ string CommandRunner::flush() const
 
 	string result = ssdInterface->flush();
 
+	LOGGING_SHELL( "Result : " + result);
 	return result;
 }
 
@@ -56,6 +60,7 @@ string CommandRunner::erase(const string& startLBA, const string& LBARange) cons
 		result = ssdInterface->erase(std::to_string(startIndexNum), std::to_string(rangeNum));
 	}
 
+	LOGGING_SHELL( "startLBA :" + startLBA + " , LBARange : " + LBARange + ", Result : " + result);
 	return result;
 }
 

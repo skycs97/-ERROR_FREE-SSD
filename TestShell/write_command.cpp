@@ -1,5 +1,6 @@
 #include <iostream>
 #include "write_command.h"
+#include "logger.h"
 
 namespace {
 	const int numOfArgs = 2;
@@ -15,6 +16,8 @@ void WriteCommand::run(const CommandRunner& cmdRunner) const
 {
 	string result = cmdRunner.write(LBA, value);
 	printResult(result);
+
+	LOGGING_SHELL( "LBA: " + LBA + ", value : " + value);
 }
 
 void WriteCommand::printResult(const string& result) const

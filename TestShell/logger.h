@@ -8,7 +8,9 @@
 #include <iostream>
 #include <windows.h>
 #include <vector>
+
 #define logger Logger::getInstance()
+#define LOGGING_SHELL(log) logger.print(Logger::getInstance().parse_function(__FUNCSIG__), log)
 
 namespace {
 	const std::string LOGFILE_PREFIX = "until_";
@@ -28,6 +30,7 @@ public:
 
 	void print(const std::string& functionName, const std::string& message);
 	std::size_t getLogFileSize();
+	std::string parse_function(std::string funcSig);
 
 private:
 	Logger();
