@@ -9,6 +9,8 @@ public:
 	void printResult(const string& result, const string& lba) const;
 private:
 	EraseRangeCommand(const std::vector<std::string>& args);
+	bool checkLBARange(int startLBAIndex, int endLBAIndex) const;
+
 	string startLBA;
 	string endLBA;
 

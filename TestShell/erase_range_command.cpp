@@ -13,8 +13,8 @@ EraseRangeCommand::EraseRangeCommand(const std::vector<std::string>& args) : Com
 
 void EraseRangeCommand::run(const CommandRunner& cmdRunner) const
 {
-	if (stoi(endLBA) < stoi(startLBA)) {
-		printResult(ERR, startLBA + endLBA);
+	if (checkLBARange(stoi(startLBA), stoi(endLBA)) == false) {
+		std::cout << "[EraseRange] WRONG LBA RANGE" << std::endl;
 		return;
 	}
 
@@ -49,6 +49,14 @@ void EraseRangeCommand::printHelp() const
 	std::cout << " erase_range 85 99\n";
 }
 
+bool EraseRangeCommand::checkLBARange(int startLBAIndex, int endLBAIndex) const
+{
+	if ((startLBAIndex < MIN_LBA) || (startLBAIndex > MAX_LBA)) { return false; }
+	if ((endLBAIndex < MIN_LBA) || (endLBAIndex > MAX_LBA)) { return false; }
+	if (startLBAIndex > endLBAIndex) { return false; }
+
+	return true;
+}
 std::shared_ptr<Command> EraseRangeCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
 	if (args.size() != numOfArgs) return nullptr;
