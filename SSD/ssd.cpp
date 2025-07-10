@@ -1,6 +1,7 @@
 ﻿#include "ssd.h"
 #include "buffer_manager.h"
 #include <stdexcept>
+#include <iostream>
 #include "ssd_command.h"
 
 SSD::SSD(FileHandler* fileHandler) {
@@ -36,6 +37,7 @@ void SSD::run(int argc, const char* argv[])
 	}
 	catch (std::exception e) {
 		result = "ERROR";
+		std::cout << e.what()<<std::endl;
 	}
 	outputHandler->output(result);
 }
