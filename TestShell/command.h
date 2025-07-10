@@ -20,6 +20,7 @@ public:
 protected:
 	int numOfArgs;
 	string cmdName;
+	bool isValidLba(int lba) const;
 };
 
 class CommandRunFailException : public std::exception {
