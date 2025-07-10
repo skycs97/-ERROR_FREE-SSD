@@ -13,7 +13,7 @@ EraseCommand::EraseCommand(const std::vector<std::string>& args) : Command(CMD_E
 
 void EraseCommand::run(const CommandRunner& cmdRunner) const
 {
-	if (checkLBARange(stoi(startLBA), stoi(LBARange)) == false) {
+	if (checkLbaRange(stoi(startLBA), stoi(LBARange)) == false) {
 
 		std::cout << "[Erase] WRONG LBA RANGE" << std::endl;
 		return;
@@ -45,10 +45,10 @@ void EraseCommand::printHelp() const
 	std::cout << " erase 85 15\n";
 }
 
-bool EraseCommand::checkLBARange(int startLBAIndex, int range) const
+bool EraseCommand::checkLbaRange(int startLBAIndex, int range) const
 {
-	if ((startLBAIndex < MIN_LBA) || (startLBAIndex > MAX_LBA)) { return false; }
-	if (((range + startLBAIndex) < MIN_LBA) || ((range + startLBAIndex) > MAX_LBA)) { return false; }
+	if (isValidLba(startLBAIndex) == false) { return false; }
+	if (isValidLba(range + startLBAIndex) == false) { return false; }
 
 	return true;
 }

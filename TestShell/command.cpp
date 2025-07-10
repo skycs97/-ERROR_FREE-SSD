@@ -27,3 +27,9 @@ void Command::printProcess(void) const
 	std::cout << std::left << std::setw(25) << cmdName;
 	std::cout << "  ___   " << "Run..";
 }
+
+bool Command::isValidLba(int lba) const
+{
+	if (lba<MIN_LBA || lba > MAX_LBA) return false;
+	return true;
+}
