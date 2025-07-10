@@ -14,24 +14,12 @@ void FullWriteAndReadCompareCommand::run(const CommandRunner& cmdRunner) const
 
 	int lba = MIN_LBA;
 	int testSize = 5;
-	int random = 0;
+	int random = 1;
 
 	std::vector<string> testValue;
 
 	while (lba <= MAX_LBA) {
 
-		random = 0;
-		testValue = getTestData(testSize, random);
-
-		if (partialWrite(cmdRunner, lba, testSize, testValue) == false)
-			throw CommandRunFailException(FAIL);
-
-		if (partialReadAndCompare(cmdRunner, lba, testSize, testValue) == false)
-			throw CommandRunFailException(FAIL);
-
-		lba += testSize;
-
-		random = 1;
 		testValue = getTestData(testSize, random);
 
 		if (partialWrite(cmdRunner, lba, testSize, testValue) == false)
@@ -87,14 +75,13 @@ vector<string> FullWriteAndReadCompareCommand::getTestData(int testsize, int ran
 
 	vector<string> data;
 	RandomNumberGenerator rng;
+	string testData = MAGICVALUE;
+	
+	if (random)
+		testData = rng.generateRandomUnsignedIntString();
 
 	for (int i = 0; i < testsize; i++) {
-		if (random) {
-			data.push_back(rng.generateRandomUnsignedIntString());
-		}
-		else {
-			data.push_back(MAGICVALUE);
-		}
+			data.push_back(testData);
 	}
 
 	return data;
