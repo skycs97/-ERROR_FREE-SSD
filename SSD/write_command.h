@@ -17,6 +17,8 @@ public:
 	void parseArg(int argc, const char* argv[]) override;
 	string run() override;
 private:
+	bool isInvalidNumber(const string& str);
+	bool isInvalidHexNumber(const string& str);
 	bool isInvalidAddress();
 	void validDataOrThrow();
 

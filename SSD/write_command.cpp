@@ -3,12 +3,22 @@
 void WriteCommand::parseArg(int argc, const char* argv[])
 {
 	if (argc != WRITE_CORRECT_ARG_SIZE) throw std::invalid_argument("number of argument is incorrect");
+
+	if (isInvalidNumber(string(argv[ARG_IDX_ADDR]))) throw std::invalid_argument("Not a number in address");
 	lba = atoi(argv[ARG_IDX_ADDR]);
 
 	if (isInvalidAddress()) throw std::invalid_argument("Out of range");
 	
 	data = argv[ARG_IDX_DATA];
 	validDataOrThrow();
+}
+
+bool WriteCommand::isInvalidNumber(const string& str) {
+	return (str.find_first_not_of("0123456789") != string::npos);
+}
+
+bool WriteCommand::isInvalidHexNumber(const string& str) {
+	return (str.find_first_not_of("0123456789ABCDEF") != string::npos);
 }
 
 bool WriteCommand::isInvalidAddress() {
@@ -23,7 +33,8 @@ void WriteCommand::validDataOrThrow()
 	if (cleanedAddress.length() > 2 && (cleanedAddress.substr(0, 2) == "0x" || cleanedAddress.substr(0, 2) == "0X")) {
 		cleanedAddress = cleanedAddress.substr(2);
 	}
-	// 16진수 파싱이 되지 않으면 내부적으로 exception 이 발생합니다. 
+	
+	if (isInvalidHexNumber(cleanedAddress)) throw std::invalid_argument("Not a hex number in data");
 	std::stoul(cleanedAddress, nullptr, 16);
 }
 

@@ -18,6 +18,7 @@ public:
 
 private:
 	bool isInvalidAddress();
+	bool isInvalidNumber(const string& str);
 
 	NandFlashMemory* nandFlashMemory;
 	BufferManager* bufferManager;
