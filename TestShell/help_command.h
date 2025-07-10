@@ -4,10 +4,12 @@
 
 class HelpCommand : public Command {
 public:
-	HelpCommand(const std::vector<std::string>& args);
-
 	void printHelp() const override;
 	void run(const CommandRunner& cmdRunner) const override;
+private:
+	HelpCommand(const std::vector<std::string>& args);
+
+	friend class HelpCommandFactory;
 };
 
 class HelpCommandFactory : public CommandFactory {

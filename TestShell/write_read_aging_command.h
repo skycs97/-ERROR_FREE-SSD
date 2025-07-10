@@ -4,10 +4,12 @@
 
 class WriteReadAgingCommand : public Command {
 public:
-	WriteReadAgingCommand(const std::vector<std::string>& args);
 	void run(const CommandRunner& cmdRunner) const override;
 	void printHelp() const override;
 private:
+	WriteReadAgingCommand(const std::vector<std::string>& args);
+
+	friend class WriteReadAgingCommandFactory;
 };
 
 class WriteReadAgingCommandFactory : public CommandFactory {

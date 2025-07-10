@@ -42,5 +42,5 @@ void EraseCommand::printHelp() const
 std::shared_ptr<Command> EraseCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
 	if (args.size() != numOfArgs) return nullptr;
-	return std::make_shared<EraseCommand>(args);
+	return std::shared_ptr<EraseCommand>(new EraseCommand(args));
 }

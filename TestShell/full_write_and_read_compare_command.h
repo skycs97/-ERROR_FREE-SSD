@@ -4,13 +4,16 @@
 
 class FullWriteAndReadCompareCommand : public Command {
 public:
-	FullWriteAndReadCompareCommand(const std::vector<std::string>& args);
 	void run(const CommandRunner& cmdRunner) const override;
 	void printHelp() const override;
 private:
+	FullWriteAndReadCompareCommand(const std::vector<std::string>& args);
 	bool partialWrite(const CommandRunner& cmdRunner, int lba, int testSize, const vector<string>& data) const;
 	bool partialReadAndCompare(const CommandRunner& cmdRunner, int lba, int testSize, const vector<string>& data) const;
+
 	vector<string> getTestData(int testsize, int random) const;
+
+	friend class FullWriteAndReadCompareCommandFactory;
 };
 
 class FullWriteAndReadCompareCommandFactory : public CommandFactory {

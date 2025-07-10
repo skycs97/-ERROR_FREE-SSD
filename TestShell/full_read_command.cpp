@@ -37,5 +37,5 @@ void FullReadCommand::printHelp() const
 std::shared_ptr<Command> FullReadCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
 	if (args.size() != numOfArgs) return nullptr;
-	return std::make_shared<FullReadCommand>(args);
+	return std::shared_ptr<FullReadCommand>(new FullReadCommand(args));
 }
