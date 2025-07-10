@@ -29,7 +29,6 @@ string SsdImpl::erase(const string& startLBA, const string& range)
     }
 
     string cmd = makeEraseCommand(startLBA, range);
-    system(cmd.c_str());
 
     return executeSsd(cmd);
 }
