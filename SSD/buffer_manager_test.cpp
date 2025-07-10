@@ -183,3 +183,43 @@ TEST_F(BufferManagerFixture, TC10) {
 	// E 0 3 이 이후에 들어온 W 명령어들에 의해 지워집니다.
 	EXPECT_EQ(3, manager.getUsedBufferCount());
 }
+
+TEST_F(BufferManagerFixture, FileNameTest1) {
+	manager.init();
+	EXPECT_CALL(fileHandler, rename(_, "buffer\\1_E_0_3"))
+		.Times(1);
+	manager.addEraseCommand(0, 3);
+}
+
+TEST_F(BufferManagerFixture, FileNameTest2) {
+	manager.init();
+	EXPECT_CALL(fileHandler, rename(_, "buffer\\1_W_10_0x11111111"))
+		.Times(1);
+	manager.addWriteCommand(10, "0x11111111");
+}
+
+TEST_F(BufferManagerFixture, InitEraseAndEraseTest) {
+	EXPECT_CALL(fileHandler, isExist(_, _, _))
+		.WillOnce(Return(true))
+		.WillRepeatedly(Return(false));
+	EXPECT_CALL(fileHandler, findFileUsingPrefix)
+		.WillOnce(Return(vector<string>{"1_E_0_3"}));
+	EXPECT_CALL(fileHandler, rename("buffer\\1_E_0_3", "buffer\\1_E_0_5"))
+		.Times(1);
+	manager.init();
+	
+	manager.addEraseCommand(0, 5);
+}
+
+TEST_F(BufferManagerFixture, InitWriteAndEraseTest) {
+	EXPECT_CALL(fileHandler, isExist(_, _, _))
+		.WillOnce(Return(true))
+		.WillRepeatedly(Return(false));
+	EXPECT_CALL(fileHandler, findFileUsingPrefix)
+		.WillOnce(Return(vector<string>{"1_W_0_0x11112222"}));
+	EXPECT_CALL(fileHandler, rename("buffer\\1_W_0_0x11112222", "buffer\\1_E_0_5"))
+		.Times(1);
+	manager.init();
+
+	manager.addEraseCommand(0, 5);
+}
