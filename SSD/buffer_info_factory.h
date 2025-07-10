@@ -6,6 +6,9 @@ class BufferInfoFactory {
 public:
 	BufferInfo* createCommand(const string& fileName);
 
+	BufferInfo* createWriteCommand(int LBA, const string& data);
+	BufferInfo* createEraseCommand(int LBA, int size);
+
 	static BufferInfoFactory& getInstance() {
 		static BufferInfoFactory instance;
 		return instance;

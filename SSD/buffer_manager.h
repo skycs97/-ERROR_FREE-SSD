@@ -56,7 +56,6 @@ private:
 	void updateBufferState(int bufIndex);
 	void updateInternalBufferState();
 	void fillBufferInfo(string fname, int bufIndex);
-	CMD_TYPE getBufferTypeFromFilenames(const string& fname);
 	void IncreaseBufferCnt();
 
 	bool isBufferFull();
@@ -64,7 +63,7 @@ private:
 
 	void writeBufferFile(const string& old_name, const string& new_name);
 	void updateBufferByInternalBuffer();
-	int createWriteBuffer(const string& internalBuffer, int bufIndex, int internalBufferIdx);
+	int createWriteBuffer(int bufIndex, int LBA, const string& data);
 	int createEraseBufferAndPassedWriteBuffer(int eraseStartLBA, int eraseCount, int bufIndex, std::vector<int>& writeLBAs);
 	vector<string> getOldFileNames();
 	inline bool isLastLBA(int lba) { return lba == MAX_LBA; }
