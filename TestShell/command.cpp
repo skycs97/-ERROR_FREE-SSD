@@ -24,7 +24,7 @@ string Command::getCmdName(void)
 
 void Command::printProcess(void) const
 {
-	std::cout << std::left << std::setw(25) << cmdName;
+	std::cout << std::left << std::setw(25) << std::setfill(' ') << cmdName;
 	std::cout << "  ___   " << "Run..";
 }
 
@@ -32,4 +32,9 @@ bool Command::isValidLba(int lba) const
 {
 	if (lba<MIN_LBA || lba > MAX_LBA) return false;
 	return true;
+}
+
+void Command::printPass(void) const
+{
+	std::cout << "Pass" << std::endl;
 }

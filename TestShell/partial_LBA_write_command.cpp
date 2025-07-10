@@ -35,11 +35,11 @@ void PartialLBAWriteCommand::run(const CommandRunner& cmdRunner) const
 		}
 
 		if (checkResult(result) == false) {
-			throw CommandRunFailException("Fail");
+			throw CommandRunFailException(FAIL);
 		}
 	}
 
-	std::cout << "Pass" << std::endl;
+	printPass();
 }
 
 void PartialLBAWriteCommand::printHelp() const

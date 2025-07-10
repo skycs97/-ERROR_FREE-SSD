@@ -14,3 +14,4 @@
 #include "full_write_and_read_compare_command.h"
 #include "partial_LBA_write_command.h"
 #include "write_read_aging_command.h"
+#include "erase_and_write_aging.h"

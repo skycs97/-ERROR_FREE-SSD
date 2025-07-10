@@ -31,7 +31,7 @@ void WriteReadAgingCommand::run(const CommandRunner& cmdRunner) const
 			throw CommandRunFailException(FAIL);
 	}
 
-	std::cout << "Pass" << std::endl;
+	printPass();
 }
 
 void WriteReadAgingCommand::printHelp() const

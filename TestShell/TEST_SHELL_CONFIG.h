@@ -32,6 +32,8 @@ const std::string CMD_3_WRITE_READ_AGING_SHORT = "3_";
 const std::string CMD_3_WRITE_READ_AGING = "3_WriteReadAging";
 const std::string CMD_ERASE = "erase";
 const std::string CMD_ERASE_RANGE = "erase_range";
+const std::string CMD_4_ERASE_AND_WRITE_AGING_SHORT = "4_";
+const std::string CMD_4_ERASE_AND_WRITE_AGING = "4_EraseAndWriteAging";
 
 const vector<string> AVAILABLE_COMMAND_LIST = {
 	CMD_HELP,
@@ -45,13 +47,15 @@ const vector<string> AVAILABLE_COMMAND_LIST = {
 	CMD_2_PARTIAL_LBA_WRITE,
 	CMD_3_WRITE_READ_AGING,
 	CMD_ERASE,
-	CMD_ERASE_RANGE
+	CMD_ERASE_RANGE,
+	CMD_4_ERASE_AND_WRITE_AGING
 };
 
 const std::map<string, string> shortCommandToCommand = {
 	{CMD_1_FULL_WRITE_AND_READ_COMPARE_SHORT, CMD_1_FULL_WRITE_AND_READ_COMPARE},
 	{CMD_2_PARTIAL_LBA_WRITE_SHORT, CMD_2_PARTIAL_LBA_WRITE},
-	{CMD_3_WRITE_READ_AGING_SHORT, CMD_3_WRITE_READ_AGING}
+	{CMD_3_WRITE_READ_AGING_SHORT, CMD_3_WRITE_READ_AGING},
+	{CMD_4_ERASE_AND_WRITE_AGING_SHORT, CMD_4_ERASE_AND_WRITE_AGING}
 };
 
 static const int MAX_LBA = 99;
@@ -60,6 +64,6 @@ static const int MIN_LBA = 0;
 const std::string MAGICVALUE = "0xA5A5A5A5";
 const std::string ERR = "ERROR";
 const std::string DONE = "DONE";
-const std::string FAIL = "FAIL";
+const std::string FAIL = "FAIL!";
 const std::string WRITESUCCESS = "";
 const std::string ERASESUCCESS = "";

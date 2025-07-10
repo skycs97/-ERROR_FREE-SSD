@@ -16,6 +16,7 @@ public:
 		addFactory(CMD_1_FULL_WRITE_AND_READ_COMPARE, new FullWriteAndReadCompareCommandFactory());
 		addFactory(CMD_2_PARTIAL_LBA_WRITE, new PartialLBAWriteCommandFactory());
 		addFactory(CMD_3_WRITE_READ_AGING, new WriteReadAgingCommandFactory());
+		addFactory(CMD_4_ERASE_AND_WRITE_AGING, new EraseAndWriteAgingCommandFactory());
 	}
 	void addFactory(const string& cmdName, CommandFactory* factory);
 	CommandFactory* getFactory(const string& cmdName);
