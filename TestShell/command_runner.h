@@ -8,6 +8,7 @@ using std::vector;
 class CommandRunner {
 public:
 	string read(const string& LBA) const;
+	void AssertionCheckSsdInterface() const;
 	string write(const string& LBA, const string& value) const;
 	string erase(const string& startLBA, const string& LBARange) const;
 	string flush() const;
