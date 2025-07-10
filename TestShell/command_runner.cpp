@@ -38,9 +38,8 @@ string CommandRunner::flush() const
 
 string CommandRunner::erase(const string& startLBA, const string& LBARange) const
 {
-	if (isSetSsdInterface() == false) {
-		throw std::runtime_error("ssd Interface hasn't set");
-	}
+	AssertionCheckSsdInterface();
+
 	int startIndexNum = stoi(startLBA);
 	int rangeNum = stoi(LBARange);
 	string result = "";
