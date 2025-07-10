@@ -76,8 +76,8 @@ void BufferManager::fillBufferInfo(string fname, int bufIndex)
 
 void BufferManager::IncreaseBufferCnt()
 {
-	valid_buf_cnt++;
-	if (valid_buf_cnt > BUFFER_SIZE) throw std::exception("valid_buf_cnt is over than 5!");
+	validBufCount++;
+	if (validBufCount > BUFFER_SIZE) throw std::exception("validBufCount is over than 5!");
 }
 
 bool BufferManager::read(int lba, string& outputData) {
@@ -142,7 +142,7 @@ void BufferManager::updateBufferFiles()
 void BufferManager::updateBufferFilesAllEmpty()
 {
 	vector<string> oldNames = getOldFileNames();
-	valid_buf_cnt = 0;
+	validBufCount = 0;
 	fillEmptyBuffers();
 	writeAllBufferFiles(oldNames);
 }
@@ -151,7 +151,7 @@ vector<string> BufferManager::getOldFileNames()
 {
 	vector<string> oldNames;
 	for (int i = 0; i < BUFFER_SIZE; i++) {
-		oldNames.push_back(buffers[i]->getFileName(i));
+		oldNames.push_back(getBufferFilePrefix(i) + buffers[i]->getFileName());
 	}
 	return oldNames;
 }
@@ -159,18 +159,18 @@ vector<string> BufferManager::getOldFileNames()
 void BufferManager::writeAllBufferFiles(std::vector<std::string>& oldNames)
 {
 	for (int i = 0; i < BUFFER_SIZE; i++) {
-		const string& new_name = buffers[i]->getFileName(i);
-		const string& old_name = oldNames[i];
-		writeBufferFile(old_name, new_name);
+		const string& newName = getBufferFilePrefix(i) + buffers[i]->getFileName();
+		const string& oldName = oldNames[i];
+		writeBufferFile(oldName, newName);
 	}
 }
 
-void BufferManager::writeBufferFile(const string& old_name, const string& new_name) {
-	if (old_name == new_name) {
+void BufferManager::writeBufferFile(const string& oldName, const string& newName) {
+	if (oldName == newName) {
 		return;
 	}
-	string old_path = BUFFER_DIR_NAME "\\" + old_name;
-	string new_path = BUFFER_DIR_NAME "\\" + new_name;
+	string old_path = BUFFER_DIR_NAME "\\" + oldName;
+	string new_path = BUFFER_DIR_NAME "\\" + newName;
 	fileHandler->rename(old_path, new_path);
 }
 
@@ -212,7 +212,7 @@ void BufferManager::updateBufferByInternalBuffer() {
 
 		}
 	}
-	valid_buf_cnt = bufIndex;
+	validBufCount = bufIndex;
 	fillEmptyBuffers();
 }
 
@@ -258,5 +258,5 @@ void BufferManager::flushInternalBuffers()
 }
 
 int BufferManager::getUsedBufferCount() {
-	return valid_buf_cnt;
+	return validBufCount;
 }

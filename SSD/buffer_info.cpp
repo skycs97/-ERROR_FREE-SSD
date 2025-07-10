@@ -28,24 +28,21 @@ void EmptyBufferInfo::updateInternalBufferInfos(vector<InternalBufferInfo>& inte
 	// emptyBufferInfo는 InternalBufferInfo 에 아무런 영향을 주지 않습니다.
 }
 
-string WriteBufferInfo::getFileName(int bufIndex) {
+string WriteBufferInfo::getFileName() {
 	std::ostringstream oss;
-	oss << bufIndex + 1 << "_W_" << lba << "_" << written_data;
-	string fileName = oss.str();
-	return fileName;
+	oss << "W_" << lba << "_" << written_data;
+	return oss.str();
 }
 
-string EraseBufferInfo::getFileName(int bufIndex) {
+string EraseBufferInfo::getFileName() {
 	std::ostringstream oss;
-	oss << bufIndex + 1 << "_E_" << lba << "_" << size;
-	string fileName = oss.str();
-	return fileName;
+	oss << "E_" << lba << "_" << size;
+	return oss.str();
 }
 
-string EmptyBufferInfo::getFileName(int bufIndex) {
+string EmptyBufferInfo::getFileName() {
 	std::ostringstream oss;
-	oss << bufIndex + 1 << "_empty";
-	string fileName = oss.str();
-	return fileName;
+	oss << "empty";
+	return oss.str();
 }
 
