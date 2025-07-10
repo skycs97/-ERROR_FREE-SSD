@@ -28,11 +28,7 @@ public:
 	BufferManager(NandFlashMemory* nandFlashMemory, FileHandler* fileHandler)
 		: nandFlashMemory{ nandFlashMemory }, fileHandler{ fileHandler } {
 
-		// 내부 버퍼 초기화
-		for (int index = 0; index < 100; index++) {
-			internalBuffers[index].cmd = INVALID_VALUE;
-			internalBuffers[index].data = "";
-		}
+		initInternalBuffers();
 	}
 
 	void init();
@@ -55,6 +51,7 @@ public:
 	// empty가 아닌 버퍼의 개수를 리턴합니다.
 	int getUsedBufferCount();
 private:
+	const string ERASED_VALUE = "0x00000000";
 	NandFlashMemory* nandFlashMemory;
 	FileHandler* fileHandler;
 	vector<BufferInfo> buffers{ BUFFER_SIZE };
@@ -72,6 +69,8 @@ private:
 
 	// 버퍼 상태 업데이트
 	void updateBufferState(int buf_idx);
+
+	void updateInternalBufferState();
 
 	void fillBufferInfo(string fname, int buf_idx, bool need_file_change);
 
@@ -92,7 +91,10 @@ private:
 
 	void IncreaseBufferCnt();
 
-	void DecreaseBufferCnt();
-
 	void updateBuffer();
+
+	void initInternalBuffers();
+	void fillEmptyBufferInfo(int buffer_idx);
+	void fillWriteBufferInfo(int write_lba, int buffer_idx);
+	void fillEraseBufferInfo(int buffer_idx, int erase_start, int erase_count);
 };

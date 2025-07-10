@@ -56,6 +56,11 @@ void BufferManager::updateBufferState(int buf_idx)
 	fillBufferInfo(buffer_fname.front(), buf_idx, false);
 	IncreaseBufferCnt();
 
+	updateInternalBufferState();
+}
+
+void BufferManager::updateInternalBufferState()
+{
 	for (int buffer_idx = 0; buffer_idx < BUFFER_SIZE; buffer_idx++) {
 		if (buffers[buffer_idx].cmd == INVALID_VALUE) continue;
 		else if (buffers[buffer_idx].cmd == CMD_WRITE) {
@@ -69,7 +74,7 @@ void BufferManager::updateBufferState(int buf_idx)
 			int size = buffers[buffer_idx].erase_size;
 			for (int count = 0; count < size; count++) {
 				internalBuffers[lba + count].cmd = CMD_ERASE;
-				internalBuffers[lba + count].data = "0x00000000";
+				internalBuffers[lba + count].data = ERASED_VALUE;
 			}
 		}
 	}
@@ -141,73 +146,88 @@ bool BufferManager::read(int lba, string& outputData) {
 	return true;
 }
 void BufferManager::updateBuffer() {
-	int erase_start = -1;
-	int erase_count = 0;
-	bool erase_flag = false;
+	int eraseStartLBA = -1;
+	bool meetErase = false;
 	vector<int> write_lbas;
 
 	int buffer_idx = 0;
-	for (int i = 0; i < 100; i++) {
-		if (erase_flag == true) {
-			if (internalBuffers[i].cmd == CMD_ERASE) {
-				erase_count++;
-			}
-			else if (internalBuffers[i].cmd == CMD_WRITE) {
-				erase_count++;
-				write_lbas.push_back(i);
-			}
-
-			if (i == 99 || erase_count == 10 || internalBuffers[i].cmd == INVALID_VALUE) {
-				std::ostringstream oss;
-				oss << buffer_idx + 1 << "_E_" << erase_start << "_" << erase_count;
-				fillBufferInfo(oss.str(), buffer_idx, true);
-				buffer_idx++;
-				for (int write_lba : write_lbas) {
-					string data = internalBuffers[write_lba].data;
-					std::ostringstream oss;
-					oss << buffer_idx + 1 << "_W_" << write_lba << "_" << data;
-					fillBufferInfo(oss.str(), buffer_idx, true);
-					buffer_idx++;
-				}
-				erase_flag = false;
-				erase_count = 0;
+	for (int internalBufferIdx = 0; internalBufferIdx < 100; internalBufferIdx++) {
+		InternalBufferInfo& internalBuffer = internalBuffers[internalBufferIdx];
+		if (meetErase == false) {
+			if (internalBuffer.cmd == CMD_ERASE) {
+				meetErase = true;
+				eraseStartLBA = internalBufferIdx;
 				write_lbas.clear();
+			}
+			else if (internalBuffer.cmd == CMD_WRITE) {
+				fillWriteBufferInfo(internalBufferIdx, buffer_idx);
+				buffer_idx++;
 			}
 		}
 		else {
-			if (internalBuffers[i].cmd == CMD_WRITE) {
-				string data = internalBuffers[i].data;
-				std::ostringstream oss;
-				oss << buffer_idx + 1 << "_W_" << i << "_" << data;
-				fillBufferInfo(oss.str(), buffer_idx, true);
-				buffer_idx++;
+			if (internalBuffer.cmd == CMD_WRITE) {
+				// erase 사이에 등장한 write는 따로 기록해 둡니다.
+				write_lbas.push_back(internalBufferIdx);
 			}
-			else if (internalBuffers[i].cmd == CMD_ERASE) {
-				erase_flag = true;
-				erase_start = i;
-				erase_count = 1;
-				write_lbas.clear();
+			else if (internalBuffer.cmd == INVALID_VALUE) {
+				// erase 가 끝나면, eraseBuffer를 기록하고, 그 사이에 지나친 write 들도 기록합니다.
+				int erase_count = internalBufferIdx - eraseStartLBA - 1;
+				fillEraseBufferInfo(buffer_idx, eraseStartLBA, erase_count);
+				buffer_idx++;
+				for (int write_lba : write_lbas) {
+					fillWriteBufferInfo(write_lba, buffer_idx);
+					buffer_idx++;
+				}
+				meetErase = false;
+			}
+
+			else if (internalBufferIdx == 99 || internalBufferIdx - eraseStartLBA == 10) {
+				// erase 가 끝나면, eraseBuffer를 기록하고, 그 사이에 지나친 write 들도 기록합니다.
+				int erase_count = internalBufferIdx - eraseStartLBA;
+				fillEraseBufferInfo(buffer_idx, eraseStartLBA, erase_count);
+				buffer_idx++;
+				for (int write_lba : write_lbas) {
+					fillWriteBufferInfo(write_lba, buffer_idx);
+					buffer_idx++;
+				}
+				meetErase = false;
 			}
 		}
 	}
 	valid_buf_cnt = buffer_idx;
-	for (int ibuffer_idx = valid_buf_cnt; buffer_idx < BUFFER_SIZE; buffer_idx++) {
-		std::ostringstream oss;
-		oss << buffer_idx + 1 << "_empty";
-		fillBufferInfo(oss.str(), buffer_idx, true);
+	for (; buffer_idx < BUFFER_SIZE; buffer_idx++) {
+		// empty Buffer도 기록합니다.
+		fillEmptyBufferInfo(buffer_idx);
 	}
 }
+void BufferManager::fillEmptyBufferInfo(int buffer_idx)
+{
+	std::ostringstream oss;
+	oss << buffer_idx + 1 << "_empty";
+	fillBufferInfo(oss.str(), buffer_idx, true);
+}
+void BufferManager::fillWriteBufferInfo(int write_lba, int buffer_idx)
+{
+	string data = internalBuffers[write_lba].data;
+	std::ostringstream oss;
+	oss << buffer_idx + 1 << "_W_" << write_lba << "_" << data;
+	fillBufferInfo(oss.str(), buffer_idx, true);
+}
+void BufferManager::fillEraseBufferInfo(int buffer_idx, int erase_start, int erase_count)
+{
+	std::ostringstream oss;
+	oss << buffer_idx + 1 << "_E_" << erase_start << "_" << erase_count;
+	fillBufferInfo(oss.str(), buffer_idx, true);
+}
 void BufferManager::addWriteCommand(int lba, const string& data) {
-	if (isBufferFull()) {
-		flush();
-	}
-
-	if (data == "0x00000000") {
+	if (data == ERASED_VALUE) {
 		addEraseCommand(lba, 1);
 		return;
 	}
+	if (isBufferFull()) {
+		flush();
+	}
 	internalBuffers[lba] = { CMD_WRITE, data };
-
 	updateBuffer();
 }
 
@@ -215,12 +235,9 @@ void BufferManager::addEraseCommand(int lba, int count) {
 	if (isBufferFull()) {
 		flush();
 	}
-	//로직 구현
-
 	for (int i = lba; i < lba + count; i++) {
-		internalBuffers[i] = { CMD_ERASE, "0x00000000" };
+		internalBuffers[i] = { CMD_ERASE, ERASED_VALUE };
 	}
-
 	updateBuffer();
 }
 
@@ -234,19 +251,24 @@ void BufferManager::flush() {
 	}
 
 	// 내부 버퍼 초기화
-	for (int index = 0; index < 100; index++) {
-		internalBuffers[index].cmd = INVALID_VALUE;
-		internalBuffers[index].data = "";
-	}
+	initInternalBuffers();
 
 	// 외부 버퍼 초기화
 	int buf_cnt = getUsedBufferCount();
 	for (int buf_idx = 0; buf_idx < buf_cnt; buf_idx++) {
 		string file_name = string(getBufferFilePrefix(buf_idx)) + BUFFER_NAME_EMPTY;
 		fillBufferInfo(file_name, buf_idx, true);
-		DecreaseBufferCnt();
 	}
 	nandFlashMemory->write(datas);
+	valid_buf_cnt = 0;
+}
+
+void BufferManager::initInternalBuffers()
+{
+	for (int index = 0; index < 100; index++) {
+		internalBuffers[index].cmd = INVALID_VALUE;
+		internalBuffers[index].data = "";
+	}
 }
 
 void BufferManager::writeBuffer(const string& old_name, const string& new_name) {
@@ -265,10 +287,4 @@ void BufferManager::IncreaseBufferCnt()
 {
 	valid_buf_cnt++;
 	if (valid_buf_cnt > BUFFER_SIZE) throw std::exception("valid_buf_cnt is over than 5!");
-}
-
-void BufferManager::DecreaseBufferCnt()
-{
-	valid_buf_cnt--;
-	if (valid_buf_cnt < 0) throw std::exception("valid_buf_cnt is lower than 0!");
 }
