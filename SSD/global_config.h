@@ -3,6 +3,7 @@
 // SSD
 #define MAX_LBA 99
 #define MIN_LBA 0
+#define MAX_ERASE_COUNT 10
 #define CMD_INVALID	0xFFFF
 #define CMD_READ	1
 #define CMD_WRITE	2

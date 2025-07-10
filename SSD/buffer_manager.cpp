@@ -51,7 +51,7 @@ void BufferManager::init() {
 	for (int buf_idx = 0; buf_idx < BUFFER_SIZE; buf_idx++)
 	{
 		if (existBufferFile(buf_idx)) updateBufferState(buf_idx);
-		else createBufferFile(buf_idx);
+		else createEmptyBufferFile(buf_idx);
 	}
 }
 
@@ -66,7 +66,7 @@ bool BufferManager::existBufferFile(int buf_idx)
 	return false;
 }
 
-void BufferManager::createBufferFile(int buf_idx)
+void BufferManager::createEmptyBufferFile(int buf_idx)
 {
 	string file_name = getBufferFilePrefix(buf_idx) + BUFFER_NAME_EMPTY;
 	string file_path = BUFFER_DIR_NAME "\\";
@@ -234,7 +234,7 @@ void BufferManager::addEraseCommand(int lba, int count) {
 void BufferManager::flush() {
 	vector<string> datas = nandFlashMemory->read();
 	updateNandData(datas);
-	initInternalBuffers();
+	flushInternalBuffers();
 
 	vector<string> old_names = getOldFileNames();
 	valid_buf_cnt = 0;
@@ -268,7 +268,7 @@ void BufferManager::updateNandData(std::vector<std::string>& outData)
 	}
 }
 
-void BufferManager::initInternalBuffers()
+void BufferManager::flushInternalBuffers()
 {
 	for (int index = 0; index <= MAX_LBA; index++) {
 		internalBuffers[index].cmd = INVALID_VALUE;
