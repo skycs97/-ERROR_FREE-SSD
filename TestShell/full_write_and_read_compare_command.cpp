@@ -90,6 +90,8 @@ vector<string> FullWriteAndReadCompareCommand::getTestData(int testsize, int ran
 std::shared_ptr<Command> FullWriteAndReadCompareCommandFactory::makeCommand(const string& cmdName
 																			, const std::vector<string>& args)
 {
+	if (cmdName != CMD_1_FULL_WRITE_AND_READ_COMPARE) return nullptr;
 	if (args.size() != numOfArgs) return nullptr;
+
 	return std::shared_ptr<FullWriteAndReadCompareCommand>(new FullWriteAndReadCompareCommand(args));
 }

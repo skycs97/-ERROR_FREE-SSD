@@ -39,6 +39,8 @@ void HelpCommand::run(const CommandRunner& cmdRunner) const
 
 std::shared_ptr<Command> HelpCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
+	if (cmdName != CMD_HELP) return nullptr;
 	if (args.size() != numOfArgs) return nullptr;
+
 	return std::shared_ptr<HelpCommand>(new HelpCommand(args));
 }

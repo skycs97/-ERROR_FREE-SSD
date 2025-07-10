@@ -59,6 +59,7 @@ bool EraseRangeCommand::checkLbaRange(int startLBAIndex, int endLBAIndex) const
 }
 std::shared_ptr<Command> EraseRangeCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
+	if (cmdName != CMD_ERASE_RANGE) return nullptr;
 	if (args.size() != numOfArgs) return nullptr;
 
 	return std::shared_ptr<EraseRangeCommand>(new EraseRangeCommand(args));

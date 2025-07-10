@@ -24,6 +24,8 @@ void ExitCommand::printHelp() const
 
 std::shared_ptr<Command> ExitCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
+	if (cmdName != CMD_EXIT) return nullptr;
 	if (args.size() != numOfArgs) return nullptr;
+
 	return std::shared_ptr<ExitCommand>(new ExitCommand(args));
 }

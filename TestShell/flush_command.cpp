@@ -25,5 +25,8 @@ void FlushCommand::printHelp() const
 
 std::shared_ptr<Command> FlushCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
+	if (cmdName != CMD_FLUSH) return nullptr;
+	if (args.size() != numOfArgs) return nullptr;
+
 	return std::make_shared<FlushCommand>(args);
 }

@@ -40,6 +40,8 @@ void WriteCommand::printHelp() const
 
 std::shared_ptr<Command> WriteCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
+	if (cmdName != CMD_WRITE) return nullptr;
 	if (args.size() != numOfArgs) return nullptr;
+
 	return std::shared_ptr<WriteCommand>(new WriteCommand(args));
 }

@@ -242,4 +242,31 @@ TEST_F(TestShellFixtureWithMock, EraseAndWriteAging) {
 
 	command->run(runner);
 }
+
+TEST_F(TestShellFixtureWithMock, FactoryCheck) {
+	std::vector<std::string> commands = { "read 99"
+										, "write 99 0x12341234"
+										, "fullread"
+										, "fullwrite 0x23452345"
+										, "help"
+										, "exit"
+										, "flush"
+										, "1_"
+										, "2_"
+										, "3_"
+										, "4_"
+										, "1_FullWriteAndReadCompare"
+										, "2_PartialLBAWrite"
+										, "3_WriteReadAging"
+										, "4_EraseAndWriteAging"
+										, "erase 98 1"
+										, "erase_range 98 99"
+
+	};
+
+	for (std::string command : commands) {
+		auto command_ptr = parser.parseAndMakeShellCommand(command);
+		EXPECT_FALSE(command_ptr == nullptr);
+	}
+}
 #endif

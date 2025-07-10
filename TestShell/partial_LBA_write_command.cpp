@@ -53,6 +53,8 @@ void PartialLBAWriteCommand::printHelp() const
 
 std::shared_ptr<Command> PartialLBAWriteCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
+	if (cmdName != CMD_2_PARTIAL_LBA_WRITE) return nullptr;
 	if (args.size() != numOfArgs) return nullptr;
+
 	return std::shared_ptr<PartialLBAWriteCommand>(new PartialLBAWriteCommand(args));
 }
