@@ -1,5 +1,13 @@
 #pragma once
-
+#include <fstream>
+#include <iomanip>
+#include <chrono>
+#include <ctime>
+#include <string>
+#include <sstream>
+#include <iostream>
+#include <windows.h>
+#include <vector>
 #define logger Logger::getInstance()
 
 namespace {

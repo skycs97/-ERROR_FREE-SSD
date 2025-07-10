@@ -1,12 +1,4 @@
-#include <fstream>
-#include <iomanip>
-#include <chrono>
-#include <ctime>
-#include <string>
-#include <sstream>
-#include <iostream>
-#include <windows.h>
-#include <vector>
+
 #include "logger.h"
 
 void Logger::print(const std::string& functionName, const std::string& message) {
