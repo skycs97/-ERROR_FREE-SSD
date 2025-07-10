@@ -9,17 +9,19 @@
 using std::string;
 using std::vector;
 
+struct BufferInfo
+{
+	string fname;
+	CMD_TYPE cmd;
+	int lba;
+	string written_data;
+	int erase_size;
+
+	string getFileName(int buf_idx);
+};
+
 class BufferManager {
 public:
-	struct BufferInfo
-	{
-		string fname;
-		CMD_TYPE cmd;
-		int lba;
-		string written_data;
-		int erase_size;
-	};
-
 	struct InternalBufferInfo {
 		CMD_TYPE cmd;
 		string data;
@@ -51,7 +53,6 @@ public:
 	// empty가 아닌 버퍼의 개수를 리턴합니다.
 	int getUsedBufferCount();
 private:
-	const string ERASED_VALUE = "0x00000000";
 	NandFlashMemory* nandFlashMemory;
 	FileHandler* fileHandler;
 	vector<BufferInfo> buffers{ BUFFER_SIZE };
@@ -65,14 +66,18 @@ private:
 	void createBufferFile(int buf_idx);
 
 	// Buffer 파일의 Prefix 매크로 반환합니다.
-	const char* getBufferFilePrefix(int buf_idx);
+	string getBufferFilePrefix(int buf_idx);
 
 	// 버퍼 상태 업데이트
 	void updateBufferState(int buf_idx);
 
 	void updateInternalBufferState();
 
-	void fillBufferInfo(string fname, int buf_idx, bool need_file_change);
+	void fillInternalBufferErase(int buffer_idx);
+
+	void fillInternalBufferWrite(int buffer_idx);
+
+	void fillBufferInfo(string fname, int buf_idx);
 
 	void setBufferInfo(
 		int buf_idx,
