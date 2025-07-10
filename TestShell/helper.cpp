@@ -4,7 +4,7 @@
 
 std::map<std::string, std::string> Helper::cmdHelpList{};
 
-std::string Helper::printAllHelp() {
+void Helper::printAllHelp() {
 	for (auto cmdName : AVAILABLE_COMMAND_LIST) {
 		printCmdHelp(cmdName);
 	}
