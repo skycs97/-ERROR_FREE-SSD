@@ -4,6 +4,7 @@
 #include <vector>
 #include <stdexcept>
 #include <random>
+#include <system_error>
 #include "command_runner.h"
 #include "TEST_SHELL_CONFIG.h"
 #include "test_util.h"
@@ -14,6 +15,7 @@ public:
 	int getNumOfArgs(void);
 	string getCmdName(void);
 	void printProcess(void) const;
+	void printPass(void) const;
 
 	virtual void run(const CommandRunner& cmdRunner) const = 0;
 	virtual void printHelp(void) const = 0;

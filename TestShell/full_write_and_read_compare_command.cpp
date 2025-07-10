@@ -43,7 +43,7 @@ void FullWriteAndReadCompareCommand::run(const CommandRunner& cmdRunner) const
 		lba += testSize;
 	}
 
-	std::cout << "Pass" << std::endl;
+	printPass();
 }
 
 bool FullWriteAndReadCompareCommand::partialWrite(const CommandRunner& cmdRunner, int lba, int testSize, const vector<string>& data) const
