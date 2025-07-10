@@ -12,7 +12,7 @@ void FlushCommand::run(const CommandRunner& cmdRunner) const
 {
 	string result = cmdRunner.flush();
 
-	if (result == ERROR) {
+	if (result == ERR) {
 		throw std::runtime_error("flush error!");
 	}
 

@@ -16,8 +16,8 @@ void FullWriteCommand::run(const CommandRunner& cmdRunner) const
 
 	for (int lba = MIN_LBA; lba <= MAX_LBA; lba++) {
 		writeResult = cmdRunner.write(std::to_string(lba), this->value);
-		if (writeResult == ERROR)
-			fullWriteResult = ERROR;
+		if (writeResult == ERR)
+			fullWriteResult = ERR;
 	}
 
 	printResult(fullWriteResult);
@@ -29,7 +29,7 @@ void FullWriteCommand::printResult(const string& result) const
 	if (result == "")
 		std::cout << DONE;
 	else
-		std::cout << ERROR;
+		std::cout << ERR;
 
 	std::cout << std::endl << std::endl;
 }

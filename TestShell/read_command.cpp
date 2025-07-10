@@ -19,7 +19,7 @@ void ReadCommand::run(const CommandRunner& cmdRunner) const
 void ReadCommand::printResult(const string& result, const string& lba) const
 {
 	std::cout << "[Read] ";
-	if (result != ERROR)
+	if (result != ERR)
 		std::cout << lba << " : ";
 	std::cout << result
 		<< std::endl << std::endl;

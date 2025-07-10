@@ -58,7 +58,7 @@ static const int MAX_LBA = 99;
 static const int MIN_LBA = 0;
 
 const std::string MAGICVALUE = "0xA5A5A5A5";
-const std::string ERROR = "ERROR";
+const std::string ERR = "ERROR";
 const std::string DONE = "DONE";
 const std::string FAIL = "FAIL";
 const std::string WRITESUCCESS = "";

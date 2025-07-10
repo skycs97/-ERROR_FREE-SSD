@@ -25,7 +25,7 @@ string SsdImpl::erase(const string& startLBA, const string& range)
     int rangeNum = stoi(range);
 
     if (rangeNum > MAX_ERASE_RANGE) {
-        return ERROR;
+        return ERR;
     }
 
     string cmd = makeEraseCommand(startLBA, range);
@@ -101,7 +101,7 @@ string SsdImpl::checkSsdResult() {
     std::string line;
 
     if (inputFile.is_open() == false) {
-        return ERROR;
+        return ERR;
     }
 
     getline(inputFile, line);
