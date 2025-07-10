@@ -136,7 +136,7 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
-    <ClCompile Include="file_handler.cpp" />
+    <ClCompile Include="file_handler_impl.cpp" />
     <ClCompile Include="file_handler_mock.h">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> %(AdditionalOptions)</AdditionalOptions>
@@ -191,6 +191,7 @@
   <ItemGroup>
     <ClInclude Include="buffer_manager.h" />
     <ClInclude Include="file_handler.h" />
+    <ClInclude Include="file_handler_impl.h" />
     <ClInclude Include="global_config.h" />
     <ClInclude Include="erase_command.h" />
     <ClInclude Include="nand_flash_memory_impl.h" />

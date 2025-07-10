@@ -60,9 +60,6 @@
     <ClCompile Include="flush_command.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="file_handler.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="output_handler_test.cpp">
       <Filter>테스트 파일</Filter>
     </ClCompile>
@@ -76,6 +73,15 @@
       <Filter>테스트 파일</Filter>
     </ClCompile>
     <ClCompile Include="ssd_command_test.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="file_handler_impl.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -120,6 +126,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="ssd_command.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="file_handler_impl.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
