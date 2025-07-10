@@ -7,15 +7,6 @@ using std::string;
 using std::ofstream;
 using std::ifstream;
 
-void FileHandler::write(const string& file_name, const vector<string>& output_string) {
-	ofstream writefile;
-	writefile.open(file_name);
-	for (const auto& line : output_string) {
-		writefile << line << '\n';
-	}
-	writefile.close();
-}
-
 vector<string> FileHandler::read(const string& file_name) {
 	ifstream readfile;
 	readfile.open(file_name);
@@ -28,23 +19,9 @@ vector<string> FileHandler::read(const string& file_name) {
 	return lines;
 }
 
-void FileHandler::createEmptyFile(const string& file_path)
-{
-	std::ofstream outFile(file_path.c_str());
-	if (!outFile) {
-		throw std::exception("Fail to create buffer file.");
-	}
-
-	outFile << "";
-	outFile.close();
-
-	return;
-}
-
 void FileHandler::rename(const string& old_name, const string& new_name) const
 {
 	if (std::rename(old_name.c_str(), new_name.c_str()) == 0) {
-		// success
 		return;
 	}
 	else {
@@ -52,7 +29,7 @@ void FileHandler::rename(const string& old_name, const string& new_name) const
 	}
 }
 
-vector<string> FileHandler::findFileUsingPrefix(const string& path, const string& prefix)
+vector<string> FileHandler::getFileUsingPrefix(const string& path, const string& prefix)
 {
 	std::vector<std::string> matchingFiles;
 
@@ -83,46 +60,56 @@ vector<string> FileHandler::findFileUsingPrefix(const string& path, const string
 	return matchingFiles;
 }
 
-bool FileHandler::createDirectory(const string& path)
+void FileHandler::createDirectory(const string& path)
 {
-	if (!(CreateDirectoryA(path.c_str(), NULL) || GetLastError() == ERROR_ALREADY_EXISTS)) return false;
-	return true;
+	if (!(CreateDirectoryA(path.c_str(), NULL) || GetLastError() == ERROR_ALREADY_EXISTS))
+		throw std::runtime_error("Fail to create directory.");
 }
 
-bool FileHandler::createFile(const string& path)
+void FileHandler::createFile(const string& path)
 {
 	std::ofstream outFile(path.c_str());
 	if (!outFile.is_open()) {
-		return false;
+		throw std::runtime_error("Failed to create file: " + path);
 	}
 
 	outFile << "";
 	outFile.close();
-	return true;
 }
 
-bool FileHandler::writeData(const string& path, const string& data)
+void FileHandler::writeData(const string& path, const string& data)
 {
 	std::ofstream outFile(path.c_str());
-	if (!outFile.is_open()) {
-		return false;
+	if (!outFile.is_open())
+		throw std::runtime_error("Fail to open " NAND_FILENAME);
+
+	outFile << data;
+	if (outFile.fail())
+		throw std::runtime_error("Fail to write data " NAND_FILENAME);
+
+	outFile.close();
+}
+
+char* FileHandler::readFile(const string& path)
+{
+	std::ifstream file(path, std::ios::binary | std::ios::ate);
+	if (!file.is_open()) {
 		throw std::runtime_error("Failed to open file: " + path);
 	}
 
-	outFile << data;
+	std::streamsize size = file.tellg();
+	file.seekg(0, std::ios::beg);
 
-	if (outFile.fail()) {
-		return false;
-		throw std::runtime_error("Failed to write to file: " + path);
+	// 동적 메모리 할당
+	char* buffer = new char[size + 1];  // +1 for null-terminator
+	if (!file.read(buffer, size)) {
+		delete[] buffer;
+		throw std::runtime_error("Failed to read file: " + path);
 	}
 
-	outFile.close();
-	return true;
-}
+	buffer[size] = '\0';  // 문자열처럼 쓰고 싶을 경우
 
-char* FileHandler::readFile(const string& path, int& size)
-{
-	return nullptr;
+	return buffer;  // 호출자가 delete[]로 해제해야 함
 }
 
 bool FileHandler::isFileExistByMatchLength(const string& dir_path, const string& file_name, int len)

@@ -10,5 +10,5 @@ void OutputHandler::init()
 }
 
 void OutputHandler::output(const string& output_string) {
-	fileHandler->write(OUTPUT_FILENAME, { output_string });
+	fileHandler->writeData(OUTPUT_FILENAME, { output_string });
 }
