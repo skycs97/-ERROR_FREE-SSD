@@ -35,7 +35,7 @@ void EraseRangeCommand::printResult(const string& result, const string& lba) con
 		std::cout << DONE << std::endl;
 	}
 	else {
-		std::cout << FAIL << std::endl;
+		std::cout << result << std::endl;
 	}
 }
 void EraseRangeCommand::printHelp() const
@@ -60,5 +60,6 @@ bool EraseRangeCommand::checkLbaRange(int startLBAIndex, int endLBAIndex) const
 std::shared_ptr<Command> EraseRangeCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
 	if (args.size() != numOfArgs) return nullptr;
+
 	return std::shared_ptr<EraseRangeCommand>(new EraseRangeCommand(args));
 }

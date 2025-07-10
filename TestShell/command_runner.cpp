@@ -37,6 +37,8 @@ string CommandRunner::flush() const
 
 string CommandRunner::erase(const string& startLBA, const string& LBARange) const
 {
+	if (LBARange == "0") { return "ERROR"; }
+
 	AssertionCheckSsdInterface();
 
 	int startIndexNum = stoi(startLBA);
@@ -44,14 +46,14 @@ string CommandRunner::erase(const string& startLBA, const string& LBARange) cons
 	string result = "";
 
 	while (rangeNum > MAX_ERASE_RANGE) {
-		result += ssdInterface->erase(std::to_string(startIndexNum), std::to_string(MAX_ERASE_RANGE));
+		result = ssdInterface->erase(std::to_string(startIndexNum), std::to_string(MAX_ERASE_RANGE));
 
 		startIndexNum += MAX_ERASE_RANGE;
 		rangeNum -= MAX_ERASE_RANGE;
 	}
 
 	if (rangeNum > 0) {
-		result += ssdInterface->erase(std::to_string(startIndexNum), std::to_string(rangeNum));
+		result = ssdInterface->erase(std::to_string(startIndexNum), std::to_string(rangeNum));
 	}
 
 	return result;
