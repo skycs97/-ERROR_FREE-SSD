@@ -10,9 +10,7 @@ int main(void) {
 #include "ssd_impl.h"
 
 int main(int argc, char* argv[]) {
-	SsdImpl ssd;
 	TestShell& shell = TestShell::getShell();
-	shell.runner.setStorage(&ssd);
 	shell.runShell(argc, argv);
 }
 

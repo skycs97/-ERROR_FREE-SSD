@@ -1,13 +1,20 @@
 #include "shell.h"
+#include "ssd_impl.h"
 
 void TestShell::runShell(int argc, char* argv[]) {
-	string input;
 
 	if (isRunShellScript(argc) == true) {
 		string filePath = argv[1];
 		runShellScript(filePath);
 		return;
 	}
+
+	startShellLoop();
+}
+
+void TestShell::startShellLoop()
+{
+	string input;
 
 	while (1) {
 		input = getUserInput();
@@ -69,12 +76,22 @@ bool TestShell::parseAndRunCommand(const string& input) {
 	bool result = true;
 	try {
 		auto command = parser.parseAndMakeShellCommand(input);
-		command->run(runner);
+		runShellCommand(command);
 	}
-	catch (TestScriptFailExcpetion& e) {
+	catch (std::exception& e) {
 		printTestResult(e.what());
 		result = false;
 	}
 
 	return result;
+}
+
+void TestShell::runShellCommand(std::shared_ptr<Command> command)
+{
+	command->run(runner);
+}
+
+TestShell::TestShell() {
+	runner.setStorage(new SsdImpl());
+
 }

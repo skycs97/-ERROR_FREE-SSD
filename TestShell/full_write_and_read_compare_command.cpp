@@ -24,10 +24,10 @@ void FullWriteAndReadCompareCommand::run(const CommandRunner& cmdRunner) const
 		testValue = getTestData(testSize, random);
 
 		if (partialWrite(cmdRunner, lba, testSize, testValue) == false)
-			throw TestScriptFailExcpetion(FAIL);
+			throw CommandRunFailException(FAIL);
 
 		if (partialReadAndCompare(cmdRunner, lba, testSize, testValue) == false)
-			throw TestScriptFailExcpetion(FAIL);
+			throw CommandRunFailException(FAIL);
 
 		lba += testSize;
 
@@ -35,10 +35,10 @@ void FullWriteAndReadCompareCommand::run(const CommandRunner& cmdRunner) const
 		testValue = getTestData(testSize, random);
 
 		if (partialWrite(cmdRunner, lba, testSize, testValue) == false)
-			throw TestScriptFailExcpetion(FAIL);
+			throw CommandRunFailException(FAIL);
 
 		if (partialReadAndCompare(cmdRunner, lba, testSize, testValue) == false)
-			throw TestScriptFailExcpetion(FAIL);
+			throw CommandRunFailException(FAIL);
 
 		lba += testSize;
 	}

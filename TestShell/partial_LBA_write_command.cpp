@@ -35,7 +35,7 @@ void PartialLBAWriteCommand::run(const CommandRunner& cmdRunner) const
 		}
 
 		if (checkResult(result) == false) {
-			throw TestScriptFailExcpetion("Fail");
+			throw CommandRunFailException("Fail");
 		}
 	}
 
