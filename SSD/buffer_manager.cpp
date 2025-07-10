@@ -139,7 +139,7 @@ void BufferManager::updateBufferByInternalBuffer() {
 	bool meetErase = false;
 	vector<int> writeLBAs;
 	vector<string> old_names = getOldFileNames();
-	int buf_idx = MIN_LBA;
+	int bufIndex = MIN_LBA;
 	for (int internalBufferIdx = MIN_LBA; internalBufferIdx <= MAX_LBA; internalBufferIdx++) {
 		InternalBufferInfo& internalBuffer = internalBuffers[internalBufferIdx];
 		if (meetErase == false) {
@@ -148,8 +148,9 @@ void BufferManager::updateBufferByInternalBuffer() {
 				eraseStartLBA = internalBufferIdx;
 				writeLBAs.clear();
 
-				if(isLastLBA(internalBufferIdx))
-					fillEraseBufferInfo(buf_idx, eraseStartLBA, 1);
+				if (isLastLBA(internalBufferIdx)) {
+					bufIndex = createEraseBufferAndPassedWriteBuffer(eraseStartLBA, 1, bufIndex, writeLBAs);
+				}
 			}
 			else if (internalBuffer.cmd == CMD_WRITE) {
 				bufIndex = createWriteBuffer(bufIndex, internalBufferIdx, internalBuffer.data);
@@ -159,17 +160,17 @@ void BufferManager::updateBufferByInternalBuffer() {
 			if (internalBuffer.cmd == CMD_WRITE) {
 				writeLBAs.push_back(internalBufferIdx);
 			}
-
-			if (meetErase == true && (internalBufferIdx == MAX_LBA || internalBufferIdx - eraseStartLBA + 1 == MAX_ERASE_COUNT)) {
-				int eraseCount = internalBufferIdx - eraseStartLBA + 1;
-				bufIndex = createEraseBufferAndPassedWriteBuffer(eraseStartLBA, eraseCount, bufIndex, writeLBAs);
-				meetErase = false;
-			}
 			if (internalBuffer.cmd == BUFFER_EMPTY) {
 				int eraseCount = internalBufferIdx - eraseStartLBA;
 				bufIndex = createEraseBufferAndPassedWriteBuffer(eraseStartLBA, eraseCount, bufIndex, writeLBAs);
 				meetErase = false;
 			}
+			if (meetErase == true && (internalBufferIdx == MAX_LBA || internalBufferIdx - eraseStartLBA + 1 == MAX_ERASE_COUNT)) {
+				int eraseCount = internalBufferIdx - eraseStartLBA + 1;
+				bufIndex = createEraseBufferAndPassedWriteBuffer(eraseStartLBA, eraseCount, bufIndex, writeLBAs);
+				meetErase = false;
+			}
+
 		}
 	}
 	valid_buf_cnt = bufIndex;
