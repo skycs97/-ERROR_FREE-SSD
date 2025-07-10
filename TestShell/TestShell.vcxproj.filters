@@ -144,14 +144,18 @@
     <ClInclude Include="erase_range_command.h">
       <Filter>헤더 파일\cmds</Filter>
     </ClInclude>
-    <ClInclude Include="ssd_impl.h" />
-    <ClInclude Include="write_read_aging_command.h" />
     <ClInclude Include="flush_command.h">
       <Filter>헤더 파일\cmds</Filter>
     </ClInclude>
     <ClInclude Include="ssd_impl.h" />
     <ClInclude Include="write_read_aging_command.h" />
     <ClInclude Include="test_util.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ssd_impl.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="write_read_aging_command.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
