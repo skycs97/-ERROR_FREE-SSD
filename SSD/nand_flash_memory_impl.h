@@ -15,4 +15,6 @@ private:
 	FileHandler* fileHandler;
 
 	vector<string> convertToVectorStringFormat(const char* data);
+
+	void removeLastSpaceChar(vector<string>& datas);
 };
