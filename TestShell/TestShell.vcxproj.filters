@@ -88,6 +88,9 @@
     <ClCompile Include="erase_and_write_aging_command.cpp">
       <Filter>소스 파일\cmds</Filter>
     </ClCompile>
+    <ClCompile Include="helper.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="command_parser.h">
@@ -154,6 +157,12 @@
     <ClInclude Include="ssd_impl.h" />
     <ClInclude Include="write_read_aging_command.h" />
     <ClInclude Include="test_util.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="helper.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ssd_impl.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="erase_and_write_aging.h">

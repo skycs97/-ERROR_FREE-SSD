@@ -4,9 +4,8 @@
 #include <sstream>
 #include <stdexcept>
 #include "command_parser.h"
-#include "command_list.h"
-#include "command_factory.h"
 #include "TEST_SHELL_CONFIG.h"
+#include "helper.h"
 
 using std::string;
 
@@ -18,8 +17,16 @@ std::shared_ptr<Command> CommandParser::parseAndMakeShellCommand(const std::stri
 
 	auto cmd = makeCommand(cmdName, args);
 
-	if (cmd == nullptr)
-		throw std::invalid_argument("Invalid command");
+	if (cmd == nullptr) {
+		if (find(AVAILABLE_COMMAND_LIST.begin(), AVAILABLE_COMMAND_LIST.end(), cmdName)
+			!= AVAILABLE_COMMAND_LIST.end()) {
+			Helper::printCmdHelp(cmdName);
+			throw std::invalid_argument("");
+		}
+		else {
+			throw std::invalid_argument("Invalid command");
+		}
+	}
 
 	return cmd;
 }
@@ -57,4 +64,21 @@ std::string CommandParser::convertShortCommand(const std::string cmdName) {
 		return shortCommandToCommand.at(cmdName);
 	}
 	return cmdName;
+}
+
+void CommandParser::registCommand(const std::string& cmdName, CommandInfo cmdInfo)
+{
+	Helper::registerCmd(cmdName, cmdInfo.helpStr);
+	factoryComplex.addFactory(cmdName, cmdInfo.factory);
+}
+
+void CommandParser::initCommandList() {
+	for (auto cmdItem : cmdList) {
+		registCommand(cmdItem.first, cmdItem.second);
+	}
+}
+
+CommandParser::CommandParser()
+{
+	initCommandList();
 }

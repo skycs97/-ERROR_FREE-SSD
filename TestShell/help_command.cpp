@@ -3,11 +3,11 @@
 #include "command_factory.h"
 #include "help_command.h"
 #include "TEST_SHELL_CONFIG.h"
+#include "helper.h"
 
 namespace {
 	const int numOfArgs = 0;
 }
-
 std::string join(std::vector<std::string> const& strings, std::string delim)
 {
 	std::stringstream ss;
@@ -20,21 +20,13 @@ HelpCommand::HelpCommand(const std::vector<std::string>& args) : Command(CMD_HEL
 {
 }
 
-void HelpCommand::printHelp() const
-{
-	std::cout << "------------------- Command Helper ------------------\n";
-}
-
 void HelpCommand::run(const CommandRunner& cmdRunner) const
 {
-	//for (const string& cmd : AVAILABLE_COMMAND_LIST) {
-	//	factory.makeCommand(cmd)->printHelp();
-	//	std::cout << std::endl;
-	//}
-
+	std::cout << "------------------- Command Helper ------------------\n";
+	Helper::printAllHelp();
 	std::cout << std::endl;
 	std::cout << "-------------------Thanks For Developers-------------------------\n";
-	std::cout << join(DEVELOPERS, ", ") << std::endl;
+	std::cout << join(DEVELOPERS, ", ") << "\n\n";
 }
 
 std::shared_ptr<Command> HelpCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)

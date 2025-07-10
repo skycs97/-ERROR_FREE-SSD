@@ -63,15 +63,6 @@ int EraseAndWriteAgingCommand::getLbaRange(int startLBA) const {
 	return LBARange;
 }
 
-void EraseAndWriteAgingCommand::printHelp() const
-{
-	std::cout << "** Erase Write Aging Command **\n";
-	std::cout << " - A test that erase & writes a random value to LBA 0 and 99, repeated 30 times..\n";
-	std::cout << "Usage\n";
-	std::cout << " 4_EraseAndWriteAging\n";
-	std::cout << " 4_\n";
-}
-
 std::shared_ptr<Command> EraseAndWriteAgingCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
 	if (cmdName != CMD_4_ERASE_AND_WRITE_AGING) return nullptr;

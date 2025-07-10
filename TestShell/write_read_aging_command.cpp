@@ -34,15 +34,6 @@ void WriteReadAgingCommand::run(const CommandRunner& cmdRunner) const
 	printPass();
 }
 
-void WriteReadAgingCommand::printHelp() const
-{
-	std::cout << "** Write Read Aging Command **\n";
-	std::cout << " - A test that writes a random value to LBA 0 and 99 and then reads it to confirm, repeated 200 times..\n";
-	std::cout << "Usage\n";
-	std::cout << " 3_WriteReadAging\n";
-	std::cout << " 3_\n";
-}
-
 std::shared_ptr<Command> WriteReadAgingCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
 	if (cmdName != CMD_3_WRITE_READ_AGING) return nullptr;

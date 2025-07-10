@@ -27,16 +27,6 @@ void WriteCommand::printResult(const string& result) const
 
 	std::cout << std::endl << std::endl;
 }
-void WriteCommand::printHelp() const
-{
-	std::cout << "** Write Command **\n";
-	std::cout << " - Writes value to the specified LBA of SSD.\n\n";
-	std::cout << "Usage\n";
-	std::cout << " write [LBA] [value]\n";
-	std::cout << "Example\n";
-	std::cout << " write 0 0xAAAABBBB\n";
-	std::cout << " write 10 0x10002000\n";
-}
 
 std::shared_ptr<Command> WriteCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {

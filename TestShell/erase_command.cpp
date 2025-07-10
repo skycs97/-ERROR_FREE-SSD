@@ -34,16 +34,6 @@ void EraseCommand::printResult(const string& result, const string& lba) const
 		std::cout << result << std::endl;
 	}
 }
-void EraseCommand::printHelp() const
-{
-	std::cout << "** Erase Command **\n";
-	std::cout << " - Erases data from the specified StartLBA in range of LBARange SSD.\n\n";
-	std::cout << "Usage\n";
-	std::cout << " erase [StartLBA] [LBARange]\n";
-	std::cout << "Example\n";
-	std::cout << " erase 0 10\n";
-	std::cout << " erase 85 15\n";
-}
 
 bool EraseCommand::checkLbaRange(int startLBAIndex, int range) const
 {

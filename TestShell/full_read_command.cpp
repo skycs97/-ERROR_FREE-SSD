@@ -25,15 +25,6 @@ void FullReadCommand::printResult(const string& result, const string& lba) const
 	std::cout << result << std::endl;
 }
 
-void FullReadCommand::printHelp() const
-{
-	std::cout << "** Full Read Command **\n";
-	std::cout << " - Read value from the all LBAs in SSD.\n";
-	std::cout << " - LBA (" << MIN_LBA << " ~ " << MAX_LBA << ")\n\n";
-	std::cout << "Usage\n";
-	std::cout << " fullread\n";
-}
-
 std::shared_ptr<Command> FullReadCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
 	if (cmdName != CMD_FULLREAD) return nullptr;
