@@ -18,7 +18,7 @@ string NandFlashMemoryImpl::write(const vector<string>& datas) {
 	vector<string> ret;
 	for (int i = 0; i < 100; i++) {
 		std::ostringstream oss;
-		oss << i << '\t' << datas.at(i);
+		oss << std::setw(2) << std::setfill('0') << std::dec << i << '\t' << datas.at(i);
 		ret.push_back(oss.str());
 	}
 	fileHandler->write(NAND_FILENAME, ret);
