@@ -47,12 +47,12 @@ private:
 	FileHandler* fileHandler;
 	vector<BufferInfo*> buffers{ BUFFER_SIZE };
 	vector<InternalBufferInfo> internalBuffers{ 100 };
-	int valid_buf_cnt{ 0 };
+	int validBufCount{ 0 };
 
 	// init step
 	bool existEmptyBufferFile(int bufIndex);
 	bool existNonEmptyBufferFile(int bufIndex);
-	void createEmptyBufferFile(int bufIndex);
+	void createEmptyBufferFileAndUpdateState(int bufIndex);
 	string getBufferFilePrefix(int bufIndex);
 	void updateBufferState(int bufIndex);
 	void updateInternalBufferState();
