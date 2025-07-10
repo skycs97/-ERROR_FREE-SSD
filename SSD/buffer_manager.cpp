@@ -3,7 +3,6 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
-#include <iostream>
 
 void WriteBufferInfo::updateInternalBufferInfos(vector<InternalBufferInfo> internalBufferInfos) {
 	internalBufferInfos[lba].cmd = CMD_WRITE;
@@ -25,7 +24,6 @@ string WriteBufferInfo::getFileName(int buf_idx) {
 	std::ostringstream oss;
 	oss << buf_idx + 1 << "_W_" << lba << "_" << written_data;
 	string fileName = oss.str();
-	std::cout << fileName;
 	return fileName;
 }
 
@@ -33,7 +31,6 @@ string EraseBufferInfo::getFileName(int buf_idx) {
 	std::ostringstream oss;
 	oss << buf_idx + 1 << "_E_" << lba << "_" << size;
 	string fileName = oss.str();
-	std::cout << fileName;
 	return fileName;
 }
 
@@ -41,7 +38,6 @@ string EmptyBufferInfo::getFileName(int buf_idx) {
 	std::ostringstream oss;
 	oss << buf_idx + 1 << "_empty";
 	string fileName = oss.str();
-	std::cout << fileName;
 	return fileName;
 }
 
