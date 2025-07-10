@@ -8,9 +8,10 @@ using namespace testing;
 class SSDFixture : public Test {
 protected:
 	void SetUp() override {
+		ssd = SSD::getInstance(&mockedFileHandler);
+
 		EXPECT_CALL(mockedFileHandler, isFileExistByMatchLength(_, _, _))
-			.Times(1)
-			.WillOnce(Return(true));
+			.WillRepeatedly(Return(true));
 
 		EXPECT_CALL(mockedFileHandler, readFile(NAND_FILENAME))
 			.WillRepeatedly(Return(nullptr));
@@ -73,7 +74,7 @@ public:
 	const char* ERROR_MESSAGE = "ERROR";
 
 	NiceMock<FileHandlerMock> mockedFileHandler;
-	SSD ssd{ &mockedFileHandler };
+	SSD* ssd;
 	char* nandData;
 };
 
@@ -91,7 +92,7 @@ TEST_F(SSDFixture, run_with_r_1)
 	EXPECT_CALL(mockedFileHandler, writeData(OUTPUT_FILENAME, VALID_WRITE_VALUE))
 		.Times(1);
 
-	ssd.run(argc, argv);
+	ssd->run(argc, argv);
 }
 
 TEST_F(SSDFixture, run_with_r_110)
@@ -102,7 +103,7 @@ TEST_F(SSDFixture, run_with_r_110)
 	EXPECT_CALL(mockedFileHandler, writeData(OUTPUT_FILENAME, ERROR_MESSAGE))
 		.Times(1);
 
-	ssd.run(argc, argv);
+	ssd->run(argc, argv);
 }
 
 #if BUFFER_ENABLE == false
@@ -124,7 +125,7 @@ TEST_F(SSDFixture, run_with_w_1_0x00001111)
 	EXPECT_CALL(mockedFileHandler, writeData(OUTPUT_FILENAME, expectedOutput))
 		.Times(1);
 
-	ssd.run(argc, argv);
+	ssd->run(argc, argv);
 }
 #else
 TEST_F(SSDFixture, run_with_w_1_0x00001111)
@@ -140,7 +141,7 @@ TEST_F(SSDFixture, run_with_w_1_0x00001111)
 	EXPECT_CALL(mockedFileHandler, writeData(OUTPUT_FILENAME, expectedOutput))
 		.Times(1);
 
-	ssd.run(argc, argv);
+	ssd->run(argc, argv);
 }
 #endif
 
@@ -153,5 +154,5 @@ TEST_F(SSDFixture, run_with_w_1_0xzzzzFFFF)
 	EXPECT_CALL(mockedFileHandler, writeData(OUTPUT_FILENAME, expectedOutput))
 		.Times(1);
 
-	ssd.run(argc, argv);
+	ssd->run(argc, argv);
 }

@@ -9,8 +9,7 @@ int main(void) {
 #include "ssd.h"
 
 int main(int argc, const char* argv[]) {
-	FileHandler* fileHandler = new FileHandlerImpl();
-	SSD* ssd = new SSD(fileHandler);
+	SSD* ssd = SSD::getInstance();
 	ssd->run(argc, argv);
 }
 #endif

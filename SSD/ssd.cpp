@@ -3,31 +3,48 @@
 #include <stdexcept>
 #include "ssd_command.h"
 
-SSD::SSD(FileHandler* fileHandler) {
-	// Create result IO instance
-	outputHandler = new OutputHandler(fileHandler);
+SSD* SSD::instance = nullptr;
 
-	// Create nand IO instance
-	nand = new NandFlashMemoryImpl(fileHandler);
-	bufferManager = new BufferManager(nand, fileHandler);
-	factory = new SSDCommandFactory();
-	// FIXME: 내부적으로 std::exception 사용하나, 현재 위치는 try-catch 문 밖
-	bufferManager->init();
+SSD* SSD::getInstance(FileHandler* fileHandler) {
+	if (instance == nullptr) {
+		if (fileHandler == nullptr)
+			instance = SSDFactory::createSSD();
+		else
+			instance = SSDTestFactory::createSSD(fileHandler);
+	}
+	return instance;
+}
+
+SSD::SSD(NandFlashMemory* nand, BufferManager* bufferManager,
+	OutputHandler* outputHandler, SSDCommandFactory* commandFactory)
+{
+	this->nand = nand;
+	this->bufferManager = bufferManager;
+	this->outputHandler = outputHandler;
+	this->factory = commandFactory;
 }
 
 SSD::~SSD() {
+	delete nand;
 	delete bufferManager;
+	delete outputHandler;
+	delete factory;
+}
+
+void SSD::init()
+{
+	bufferManager->init();
+	outputHandler->init();
+	nand->init();
 }
 
 void SSD::run(int argc, const char* argv[])
 {
 	string result = "";
 	try {
-		outputHandler->init();
-		nand->init();
+		init();
 		
-		SSDCommand* cmd = nullptr;
-		
+		SSDCommand* cmd = nullptr;	
 		if (argc > 1) {
 			cmd = factory->createCommand(argv[ARG_IDX_CMD], nand, bufferManager);
 			cmd->parseArg(argc, argv);
