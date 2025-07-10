@@ -50,11 +50,29 @@ const char* BufferManager::getBufferFilePrefix(int buf_idx)
 void BufferManager::updateBufferState(int buf_idx)
 {
 	vector<string> buffer_fname = fileHandler->findFileUsingPrefix(BUFFER_DIR_NAME, getBufferFilePrefix(buf_idx));
-	
+
 	if (buffer_fname.size() > 1) throw std::exception("There are many buffer files in same prefix.");
-	
+
 	fillBufferInfo(buffer_fname.front(), buf_idx, false);
 	IncreaseBufferCnt();
+
+	for (int buffer_idx = 0; buffer_idx < BUFFER_SIZE; buffer_idx++) {
+		if (buffers[buffer_idx].cmd == INVALID_VALUE) continue;
+		else if (buffers[buffer_idx].cmd == CMD_WRITE) {
+			int lba = buffers[buffer_idx].lba;
+			const string& data = buffers[buffer_idx].written_data;
+			internalBuffers[lba].cmd = CMD_WRITE;
+			internalBuffers[lba].data = data;
+		}
+		else if (buffers[buffer_idx].cmd == CMD_ERASE) {
+			int lba = buffers[buffer_idx].lba;
+			int size = buffers[buffer_idx].erase_size;
+			for (int count = 0; count < size; count++) {
+				internalBuffers[lba + count].cmd = CMD_ERASE;
+				internalBuffers[lba + count].data = "0x00000000";
+			}
+		}
+	}
 }
 
 void BufferManager::fillBufferInfo(string fname, int buf_idx, bool need_file_change)
@@ -142,13 +160,13 @@ void BufferManager::updateBuffer() {
 			if (i == 99 || erase_count == 10 || internalBuffers[i].cmd == INVALID_VALUE) {
 				std::ostringstream oss;
 				oss << buffer_idx + 1 << "_E_" << erase_start << "_" << erase_count;
-				setBufferInfo(buffer_idx, oss.str(), CMD_ERASE, erase_start, "", erase_count);
+				fillBufferInfo(oss.str(), buffer_idx, true);
 				buffer_idx++;
 				for (int write_lba : write_lbas) {
 					string data = internalBuffers[write_lba].data;
 					std::ostringstream oss;
 					oss << buffer_idx + 1 << "_W_" << write_lba << "_" << data;
-					setBufferInfo(buffer_idx, oss.str(), CMD_WRITE, write_lba, data, INVALID_VALUE);
+					fillBufferInfo(oss.str(), buffer_idx, true);
 					buffer_idx++;
 				}
 				erase_flag = false;
@@ -161,7 +179,7 @@ void BufferManager::updateBuffer() {
 				string data = internalBuffers[i].data;
 				std::ostringstream oss;
 				oss << buffer_idx + 1 << "_W_" << i << "_" << data;
-				setBufferInfo(buffer_idx, "", CMD_WRITE, i, data, INVALID_VALUE);
+				fillBufferInfo(oss.str(), buffer_idx, true);
 				buffer_idx++;
 			}
 			else if (internalBuffers[i].cmd == CMD_ERASE) {
@@ -173,7 +191,11 @@ void BufferManager::updateBuffer() {
 		}
 	}
 	valid_buf_cnt = buffer_idx;
-
+	for (int ibuffer_idx = valid_buf_cnt; buffer_idx < BUFFER_SIZE; buffer_idx++) {
+		std::ostringstream oss;
+		oss << buffer_idx + 1 << "_empty";
+		fillBufferInfo(oss.str(), buffer_idx, true);
+	}
 }
 void BufferManager::addWriteCommand(int lba, const string& data) {
 	if (isBufferFull()) {
