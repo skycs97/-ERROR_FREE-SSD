@@ -11,38 +11,15 @@ void NandFlashMemoryImpl::init()
 	if (fileHandler->isFileExistByMatchLength(".\\*", NAND_FILENAME, strlen(NAND_FILENAME))) return;
 
 	fileHandler->createFile(NAND_FILENAME);
-	
-	std::ostringstream oss;
-	for (int i = MIN_LBA; i <= MAX_LBA; ++i) {
-		oss << std::setfill('0') << std::setw(2) << std::dec << i << '\t'
-			<< "0x"
-			<< std::setfill('0') << std::setw(8) << std::hex << std::uppercase << 0
-			<< '\n';
-	}
-	std::string formattedData = oss.str();
-	fileHandler->writeData(NAND_FILENAME, formattedData);
+	fileHandler->writeData(NAND_FILENAME, getRawDataFormatForNandWrite(nullptr));
 }
 
 vector<string> NandFlashMemoryImpl::read() {
-	char* read_buf = fileHandler->readFile(NAND_FILENAME);
-	vector<string> datas = convertToVectorStringFormat(read_buf);
-	removeLastSpaceChar(datas);
-
-	return datas;
+	return convertToVectorStringFormat(fileHandler->readFile(NAND_FILENAME));
 }
 
 string NandFlashMemoryImpl::write(vector<string>& datas) {
-	removeLastSpaceChar(datas);
-	
-	std::ostringstream oss;	
-	for (int i = MIN_LBA; i <= MAX_LBA; ++i) {
-		oss << std::setfill('0') << std::setw(2) << std::dec << i << '\t'
-			<< std::setfill('0') << std::setw(8) << std::hex << std::uppercase << datas.at(i)
-			<< '\n';
-	}
-
-	std::string formattedData = oss.str();
-	fileHandler->writeData(NAND_FILENAME, formattedData);
+	fileHandler->writeData(NAND_FILENAME, getRawDataFormatForNandWrite(&datas));
 	return "";
 }
 
@@ -55,6 +32,7 @@ vector<string> NandFlashMemoryImpl::convertToVectorStringFormat(const char* data
 		lines.push_back(line.substr(line.find('\t') + 1));
 	}
 
+	removeLastSpaceChar(lines);
 	return lines;
 }
 
@@ -66,4 +44,19 @@ void NandFlashMemoryImpl::removeLastSpaceChar(vector<string>& datas)
 			data.pop_back();
 		}
 	}
+}
+
+string NandFlashMemoryImpl::getRawDataFormatForNandWrite(vector<string>* datas)
+{
+	if(datas != nullptr)
+		removeLastSpaceChar(*datas);
+
+	std::ostringstream oss;
+	for (int i = MIN_LBA; i <= MAX_LBA; ++i) {
+		string value = datas == nullptr ? "0x00000000" : (*datas)[i];
+		oss << std::setw(2) << std::setfill('0') << std::dec << i << '\t'
+			<< value << '\n';
+	}
+	
+	return oss.str();
 }
