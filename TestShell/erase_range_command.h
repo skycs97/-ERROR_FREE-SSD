@@ -4,14 +4,15 @@
 
 class EraseRangeCommand : public Command {
 public:
-	EraseRangeCommand(const std::vector<std::string>& args);
-
 	void run(const CommandRunner& cmdRunner) const override;
 	void printHelp() const override;
 	void printResult(const string& result, const string& lba) const;
 private:
+	EraseRangeCommand(const std::vector<std::string>& args);
 	string startLBA;
 	string endLBA;
+
+	friend class EraseRangeCommandFactory;
 };
 
 class EraseRangeCommandFactory : public CommandFactory {

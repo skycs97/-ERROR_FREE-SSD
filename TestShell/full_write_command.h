@@ -4,14 +4,14 @@
 
 class FullWriteCommand : public Command {
 public:
-
-	FullWriteCommand(const std::vector<std::string>& args);
-
 	void run(const CommandRunner& cmdRunner) const override;
 	void printResult(const string& result) const;
 	void printHelp() const override;
 private:
+	FullWriteCommand(const std::vector<std::string>& args);
 	string value;
+
+	friend class FullWriteCommandFactory;
 };
 
 class FullWriteCommandFactory : public CommandFactory {

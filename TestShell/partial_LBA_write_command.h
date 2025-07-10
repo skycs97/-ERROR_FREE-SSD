@@ -4,7 +4,6 @@
 
 class PartialLBAWriteCommand : public Command {
 public:
-	PartialLBAWriteCommand(const std::vector<std::string>& cmd);
 	void run(const CommandRunner& cmdRunner) const override;
 	void printHelp() const override;
 private:
@@ -13,6 +12,9 @@ private:
 	std::vector<std::string> TestLbaList = { "4","0","3","1","2" };
 
 	bool checkResult(const std::vector<std::string>& result) const;
+	PartialLBAWriteCommand(const std::vector<std::string>& cmd);
+
+	friend class PartialLBAWriteCommandFactory;
 };
 
 class PartialLBAWriteCommandFactory : public CommandFactory {

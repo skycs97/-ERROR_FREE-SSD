@@ -4,11 +4,12 @@
 
 class ExitCommand : public Command {
 public:
-
-	ExitCommand(const std::vector<std::string>& args);
-
 	void run(const CommandRunner& cmdRunner) const override;
 	void printHelp() const override;
+private:
+	ExitCommand(const std::vector<std::string>& args);
+
+	friend class ExitCommandFactory;
 };
 
 class ExitCommandFactory : public CommandFactory {

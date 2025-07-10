@@ -52,5 +52,5 @@ void EraseRangeCommand::printHelp() const
 std::shared_ptr<Command> EraseRangeCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
 	if (args.size() != numOfArgs) return nullptr;
-	return std::make_shared<EraseRangeCommand>(args);
+	return std::shared_ptr<EraseRangeCommand>(new EraseRangeCommand(args));
 }

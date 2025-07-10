@@ -4,12 +4,14 @@
 
 class ReadCommand : public Command {
 public:
-	ReadCommand(const std::vector<std::string>& args);
-
 	void run(const CommandRunner& cmdRunner) const override;
 	void printHelp() const override;
 	void printResult(const string& result, const string& lba) const;
 	string LBA;
+private:
+	ReadCommand(const std::vector<std::string>& args);
+
+	friend class ReadCommandFactory;
 };
 
 class ReadCommandFactory : public CommandFactory {

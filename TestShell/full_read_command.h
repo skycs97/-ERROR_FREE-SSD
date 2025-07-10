@@ -4,12 +4,13 @@
 
 class FullReadCommand : public Command {
 public:
-
-	FullReadCommand(const std::vector<std::string>& args);
-
 	void run(const CommandRunner& cmdRunner) const override;
 	void printResult(const string& result, const string& lba) const;
 	void printHelp() const override;
+private:
+	FullReadCommand(const std::vector<std::string>& args);
+
+	friend class FullReadCommandFactory;
 };
 
 class FullReadCommandFactory : public CommandFactory {
