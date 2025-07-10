@@ -87,7 +87,7 @@ TEST_F(SSDCommandTestFixture, WriteCommandInvalidHexDataTest) {
 		"ssd.exe",
 		"W",
 		"20",
-		"QQQQZZZZ"
+		"0xQQQQZZZZ"
 	};
 
 	int argc = 4;
@@ -103,6 +103,81 @@ TEST_F(SSDCommandTestFixture, WriteCommandInvalidHexDataTest) {
 	catch (std::invalid_argument e)
 	{
 		EXPECT_EQ("Not a hex number in data", string(e.what()));
+	}
+}
+
+TEST_F(SSDCommandTestFixture, WriteCommandShortHexDataTest) {
+	// Arrange
+	const char* argv[] = {
+		"ssd.exe",
+		"W",
+		"20",
+		"1000"
+	};
+
+	int argc = 4;
+
+	// Act
+	SSDCommand* cmd = factory->createCommand(string(argv[ARG_IDX_CMD]), nand, bufferManager);
+
+	// Assert
+	try {
+		cmd->parseArg(argc, argv);
+
+	}
+	catch (std::invalid_argument e)
+	{
+		EXPECT_EQ("Incorrect Hex number length in data", string(e.what()));
+	}
+}
+
+TEST_F(SSDCommandTestFixture, WriteCommandIncorrectHexDataTest) {
+	// Arrange
+	const char* argv[] = {
+		"ssd.exe",
+		"W",
+		"20",
+		"0Z1000AAAA"
+	};
+
+	int argc = 4;
+
+	// Act
+	SSDCommand* cmd = factory->createCommand(string(argv[ARG_IDX_CMD]), nand, bufferManager);
+
+	// Assert
+	try {
+		cmd->parseArg(argc, argv);
+
+	}
+	catch (std::invalid_argument e)
+	{
+		EXPECT_EQ("Not a hexa digit format in data", string(e.what()));
+	}
+}
+
+TEST_F(SSDCommandTestFixture, WriteCommandTooLongHexDataTest) {
+	// Arrange
+	const char* argv[] = {
+		"ssd.exe",
+		"W",
+		"30",
+		"0xAAAABBBBCCCC"
+	};
+
+	int argc = 4;
+
+	// Act
+	SSDCommand* cmd = factory->createCommand(string(argv[ARG_IDX_CMD]), nand, bufferManager);
+
+	// Assert
+	try {
+		cmd->parseArg(argc, argv);
+
+	}
+	catch (std::invalid_argument e)
+	{
+		EXPECT_EQ("Incorrect Hex number length in data", string(e.what()));
 	}
 }
 

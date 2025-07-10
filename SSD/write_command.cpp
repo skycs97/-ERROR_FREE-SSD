@@ -1,11 +1,13 @@
 ﻿#include "write_command.h"
+using std::string;
+using std::stoi;
 
 void WriteCommand::parseArg(int argc, const char* argv[])
 {
 	if (argc != WRITE_CORRECT_ARG_SIZE) throw std::invalid_argument("number of argument is incorrect");
 
 	if (isInvalidNumber(string(argv[ARG_IDX_ADDR]))) throw std::invalid_argument("Not a number in address");
-	lba = atoi(argv[ARG_IDX_ADDR]);
+	lba = stoi(argv[ARG_IDX_ADDR]);
 
 	if (isInvalidAddress()) throw std::invalid_argument("Out of range");
 	
@@ -28,14 +30,17 @@ bool WriteCommand::isInvalidAddress() {
 
 void WriteCommand::validDataOrThrow()
 {
-	// "0x" 접두사를 제거 (std::stoul은 자동으로 처리하지만, 명시적으로 제거해도 무방)
+	// 0xAAAABBBB : acceptable hexa digit
+
+	if (data.length() != 10) throw std::invalid_argument("Incorrect Hex number length in data");
+
 	std::string cleanedAddress = data;
+
 	if (cleanedAddress.length() > 2 && (cleanedAddress.substr(0, 2) == "0x" || cleanedAddress.substr(0, 2) == "0X")) {
 		cleanedAddress = cleanedAddress.substr(2);
+		if (isInvalidHexNumber(cleanedAddress)) throw std::invalid_argument("Not a hex number in data");
 	}
-	
-	if (isInvalidHexNumber(cleanedAddress)) throw std::invalid_argument("Not a hex number in data");
-	std::stoul(cleanedAddress, nullptr, 16);
+	else throw std::invalid_argument("Not a hexa digit format in data");
 }
 
 string WriteCommand::run()
