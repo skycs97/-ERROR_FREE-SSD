@@ -10,7 +10,6 @@
 using std::string;
 using std::vector;
 
-
 struct InternalBufferInfo {
 	CMD_TYPE cmd;
 	string data;
@@ -71,7 +70,7 @@ public:
 	BufferManager(NandFlashMemory* nandFlashMemory, FileHandler* fileHandler)
 		: nandFlashMemory{ nandFlashMemory }, fileHandler{ fileHandler } {
 
-		initInternalBuffers();
+		flushInternalBuffers();
 
 		for (int i = 0; i < BUFFER_SIZE; i++) {
 			buffers[i] = new EmptyBufferInfo();
@@ -110,36 +109,21 @@ private:
 	vector<InternalBufferInfo> internalBuffers{ 100 };
 	int valid_buf_cnt{ 0 };
 
-	// Buffer 파일 존재 여부를 반환합니다.
+	// init step
 	bool existBufferFile(int buf_idx);
-
-	// Buffer Empty 파일을 생성합니다.
-	void createBufferFile(int buf_idx);
-
-	// Buffer 파일의 Prefix 매크로 반환합니다.
+	void createEmptyBufferFile(int buf_idx);
 	string getBufferFilePrefix(int buf_idx);
-
-	// 버퍼 상태 업데이트
 	void updateBufferState(int buf_idx);
-
 	void updateInternalBufferState();
-
 	void fillBufferInfo(string fname, int buf_idx);
-
 	CMD_TYPE getBufferTypeFromFilenames(const string& fname);
-
-	// 버퍼가 5개가 가득 찬 경우 true를 리턴합니다.
-	bool isBufferFull();
-
-	//fileHandler에 새로 버퍼를 기록합니다.
-	void writeBufferFile(const string& old_name, const string& new_name);
-
 	void IncreaseBufferCnt();
 
+	bool isBufferFull();
+	void flushInternalBuffers();
+
+	void writeBufferFile(const string& old_name, const string& new_name);
 	void updateBuffer();
-
 	vector<string> getOldFileNames();
-
-	void initInternalBuffers();
 	inline bool isLastLBA(int lba) { return lba == MAX_LBA; }
 };
