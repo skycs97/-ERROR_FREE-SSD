@@ -6,6 +6,7 @@
 
 void BufferManager::init() {
 	fileHandler->createDirIfNotExist(BUFFER_DIR_NAME);
+
 	for (int buf_idx = 0; buf_idx < BUFFER_SIZE; buf_idx++)
 	{
 		if (existBufferFile(buf_idx)) updateBufferState(buf_idx);
@@ -117,39 +118,75 @@ bool BufferManager::isBufferFull() {
 }
 
 bool BufferManager::read(int lba, string& outputData) {
-	for (int buf_idx = getUsedBufferCount() - 1; buf_idx >= 0; buf_idx--) {
-		if (buffers[buf_idx].cmd == CMD_ERASE)
-		{
-			int lba_start = buffers[buf_idx].lba;
-			int lba_end = lba_start + buffers[buf_idx].erase_size - 1;
-			if (lba_start <= lba && lba <= lba_end)
-			{
-				outputData = NAND_DATA_EMPTY;
-				return true;
+	if (internalBuffers[lba].cmd == INVALID_VALUE) return false;
+	outputData = internalBuffers[lba].data;
+	return true;
+}
+void BufferManager::updateBuffer() {
+	int erase_start = -1;
+	int erase_count = 0;
+	bool erase_flag = false;
+	vector<int> write_lbas;
+
+	int buffer_idx = 0;
+	for (int i = 0; i < 100; i++) {
+		if (erase_flag == true) {
+			if (internalBuffers[i].cmd == CMD_ERASE) {
+				erase_count++;
+			}
+			else if (internalBuffers[i].cmd == CMD_WRITE) {
+				erase_count++;
+				write_lbas.push_back(i);
+			}
+
+			if (i == 99 || erase_count == 10 || internalBuffers[i].cmd == INVALID_VALUE) {
+				std::ostringstream oss;
+				oss << buffer_idx + 1 << "_E_" << erase_start << "_" << erase_count;
+				setBufferInfo(buffer_idx, oss.str(), CMD_ERASE, erase_start, "", erase_count);
+				buffer_idx++;
+				for (int write_lba : write_lbas) {
+					string data = internalBuffers[write_lba].data;
+					std::ostringstream oss;
+					oss << buffer_idx + 1 << "_W_" << write_lba << "_" << data;
+					setBufferInfo(buffer_idx, oss.str(), CMD_WRITE, write_lba, data, INVALID_VALUE);
+					buffer_idx++;
+				}
+				erase_flag = false;
+				erase_count = 0;
+				write_lbas.clear();
 			}
 		}
-		else if (buffers[buf_idx].cmd == CMD_WRITE)
-		{
-			if (lba == buffers[buf_idx].lba)
-			{
-				outputData = buffers[buf_idx].written_data;
-				return true;
+		else {
+			if (internalBuffers[i].cmd == CMD_WRITE) {
+				string data = internalBuffers[i].data;
+				std::ostringstream oss;
+				oss << buffer_idx + 1 << "_W_" << i << "_" << data;
+				setBufferInfo(buffer_idx, "", CMD_WRITE, i, data, INVALID_VALUE);
+				buffer_idx++;
+			}
+			else if (internalBuffers[i].cmd == CMD_ERASE) {
+				erase_flag = true;
+				erase_start = i;
+				erase_count = 1;
+				write_lbas.clear();
 			}
 		}
 	}
-	return false;
-}
+	valid_buf_cnt = buffer_idx;
 
+}
 void BufferManager::addWriteCommand(int lba, const string& data) {
 	if (isBufferFull()) {
 		flush();
 	}
-	
-	int new_buf_idx = getUsedBufferCount();
-	std::ostringstream oss;
-	oss << new_buf_idx + 1 << "_W_" << lba <<"_"<< data;
-	fillBufferInfo(oss.str(), new_buf_idx, true);
-	IncreaseBufferCnt();
+
+	if (data == "0x00000000") {
+		addEraseCommand(lba, 1);
+		return;
+	}
+	internalBuffers[lba] = { CMD_WRITE, data };
+
+	updateBuffer();
 }
 
 void BufferManager::addEraseCommand(int lba, int count) {
@@ -157,31 +194,32 @@ void BufferManager::addEraseCommand(int lba, int count) {
 		flush();
 	}
 	//로직 구현
-	int new_buf_idx = getUsedBufferCount();
-	std::ostringstream oss;
-	oss << new_buf_idx + 1 << "_E_" << lba <<"_"<<count;
-	fillBufferInfo(oss.str(), new_buf_idx, true);
-	IncreaseBufferCnt();
+
+	for (int i = lba; i < lba + count; i++) {
+		internalBuffers[i] = { CMD_ERASE, "0x00000000" };
+	}
+
+	updateBuffer();
 }
 
 void BufferManager::flush() {
 	vector<string> datas = nandFlashMemory->read();
+
+	// nand 에 쓸 데이터 업데이트
+	for (int index = 0; index < 100; index++) {
+		if (internalBuffers[index].cmd == INVALID_VALUE) continue;
+		datas[index] = internalBuffers[index].data;
+	}
+
+	// 내부 버퍼 초기화
+	for (int index = 0; index < 100; index++) {
+		internalBuffers[index].cmd = INVALID_VALUE;
+		internalBuffers[index].data = "";
+	}
+
+	// 외부 버퍼 초기화
 	int buf_cnt = getUsedBufferCount();
 	for (int buf_idx = 0; buf_idx < buf_cnt; buf_idx++) {
-		if (buffers[buf_idx].cmd == CMD_WRITE)
-		{
-			datas[buffers[buf_idx].lba] = buffers[buf_idx].written_data;
-		}
-		else if (buffers[buf_idx].cmd == CMD_ERASE)
-		{
-			int lba_start = buffers[buf_idx].lba;
-			int lba_end = lba_start + buffers[buf_idx].erase_size - 1;
-			for (int lba = lba_start; lba <= lba_end; lba++)
-			{
-				datas[lba] = NAND_DATA_EMPTY;
-			}
-		}
-
 		string file_name = string(getBufferFilePrefix(buf_idx)) + BUFFER_NAME_EMPTY;
 		fillBufferInfo(file_name, buf_idx, true);
 		DecreaseBufferCnt();

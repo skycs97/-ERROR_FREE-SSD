@@ -20,8 +20,19 @@ public:
 		int erase_size;
 	};
 
+	struct InternalBufferInfo {
+		CMD_TYPE cmd;
+		string data;
+	};
+
 	BufferManager(NandFlashMemory* nandFlashMemory, FileHandler* fileHandler)
 		: nandFlashMemory{ nandFlashMemory }, fileHandler{ fileHandler } {
+
+		// 내부 버퍼 초기화
+		for (int index = 0; index < 100; index++) {
+			internalBuffers[index].cmd = INVALID_VALUE;
+			internalBuffers[index].data = "";
+		}
 	}
 
 	void init();
@@ -47,6 +58,7 @@ private:
 	NandFlashMemory* nandFlashMemory;
 	FileHandler* fileHandler;
 	vector<BufferInfo> buffers{ BUFFER_SIZE };
+	vector<InternalBufferInfo> internalBuffers{ 100 };
 	int valid_buf_cnt{ 0 };
 
 	// Buffer 파일 존재 여부를 반환합니다.
@@ -81,4 +93,6 @@ private:
 	void IncreaseBufferCnt();
 
 	void DecreaseBufferCnt();
+
+	void updateBuffer();
 };
