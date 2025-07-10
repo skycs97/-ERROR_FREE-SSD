@@ -50,7 +50,7 @@ void BufferManager::updateBufferState(int bufIndex)
 
 string BufferManager::getBufferFilePrefix(int bufIndex)
 {
-	return std::to_string(bufIndex+1) + "_";
+	return std::to_string(bufIndex + 1) + "_";
 }
 
 void BufferManager::updateInternalBufferState()
@@ -65,16 +65,6 @@ void BufferManager::fillBufferInfo(string fname, int bufIndex)
 	if (bufIndex < 0 || bufIndex >= BUFFER_SIZE) throw std::exception("invalid buffer index.");
 
 	buffers[bufIndex] = BufferInfoFactory::getInstance().createCommand(fname);
-}
-
-CMD_TYPE BufferManager::getBufferTypeFromFilenames(const string& fname) {
-	if (std::regex_match(fname, WriteBufferInfo::fileNameRegex)) {
-		return CMD_WRITE;
-	}
-	else if (std::regex_match(fname, EraseBufferInfo::fileNameRegex)) {
-		return CMD_ERASE;
-	}
-	return BUFFER_EMPTY;
 }
 
 bool BufferManager::isBufferFull() {
@@ -162,7 +152,7 @@ void BufferManager::updateBufferByInternalBuffer() {
 					fillEraseBufferInfo(buf_idx, eraseStartLBA, 1);
 			}
 			else if (internalBuffer.cmd == CMD_WRITE) {
-				bufIndex = createWriteBuffer(internalBuffer.data, bufIndex, internalBufferIdx);
+				bufIndex = createWriteBuffer(bufIndex, internalBufferIdx, internalBuffer.data);
 			}
 		}
 		else {
@@ -186,19 +176,19 @@ void BufferManager::updateBufferByInternalBuffer() {
 	fillEmptyBuffers();
 }
 
-int BufferManager::createWriteBuffer(const string& data, int bufIndex, int internalBufferIdx)
+int BufferManager::createWriteBuffer(int bufIndex, int LBA, const string& data)
 {
-	buffers[bufIndex++] = new WriteBufferInfo(internalBufferIdx, data);
+	buffers[bufIndex++] = BufferInfoFactory::getInstance().createWriteCommand(LBA, data);
 	return bufIndex;
 }
 
 int BufferManager::createEraseBufferAndPassedWriteBuffer(int eraseStartLBA, int eraseCount, int bufIndex, std::vector<int>& writeLBAs)
 {
 	// erase 가 끝나면, eraseBuffer를 기록하고, 그 사이에 지나친 write 들도 기록합니다.	
-	buffers[bufIndex++] = new EraseBufferInfo(eraseStartLBA, eraseCount);
+	buffers[bufIndex++] = BufferInfoFactory::getInstance().createEraseCommand(eraseStartLBA, eraseCount);
 	for (int writeLBA : writeLBAs) {
 		string data = internalBuffers[writeLBA].data;
-		buffers[bufIndex++] = new WriteBufferInfo(writeLBA, data);
+		bufIndex = createWriteBuffer(bufIndex, writeLBA, data);
 	}
 	return bufIndex;
 }

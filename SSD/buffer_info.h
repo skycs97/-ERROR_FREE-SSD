@@ -15,7 +15,7 @@ class BufferInfo
 {
 public:
 	virtual string getFileName(int bufIndex) = 0;
-	virtual void updateInternalBufferInfos(vector<InternalBufferInfo>) = 0;
+	virtual void updateInternalBufferInfos(vector<InternalBufferInfo>&) = 0;
 };
 
 class WriteBufferInfo : public BufferInfo {
@@ -29,7 +29,8 @@ public:
 		written_data = m.str(2);
 	}
 	string getFileName(int bufIndex) override;
-	void updateInternalBufferInfos(vector<InternalBufferInfo>) override;
+	void updateInternalBufferInfos(vector<InternalBufferInfo>&) override;
+private:
 	string written_data;
 	int lba;
 };
@@ -45,7 +46,8 @@ public:
 		size = std::atoi(m.str(2).c_str())/*erase size*/;
 	}
 	string getFileName(int bufIndex) override;
-	void updateInternalBufferInfos(vector<InternalBufferInfo>) override;
+	void updateInternalBufferInfos(vector<InternalBufferInfo>&) override;
+private:
 	int size;
 	int lba;
 };
@@ -54,6 +56,6 @@ class EmptyBufferInfo : public BufferInfo {
 public:
 	EmptyBufferInfo() {}
 	string getFileName(int bufIndex) override;
-	void updateInternalBufferInfos(vector<InternalBufferInfo>) override;
+	void updateInternalBufferInfos(vector<InternalBufferInfo>&) override;
 };
 

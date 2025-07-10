@@ -10,3 +10,10 @@ BufferInfo* BufferInfoFactory::createCommand(const string& fname) {
 	}
 	return new EmptyBufferInfo();
 }
+
+BufferInfo* BufferInfoFactory::createWriteCommand(int LBA, const string& data) {
+	return new WriteBufferInfo(LBA, data);
+}
+BufferInfo* BufferInfoFactory::createEraseCommand(int LBA, int size) {
+	return new EraseBufferInfo(LBA, size);
+}

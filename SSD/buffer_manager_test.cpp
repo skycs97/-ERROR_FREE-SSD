@@ -192,6 +192,7 @@ TEST_F(BufferManagerFixture, FileNameTest2) {
 	manager.addWriteCommand(10, "0x11111111");
 }
 
+
 TEST_F(BufferManagerFixture, InitEraseAndEraseTest) {
 	EXPECT_CALL(fileHandler, isFileExistByMatchLength(_, _, _))
 		.WillOnce(Return(false))
@@ -220,6 +221,20 @@ TEST_F(BufferManagerFixture, InitWriteAndEraseTest) {
 	manager.addEraseCommand(0, 5);
 }
 
+TEST_F(BufferManagerFixture, InitWriteAndEraseTest2) {
+	EXPECT_CALL(fileHandler, isFileExistByMatchLength(_, _, _))
+		.WillOnce(Return(false))
+		.WillOnce(Return(true))
+		.WillRepeatedly(Return(false));
+	EXPECT_CALL(fileHandler, getFileUsingPrefix)
+		.WillOnce(Return(vector<string>{"1_W_0_0x11112222"}));
+
+	EXPECT_CALL(fileHandler, rename("buffer\\2_empty", "buffer\\2_W_1_0x22223333"))
+		.Times(1);
+	manager.init();
+
+	manager.addWriteCommand(1, "0x22223333");
+}
 
 TEST_F(BufferManagerFixture, MAXLBA_TEST) {
 	manager.addEraseCommand(97, 3);
