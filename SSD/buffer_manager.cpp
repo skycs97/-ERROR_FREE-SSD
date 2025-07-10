@@ -5,7 +5,8 @@
 #include <iomanip>
 
 void BufferManager::init() {
-	if (fileHandler->createDirectory(BUFFER_DIR_NAME) == false) throw std::runtime_error("Fail to create directory.");
+	fileHandler->createDirectory(BUFFER_DIR_NAME);
+	
 
 	for (int buf_idx = 0; buf_idx < BUFFER_SIZE; buf_idx++)
 	{
@@ -30,7 +31,7 @@ void BufferManager::createBufferFile(int buf_idx)
 	string file_name = getBufferFilePrefix(buf_idx) + BUFFER_NAME_EMPTY;
 	string file_path = BUFFER_DIR_NAME "\\";
 	file_path += file_name;
-	fileHandler->createEmptyFile(file_path);
+	fileHandler->createFile(file_path);
 	fillBufferInfo(file_name, buf_idx);
 }
 
@@ -41,7 +42,7 @@ string BufferManager::getBufferFilePrefix(int buf_idx)
 
 void BufferManager::updateBufferState(int buf_idx)
 {
-	vector<string> buffer_fname = fileHandler->findFileUsingPrefix(BUFFER_DIR_NAME, getBufferFilePrefix(buf_idx));
+	vector<string> buffer_fname = fileHandler->getFileUsingPrefix(BUFFER_DIR_NAME, getBufferFilePrefix(buf_idx));
 
 	if (buffer_fname.size() > 1) throw std::exception("There are many buffer files in same prefix.");
 

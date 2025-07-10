@@ -8,7 +8,7 @@ TEST(Output, mock_file_test) {
 	NiceMock<FileHandlerMock> fhMock;
 	OutputHandler oh(&fhMock);
 
-	EXPECT_CALL(fhMock, write(OUTPUT_FILENAME, _))
+	EXPECT_CALL(fhMock, writeData(OUTPUT_FILENAME, _))
 		.Times(1);
 
 	oh.output("ERROR");

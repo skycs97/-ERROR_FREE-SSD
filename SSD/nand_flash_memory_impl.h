@@ -9,8 +9,10 @@ public:
 
 	void init() override;
 	vector<string> read() override;
-	string write(const vector<string>& data) override;
+	string write(vector<string>& data) override;
 
 private:
 	FileHandler* fileHandler;
+
+	vector<string> convertToLines(const char* data);
 };

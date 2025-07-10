@@ -4,12 +4,13 @@
 #include <iostream>
 #include "nand_flash_memory_impl.h"
 
+
+
 void NandFlashMemoryImpl::init()
 {
 	if (fileHandler->isFileExistByMatchLength(".", NAND_FILENAME, strlen(NAND_FILENAME))) return;
 
-	if (fileHandler->createFile(NAND_FILENAME) == false)
-		throw std::runtime_error("Failed to create file: " NAND_FILENAME);
+	fileHandler->createFile(NAND_FILENAME);
 	
 	std::ostringstream oss;
 	for (int i = MIN_LBA; i <= MAX_LBA; ++i) {
@@ -23,22 +24,38 @@ void NandFlashMemoryImpl::init()
 }
 
 vector<string> NandFlashMemoryImpl::read() {
-	vector<string> datas = fileHandler->read(NAND_FILENAME);
-	vector<string> ret;
-	for (auto data : datas) {
-		int pos = data.find("\t");
-		ret.push_back(data.substr(pos + 1));
-	}
-	return ret;
+	char* read_buf = fileHandler->readFile(NAND_FILENAME);
+	vector<string> datas = convertToLines(read_buf);
+	delete read_buf;
+
+	return datas;
 }
 
-string NandFlashMemoryImpl::write(const vector<string>& datas) {
-	vector<string> ret;
-	for (int i = 0; i < 100; i++) {
-		std::ostringstream oss;
-		oss << std::setw(2) << std::setfill('0') << std::dec << i << '\t' << datas.at(i);
-		ret.push_back(oss.str());
+string NandFlashMemoryImpl::write(vector<string>& datas) {
+	std::ostringstream oss;	
+	for (int i = MIN_LBA; i <= MAX_LBA; ++i) {
+		while (!datas.at(i).empty() && (datas.at(i).back() == '\n' || datas.at(i).back() == '\r')) {
+			datas[i].pop_back();
+		}
+
+		oss << std::setfill('0') << std::setw(2) << std::dec << i << '\t'
+			<< std::setfill('0') << std::setw(8) << std::hex << std::uppercase << datas.at(i)
+			<< '\n';
 	}
-	fileHandler->write(NAND_FILENAME, ret);
+
+	std::string formattedData = oss.str();
+	fileHandler->writeData(NAND_FILENAME, formattedData);
 	return "";
+}
+
+vector<string> NandFlashMemoryImpl::convertToLines(const char* data) {
+	vector<string> lines;
+	std::istringstream iss(data);
+	string line;
+
+	while (std::getline(iss, line)) {
+		lines.push_back(line.substr(line.find('\t') + 1));
+	}
+
+	return lines;
 }
