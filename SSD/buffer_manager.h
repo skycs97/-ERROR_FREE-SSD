@@ -9,6 +9,7 @@
 using std::string;
 using std::vector;
 
+
 struct InternalBufferInfo {
 	CMD_TYPE cmd;
 	string data;
@@ -17,34 +18,35 @@ struct InternalBufferInfo {
 class BufferInfo
 {
 protected:
-	BufferInfo(int lba) : lba{ lba } {}
 public:
-	int lba;
+
 	virtual string getFileName(int buf_idx) = 0;
-	virtual vector<InternalBufferInfo> makeInternalBufferInfos() = 0;
+	virtual void updateInternalBufferInfos(vector<InternalBufferInfo>) = 0;
 };
 
 class WriteBufferInfo : public BufferInfo {
 public:
-	WriteBufferInfo(int lba, const string& data) : BufferInfo(lba), written_data(data) {}
+	WriteBufferInfo(int lba, const string& data) :lba{ lba }, written_data(data) {}
 	string getFileName(int buf_idx) override;
-	vector<InternalBufferInfo> makeInternalBufferInfos() override;
+	void updateInternalBufferInfos(vector<InternalBufferInfo>) override;
 	string written_data;
+	int lba;
 };
 
 class EraseBufferInfo : public BufferInfo {
 public:
-	EraseBufferInfo(int lba, int size) : BufferInfo(lba), size(size) {}
+	EraseBufferInfo(int lba, int size) : lba{ lba }, size(size) {}
 	string getFileName(int buf_idx) override;
-	vector<InternalBufferInfo> makeInternalBufferInfos() override;
+	void updateInternalBufferInfos(vector<InternalBufferInfo>) override;
 	int size;
+	int lba;
 };
 
 class EmptyBufferInfo : public BufferInfo {
 public:
-	EmptyBufferInfo(int lba = INVALID_VALUE): BufferInfo(lba){}
+	EmptyBufferInfo(){}
 	string getFileName(int buf_idx) override;
-	vector<InternalBufferInfo> makeInternalBufferInfos() override;
+	void updateInternalBufferInfos(vector<InternalBufferInfo>) override;
 };
 
 
@@ -128,7 +130,6 @@ private:
 	void updateBuffer();
 
 	void initInternalBuffers();
-	void fillInternalBufferEmpty(int index);
 	void fillEmptyBufferInfo(int buffer_idx);
 	void fillWriteBufferInfo(int write_lba, int buffer_idx);
 	void fillEraseBufferInfo(int buffer_idx, int erase_start, int erase_count);
