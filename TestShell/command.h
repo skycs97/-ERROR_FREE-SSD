@@ -13,6 +13,7 @@ public:
 	Command(const string& cmdName, const int numOfArgs);
 	int getNumOfArgs(void);
 	string getCmdName(void);
+	void printProcess(void) const;
 
 	virtual void run(const CommandRunner& cmdRunner) const = 0;
 	virtual void printHelp(void) const = 0;

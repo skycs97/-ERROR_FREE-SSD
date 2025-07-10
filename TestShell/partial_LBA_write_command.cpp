@@ -51,12 +51,6 @@ void PartialLBAWriteCommand::printHelp() const
 	std::cout << " 2_\n";
 }
 
-void PartialLBAWriteCommand::printProcess() const
-{
-	std::cout << std::left << std::setw(25) << cmdName;
-	std::cout << "  ___   " << "Run..";
-}
-
 std::shared_ptr<Command> PartialLBAWriteCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
 	if (args.size() != numOfArgs) return nullptr;

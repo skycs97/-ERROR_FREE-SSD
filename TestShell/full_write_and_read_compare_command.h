@@ -10,7 +10,6 @@ public:
 private:
 	bool partialWrite(const CommandRunner& cmdRunner, int lba, int testSize, const vector<string>& data) const;
 	bool partialReadAndCompare(const CommandRunner& cmdRunner, int lba, int testSize, const vector<string>& data) const;
-	void printProcess() const;
 	vector<string> getTestData(int testsize, int random) const;
 };
 

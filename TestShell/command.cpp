@@ -21,3 +21,9 @@ string Command::getCmdName(void)
 {
 	return cmdName;
 }
+
+void Command::printProcess(void) const
+{
+	std::cout << std::left << std::setw(25) << cmdName;
+	std::cout << "  ___   " << "Run..";
+}

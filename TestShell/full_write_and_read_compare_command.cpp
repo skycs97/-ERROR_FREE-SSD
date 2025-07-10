@@ -79,12 +79,6 @@ void FullWriteAndReadCompareCommand::printHelp() const
 	std::cout << " 1_\n";
 }
 
-void FullWriteAndReadCompareCommand::printProcess() const
-{
-	std::cout << std::left << std::setw(25) << cmdName;
-	std::cout << "  ___   " << "Run..";
-}
-
 vector<string> FullWriteAndReadCompareCommand::getTestData(int testsize, int random) const
 {
 #ifdef _DEBUG
