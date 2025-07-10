@@ -78,4 +78,33 @@ TEST_F(TestShellFixtureWithReal, CmdRunnerFlush) {
 
 	writeCommand->run(runner);
 }
+
+TEST_F(TestShellFixtureWithReal, FullWriteAndReadCompare) {
+	auto fullWriteAndReadCompareCommand = parser.parseAndMakeShellCommand("1_");
+	EXPECT_TRUE(fullWriteAndReadCompareCommand != nullptr);
+
+	fullWriteAndReadCompareCommand->run(runner);
+}
+
+TEST_F(TestShellFixtureWithReal, PartialLBAWrite) {
+	auto partialLBAWriteCommand = parser.parseAndMakeShellCommand("2_");
+	EXPECT_TRUE(partialLBAWriteCommand != nullptr);
+
+	partialLBAWriteCommand->run(runner);
+}
+
+TEST_F(TestShellFixtureWithReal, WriteReadAging) {
+	auto writeReadAgingCommand = parser.parseAndMakeShellCommand("3_");
+	EXPECT_TRUE(writeReadAgingCommand != nullptr);
+
+	writeReadAgingCommand->run(runner);
+}
+
+TEST_F(TestShellFixtureWithReal, EraseAndWriteAging) {
+	auto eraseAndWriteAgingCommand = parser.parseAndMakeShellCommand("4_");
+	EXPECT_TRUE(eraseAndWriteAgingCommand != nullptr);
+
+	eraseAndWriteAgingCommand->run(runner);
+}
+
 #endif
