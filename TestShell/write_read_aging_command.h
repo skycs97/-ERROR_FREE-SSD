@@ -8,7 +8,6 @@ public:
 	void run(const CommandRunner& cmdRunner) const override;
 	void printHelp() const override;
 private:
-	void printProcess() const;
 };
 
 class WriteReadAgingCommandFactory : public CommandFactory {

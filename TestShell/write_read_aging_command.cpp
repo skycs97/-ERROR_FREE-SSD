@@ -43,12 +43,6 @@ void WriteReadAgingCommand::printHelp() const
 	std::cout << " 3_\n";
 }
 
-void WriteReadAgingCommand::printProcess() const
-{
-	std::cout << std::left << std::setw(25) << cmdName;
-	std::cout << "  ___   " << "Run..";
-}
-
 std::shared_ptr<Command> WriteReadAgingCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
 	if (args.size() != numOfArgs) return nullptr;
