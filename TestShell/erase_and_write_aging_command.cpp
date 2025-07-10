@@ -14,25 +14,30 @@ EraseAndWriteAgingCommand::EraseAndWriteAgingCommand(const std::vector<std::stri
 void EraseAndWriteAgingCommand::run(const CommandRunner& cmdRunner) const
 {
 	printProcess();
-	int startLBA = MIN_LBA;
 	int LBARange = 3;
 
-	cmdRunner.erase(std::to_string(startLBA), std::to_string(LBARange));
+	cmdRunner.erase(std::to_string(MIN_LBA), std::to_string(LBARange));
 
 	for (int i = 0; i < REPEAT_COUNT; i++) {
-		for (startLBA = (MIN_LBA + 2); startLBA <= (MAX_LBA - 1); startLBA+=2) {
-
-			if (WRITESUCCESS != writeTwiceRandomData(cmdRunner, startLBA))
-				throw CommandRunFailException(FAIL);
-
-			LBARange = getLbaRange(startLBA);
-
-			if (ERASESUCCESS != cmdRunner.erase(std::to_string(startLBA), std::to_string(LBARange)))
-				throw CommandRunFailException(FAIL);
-		}
+		runEraseAndWrite(cmdRunner);
 	}
 
 	printPass();
+}
+
+void EraseAndWriteAgingCommand::runEraseAndWrite(const CommandRunner& cmdRunner) const
+{
+	int LBARange = 3;
+	for (int startLBA = (MIN_LBA + 2); startLBA <= (MAX_LBA - 1); startLBA += 2) {
+
+		if (WRITESUCCESS != writeTwiceRandomData(cmdRunner, startLBA))
+			throw CommandRunFailException(FAIL);
+
+		LBARange = getLbaRange(startLBA);
+
+		if (ERASESUCCESS != cmdRunner.erase(std::to_string(startLBA), std::to_string(LBARange)))
+			throw CommandRunFailException(FAIL);
+	}
 }
 
 string EraseAndWriteAgingCommand::writeTwiceRandomData(const CommandRunner& cmdRunner, int startLBA) const

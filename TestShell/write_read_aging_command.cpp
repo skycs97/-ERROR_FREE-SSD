@@ -17,7 +17,7 @@ void WriteReadAgingCommand::run(const CommandRunner& cmdRunner) const
 
 	RandomNumberGenerator rng;
 
-	for (int i = 0; i < 200; i++) {
+	for (int i = 0; i < REPEAT_COUNT; i++) {
 
 		string data = rng.generateRandomUnsignedIntString();
 

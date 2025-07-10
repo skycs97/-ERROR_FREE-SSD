@@ -10,6 +10,7 @@ public:
 private:
 	static const int REPEAT_COUNT = 30;
 	int getLbaRange(int startLBA) const;
+	void runEraseAndWrite(const CommandRunner& cmdRunner) const;
 	string writeTwiceRandomData(const CommandRunner& cmdRunner, int startLBA) const;
 };
 
