@@ -1,5 +1,6 @@
 ﻿#include "buffer_manager.h"
 #include "buffer_info.h"
+#include "buffer_info_factory.h"
 #include <regex>
 #include <string>
 #include <sstream>
@@ -37,7 +38,7 @@ void BufferManager::createEmptyBufferFile(int bufIndex)
 
 void BufferManager::updateBufferState(int bufIndex)
 {
-	vector<string> buffer_fname = fileHandler->findFileUsingPrefix(BUFFER_DIR_NAME, getBufferFilePrefix(bufIndex));
+	vector<string> buffer_fname = fileHandler->getFileUsingPrefix(BUFFER_DIR_NAME, getBufferFilePrefix(bufIndex));
 
 	if (buffer_fname.size() > 1) throw std::exception("There are many buffer files in same prefix.");
 
@@ -63,19 +64,7 @@ void BufferManager::fillBufferInfo(string fname, int bufIndex)
 {
 	if (bufIndex < 0 || bufIndex >= BUFFER_SIZE) throw std::exception("invalid buffer index.");
 
-	CMD_TYPE bufferType = getBufferTypeFromFilenames(fname);
-	if (bufferType == CMD_WRITE) {
-		buffers[bufIndex] = new WriteBufferInfo(fname);
-		return;
-	}
-	if (bufferType == CMD_ERASE) {
-		buffers[bufIndex] = new EraseBufferInfo(fname);
-		return;
-	}
-	if (bufferType == BUFFER_EMPTY) {
-		buffers[bufIndex] = new EmptyBufferInfo();
-		return;
-	}
+	buffers[bufIndex] = BufferInfoFactory::getInstance().createCommand(fname);
 }
 
 CMD_TYPE BufferManager::getBufferTypeFromFilenames(const string& fname) {

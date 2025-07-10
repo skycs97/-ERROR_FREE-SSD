@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="buffer_info.cpp" />
+    <ClCompile Include="buffer_info_factory.cpp" />
     <ClCompile Include="buffer_manager.cpp" />
     <ClCompile Include="buffer_manager_test.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> %(AdditionalOptions)</AdditionalOptions>
@@ -189,6 +190,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="buffer_info_factory.h" />
     <ClInclude Include="buffer_manager.h" />
     <ClInclude Include="file_handler.h" />
     <ClInclude Include="file_handler_impl.h" />
