@@ -219,3 +219,10 @@ TEST_F(BufferManagerFixture, InitWriteAndEraseTest) {
 
 	manager.addEraseCommand(0, 5);
 }
+
+TEST_F(BufferManagerFixture, MAXLBA_TEST) {
+	manager.addEraseCommand(97, 3);
+	manager.addWriteCommand(99, "0x11111111");
+
+	EXPECT_EQ(2, manager.getUsedBufferCount());
+}
