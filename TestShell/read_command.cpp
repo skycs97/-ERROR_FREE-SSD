@@ -1,5 +1,6 @@
 #include <iostream>
 #include "read_command.h"
+#include "logger.h"
 
 namespace {
 	const int numOfArgs = 1;
@@ -14,6 +15,7 @@ void ReadCommand::run(const CommandRunner& cmdRunner) const
 {
 	string result = cmdRunner.read(LBA);
 	printResult(result, LBA);
+	LOGGING_SHELL( "LBA: "+LBA + ", result : "+result);
 }
 
 void ReadCommand::printResult(const string& result, const string& lba) const
@@ -21,8 +23,7 @@ void ReadCommand::printResult(const string& result, const string& lba) const
 	std::cout << "[Read] ";
 	if (result != ERR)
 		std::cout << lba << " : ";
-	std::cout << result
-		<< std::endl << std::endl;
+	std::cout << result << std::endl;
 }
 
 std::shared_ptr<Command> ReadCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)

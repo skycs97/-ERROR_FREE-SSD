@@ -1,4 +1,6 @@
 #include "partial_LBA_write_command.h"
+#include "logger.h"
+
 namespace {
 	const int numOfArgs = 0;
 };
@@ -37,6 +39,8 @@ void PartialLBAWriteCommand::run(const CommandRunner& cmdRunner) const
 		if (checkResult(result) == false) {
 			throw CommandRunFailException(FAIL);
 		}
+
+		LOGGING_SHELL( "Repeat : " + std::to_string(testRepeat) + ", Result : " + std::to_string(checkResult(result)));
 	}
 
 	printPass();

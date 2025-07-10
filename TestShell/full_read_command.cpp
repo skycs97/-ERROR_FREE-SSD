@@ -1,7 +1,8 @@
 #include <iomanip>
 #include "full_read_command.h"
-#include <iomanip>
 #include <string>
+#include "logger.h"
+
 namespace {
 	const int numOfArgs = 0;
 }
@@ -17,6 +18,7 @@ void FullReadCommand::run(const CommandRunner& cmdRunner) const
 	for (int lba = MIN_LBA; lba <= MAX_LBA; lba++) {
 		result = cmdRunner.read(std::to_string(lba));
 		printResult(result, std::to_string(lba));
+		LOGGING_SHELL( result);
 	}
 }
 void FullReadCommand::printResult(const string& result, const string& lba) const

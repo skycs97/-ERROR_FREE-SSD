@@ -1,6 +1,7 @@
 #include <iomanip>
 #include "command_runner.h"
 #include "erase_and_write_aging.h"
+#include "logger.h"
 
 namespace {
 	const int numOfArgs = 0;
@@ -23,6 +24,7 @@ void EraseAndWriteAgingCommand::run(const CommandRunner& cmdRunner) const
 	}
 
 	printPass();
+
 }
 
 void EraseAndWriteAgingCommand::runEraseAndWrite(const CommandRunner& cmdRunner) const
@@ -37,6 +39,7 @@ void EraseAndWriteAgingCommand::runEraseAndWrite(const CommandRunner& cmdRunner)
 
 		if (ERASESUCCESS != cmdRunner.erase(std::to_string(startLBA), std::to_string(LBARange)))
 			throw CommandRunFailException(FAIL);
+
 	}
 }
 
@@ -50,6 +53,8 @@ string EraseAndWriteAgingCommand::writeTwiceRandomData(const CommandRunner& cmdR
 
 	if (WRITESUCCESS != cmdRunner.write(std::to_string(startLBA), rng.generateRandomUnsignedIntString()))
 		result = ERR;
+
+	LOGGING_SHELL( "startLBA: "+std::to_string(startLBA) + " , Result : " + result);
 
 	return result;
 }

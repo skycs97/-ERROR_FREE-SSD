@@ -1,4 +1,5 @@
 #include "full_write_command.h"
+#include "logger.h"
 
 namespace {
 	const int numOfArgs = 1;
@@ -21,6 +22,7 @@ void FullWriteCommand::run(const CommandRunner& cmdRunner) const
 	}
 
 	printResult(fullWriteResult);
+	LOGGING_SHELL( " Result : " + writeResult);
 }
 
 void FullWriteCommand::printResult(const string& result) const

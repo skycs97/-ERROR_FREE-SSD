@@ -67,7 +67,7 @@ protected:
 		int prevSize = 0;
 
 		while (curSize > prevSize) {
-			logger.print(__func__, __TIMESTAMP__);
+			LOGGING_SHELL( __TIMESTAMP__);
 
 			prevSize = curSize;
 			curSize = logger.getLogFileSize();
@@ -79,7 +79,7 @@ TEST_F(LoggerTest, AppendLogToExistingFile) {
 
 	std::string before = readLogFile();
 
-	logger.print(__func__, __DATE__);
+	LOGGING_SHELL( __DATE__);
 
 	std::string after = readLogFile();
 
@@ -93,9 +93,9 @@ TEST_F(LoggerTest, AppendLogsToExistingFile) {
 
 	std::string before = readLogFile();
 
-	logger.print(__func__, __DATE__);
-	logger.print(__func__, __DATE__);
-	logger.print(__func__, __DATE__);
+	LOGGING_SHELL( __DATE__);
+	LOGGING_SHELL( __DATE__);
+	LOGGING_SHELL( __DATE__);
 
 	std::string after = readLogFile();
 

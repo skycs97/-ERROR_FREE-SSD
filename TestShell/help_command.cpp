@@ -2,7 +2,6 @@
 #include <sstream>
 #include "command_factory.h"
 #include "help_command.h"
-#include "TEST_SHELL_CONFIG.h"
 #include "helper.h"
 
 namespace {

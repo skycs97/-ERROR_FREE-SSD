@@ -1,4 +1,5 @@
 #include "flush_command.h"
+#include "logger.h"
 
 namespace {
 	const int numOfArgs = 0;
@@ -17,6 +18,8 @@ void FlushCommand::run(const CommandRunner& cmdRunner) const
 	}
 
 	std::cout << "flush success!\n";
+
+	LOGGING_SHELL( result);
 }
 
 std::shared_ptr<Command> FlushCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)

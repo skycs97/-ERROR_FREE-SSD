@@ -1,6 +1,6 @@
 #include <iomanip>
-#include "command_runner.h"
 #include "write_read_aging_command.h"
+#include "logger.h"
 
 namespace {
 	const int numOfArgs = 0;
@@ -29,6 +29,8 @@ void WriteReadAgingCommand::run(const CommandRunner& cmdRunner) const
 
 		if (cmdRunner.read(std::to_string(MIN_LBA)) != cmdRunner.read(std::to_string(MAX_LBA)))
 			throw CommandRunFailException(FAIL);
+
+		LOGGING_SHELL( std::to_string(i));
 	}
 
 	printPass();
