@@ -8,7 +8,7 @@
 
 void NandFlashMemoryImpl::init()
 {
-	if (fileHandler->isFileExistByMatchLength(".", NAND_FILENAME, strlen(NAND_FILENAME))) return;
+	if (fileHandler->isFileExistByMatchLength(".\\*", NAND_FILENAME, strlen(NAND_FILENAME))) return;
 
 	fileHandler->createFile(NAND_FILENAME);
 	
