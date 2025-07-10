@@ -8,44 +8,52 @@
 
 void BufferManager::init() {
 	fileHandler->createDirectory(BUFFER_DIR_NAME);
-	
+
 	for (int bufIndex = 0; bufIndex < BUFFER_SIZE; bufIndex++)
 	{
-		if (existBufferFile(bufIndex)) updateBufferState(bufIndex);
-		else createEmptyBufferFile(bufIndex);
+		if (existEmptyBufferFile(bufIndex)) {
+			updateBufferState(bufIndex);
+		}
+		else if (existNonEmptyBufferFile(bufIndex)) {
+			updateBufferState(bufIndex);
+			IncreaseBufferCnt();
+		}
+		else createEmptyBufferFileAndUpdateState(bufIndex);
 	}
+	updateInternalBufferState();
 }
 
-bool BufferManager::existBufferFile(int bufIndex)
+bool BufferManager::existNonEmptyBufferFile(int bufIndex)
 {
-	string dir_path = BUFFER_DIR_NAME "\\*";
-	string empty_file_name = getBufferFilePrefix(bufIndex) + BUFFER_NAME_EMPTY;
-	if (fileHandler->isFileExistByMatchLength(dir_path, empty_file_name, empty_file_name.length())) return false;
-
-	string prefix_name = getBufferFilePrefix(bufIndex);
-	if (fileHandler->isFileExistByMatchLength(dir_path, prefix_name, prefix_name.length())) return true;
+	string dirPath = BUFFER_DIR_NAME "\\*";
+	string perfixName = getBufferFilePrefix(bufIndex);
+	if (fileHandler->isFileExistByMatchLength(dirPath, perfixName, perfixName.length())) return true;
 	return false;
 }
 
-void BufferManager::createEmptyBufferFile(int bufIndex)
+bool BufferManager::existEmptyBufferFile(int bufIndex)
 {
-	string file_name = getBufferFilePrefix(bufIndex) + BUFFER_NAME_EMPTY;
-	string file_path = BUFFER_DIR_NAME "\\";
-	file_path += file_name;
-	fileHandler->createFile(file_path);
-	fillBufferInfo(file_name, bufIndex);
+	string dirPath = BUFFER_DIR_NAME "\\*";
+	string emptyFileName = getBufferFilePrefix(bufIndex) + BUFFER_NAME_EMPTY;
+	if (fileHandler->isFileExistByMatchLength(dirPath, emptyFileName, emptyFileName.length())) return true;
+	return false;
+}
+
+void BufferManager::createEmptyBufferFileAndUpdateState(int bufIndex)
+{
+	string fileName = getBufferFilePrefix(bufIndex) + BUFFER_NAME_EMPTY;
+
+	fileHandler->createFile(BUFFER_DIR_NAME "\\" + fileName);
+
+	fillBufferInfo(fileName, bufIndex);
 }
 
 void BufferManager::updateBufferState(int bufIndex)
 {
-	vector<string> buffer_fname = fileHandler->getFileUsingPrefix(BUFFER_DIR_NAME, getBufferFilePrefix(bufIndex));
+	vector<string> bufferFileNames = fileHandler->getFileUsingPrefix(BUFFER_DIR_NAME, getBufferFilePrefix(bufIndex));
 
-	if (buffer_fname.size() > 1) throw std::exception("There are many buffer files in same prefix.");
-
-	fillBufferInfo(buffer_fname.front(), bufIndex);
-	IncreaseBufferCnt();
-
-	updateInternalBufferState();
+	if (bufferFileNames.size() > 1) throw std::exception("There are many buffer files in same prefix.");
+	fillBufferInfo(bufferFileNames.front(), bufIndex);
 }
 
 string BufferManager::getBufferFilePrefix(int bufIndex)
@@ -63,12 +71,13 @@ void BufferManager::updateInternalBufferState()
 void BufferManager::fillBufferInfo(string fname, int bufIndex)
 {
 	if (bufIndex < 0 || bufIndex >= BUFFER_SIZE) throw std::exception("invalid buffer index.");
-
 	buffers[bufIndex] = BufferInfoFactory::getInstance().createCommand(fname);
 }
 
-bool BufferManager::isBufferFull() {
-	return getUsedBufferCount() == BUFFER_SIZE;
+void BufferManager::IncreaseBufferCnt()
+{
+	valid_buf_cnt++;
+	if (valid_buf_cnt > BUFFER_SIZE) throw std::exception("valid_buf_cnt is over than 5!");
 }
 
 bool BufferManager::read(int lba, string& outputData) {
@@ -86,7 +95,7 @@ void BufferManager::addWriteCommand(int lba, const string& data) {
 		flush();
 	}
 	setInternalBufferWrite(lba, data);
-	WriteUpdatedBufferFiles();
+	updateBufferFiles();
 }
 
 
@@ -95,14 +104,18 @@ void BufferManager::addEraseCommand(int lba, int count) {
 		flush();
 	}
 	SetInternalBufferErase(lba, count);
-	WriteUpdatedBufferFiles();
+	updateBufferFiles();
+}
+
+bool BufferManager::isBufferFull() {
+	return getUsedBufferCount() == BUFFER_SIZE;
 }
 
 void BufferManager::flush() {
 	vector<string> datas = nandFlashMemory->read();
 	updateNandData(datas);
 	flushInternalBuffers();
-	writeEmptyBufferFiles();
+	updateBufferFilesAllEmpty();
 
 	nandFlashMemory->write(datas);
 }
@@ -119,14 +132,14 @@ void BufferManager::SetInternalBufferErase(int lba, int count)
 	}
 }
 
-void BufferManager::WriteUpdatedBufferFiles()
+void BufferManager::updateBufferFiles()
 {
 	vector<string> oldNames = getOldFileNames();
 	updateBufferByInternalBuffer();
 	writeAllBufferFiles(oldNames);
 }
 
-void BufferManager::writeEmptyBufferFiles()
+void BufferManager::updateBufferFilesAllEmpty()
 {
 	vector<string> oldNames = getOldFileNames();
 	valid_buf_cnt = 0;
@@ -134,11 +147,37 @@ void BufferManager::writeEmptyBufferFiles()
 	writeAllBufferFiles(oldNames);
 }
 
+vector<string> BufferManager::getOldFileNames()
+{
+	vector<string> oldNames;
+	for (int i = 0; i < BUFFER_SIZE; i++) {
+		oldNames.push_back(buffers[i]->getFileName(i));
+	}
+	return oldNames;
+}
+
+void BufferManager::writeAllBufferFiles(std::vector<std::string>& oldNames)
+{
+	for (int i = 0; i < BUFFER_SIZE; i++) {
+		const string& new_name = buffers[i]->getFileName(i);
+		const string& old_name = oldNames[i];
+		writeBufferFile(old_name, new_name);
+	}
+}
+
+void BufferManager::writeBufferFile(const string& old_name, const string& new_name) {
+	if (old_name == new_name) {
+		return;
+	}
+	string old_path = BUFFER_DIR_NAME "\\" + old_name;
+	string new_path = BUFFER_DIR_NAME "\\" + new_name;
+	fileHandler->rename(old_path, new_path);
+}
+
 void BufferManager::updateBufferByInternalBuffer() {
 	int eraseStartLBA = -1;
 	bool meetErase = false;
 	vector<int> writeLBAs;
-	vector<string> old_names = getOldFileNames();
 	int bufIndex = MIN_LBA;
 	for (int internalBufferIdx = MIN_LBA; internalBufferIdx <= MAX_LBA; internalBufferIdx++) {
 		InternalBufferInfo& internalBuffer = internalBuffers[internalBufferIdx];
@@ -194,15 +233,6 @@ int BufferManager::createEraseBufferAndPassedWriteBuffer(int eraseStartLBA, int 
 	return bufIndex;
 }
 
-vector<string> BufferManager::getOldFileNames()
-{
-	vector<string> oldNames;
-	for (int i = 0; i < BUFFER_SIZE; i++) {
-		oldNames.push_back(buffers[i]->getFileName(i));
-	}
-	return oldNames;
-}
-
 void BufferManager::fillEmptyBuffers()
 {
 	for (int bufIndex = getUsedBufferCount(); bufIndex < BUFFER_SIZE; bufIndex++) {
@@ -210,14 +240,6 @@ void BufferManager::fillEmptyBuffers()
 	}
 }
 
-void BufferManager::writeAllBufferFiles(std::vector<std::string>& oldNames)
-{
-	for (int i = 0; i < BUFFER_SIZE; i++) {
-		const string& new_name = buffers[i]->getFileName(i);
-		const string& old_name = oldNames[i];
-		writeBufferFile(old_name, new_name);
-	}
-}
 
 void BufferManager::updateNandData(std::vector<std::string>& outData)
 {
@@ -235,21 +257,6 @@ void BufferManager::flushInternalBuffers()
 	}
 }
 
-void BufferManager::writeBufferFile(const string& old_name, const string& new_name) {
-	if (old_name == new_name){
-		return;
-	}
-	string old_path = BUFFER_DIR_NAME "\\" + old_name;
-	string new_path = BUFFER_DIR_NAME "\\" + new_name;
-	fileHandler->rename(old_path, new_path);
-}
-
 int BufferManager::getUsedBufferCount() {
 	return valid_buf_cnt;
-}
-
-void BufferManager::IncreaseBufferCnt()
-{
-	valid_buf_cnt++;
-	if (valid_buf_cnt > BUFFER_SIZE) throw std::exception("valid_buf_cnt is over than 5!");
 }
