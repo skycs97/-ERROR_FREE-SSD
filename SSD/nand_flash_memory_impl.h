@@ -7,6 +7,7 @@ class NandFlashMemoryImpl : public NandFlashMemory {
 public:
 	NandFlashMemoryImpl(FileHandler* fileHandler) :fileHandler{ fileHandler } {}
 
+	void init() override;
 	vector<string> read() override;
 	string write(const vector<string>& data) override;
 

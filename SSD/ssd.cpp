@@ -23,7 +23,9 @@ void SSD::run(int argc, const char* argv[])
 {
 	string result = "";
 	try {
-		outputHandler->getFileHandler()->init();
+		outputHandler->init();
+		nand->init();
+		
 		SSDCommand* cmd = nullptr;
 		
 		if (argc > 1) {
