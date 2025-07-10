@@ -173,8 +173,8 @@ void BufferManager::updateBuffer() {
 	bool meetErase = false;
 	vector<int> write_lbas;
 
-	int buf_idx = 0;
-	for (int internalBufferIdx = 0; internalBufferIdx < 100; internalBufferIdx++) {
+	int buf_idx = MIN_LBA;
+	for (int internalBufferIdx = MIN_LBA; internalBufferIdx <= MAX_LBA; internalBufferIdx++) {
 		InternalBufferInfo& internalBuffer = internalBuffers[internalBufferIdx];
 		if (meetErase == false) {
 			if (internalBuffer.cmd == CMD_ERASE) {
@@ -188,6 +188,10 @@ void BufferManager::updateBuffer() {
 			}
 		}
 		else {
+			if (internalBuffer.cmd == CMD_WRITE) {
+				// erase 사이에 등장한 write는 따로 기록해 둡니다.
+				write_lbas.push_back(internalBufferIdx);
+			}
 			if (internalBuffer.cmd == INVALID_VALUE) {
 				// erase 가 끝나면, eraseBuffer를 기록하고, 그 사이에 지나친 write 들도 기록합니다.
 				int erase_count = internalBufferIdx - eraseStartLBA;
@@ -199,11 +203,8 @@ void BufferManager::updateBuffer() {
 				}
 				meetErase = false;
 			}
-			else if (internalBufferIdx == 99 || internalBufferIdx - eraseStartLBA == 9) {
-				if (internalBuffer.cmd == CMD_WRITE) {
-					// erase 사이에 등장한 write는 따로 기록해 둡니다.
-					write_lbas.push_back(internalBufferIdx);
-				}
+			
+			if (meetErase == true && (internalBufferIdx == MAX_LBA || internalBufferIdx - eraseStartLBA == 9)) {
 				// erase 가 끝나면, eraseBuffer를 기록하고, 그 사이에 지나친 write 들도 기록합니다.
 				int erase_count = internalBufferIdx - eraseStartLBA + 1;
 				fillEraseBufferInfo(buf_idx, eraseStartLBA, erase_count);
