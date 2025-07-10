@@ -81,7 +81,9 @@
     <ClCompile Include="buffer_info.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
+    <ClCompile Include="buffer_info_factory.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
@@ -137,6 +139,9 @@
     <ClInclude Include="buffer_info.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>    <ClInclude Include="file_handler_impl.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="buffer_info_factory.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
