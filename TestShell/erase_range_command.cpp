@@ -14,7 +14,7 @@ EraseRangeCommand::EraseRangeCommand(const std::vector<std::string>& args) : Com
 void EraseRangeCommand::run(const CommandRunner& cmdRunner) const
 {
 	if (stoi(endLBA) < stoi(startLBA)) {
-		printResult(ERROR, startLBA + endLBA);
+		printResult(ERR, startLBA + endLBA);
 		return;
 	}
 
@@ -28,8 +28,8 @@ void EraseRangeCommand::printResult(const string& result, const string& lba) con
 {
 	std::cout << "[EraseRange] ";
 
-	if (result == ERROR) {
-		std::cout << ERROR << std::endl;
+	if (result == ERR) {
+		std::cout << ERR << std::endl;
 	}
 	else if (result == ERASESUCCESS) {
 		std::cout << DONE << std::endl;

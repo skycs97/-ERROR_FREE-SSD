@@ -23,7 +23,7 @@ void WriteCommand::printResult(const string& result) const
 	if (result == "")
 		std::cout << DONE;
 	else
-		std::cout << ERROR;
+		std::cout << ERR;
 
 	std::cout << std::endl << std::endl;
 }
