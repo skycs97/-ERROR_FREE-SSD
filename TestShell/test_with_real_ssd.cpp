@@ -53,6 +53,44 @@ TEST_F(TestShellFixtureWithReal, CmdRunnerRealReadFail) {
 	readCommand->run(runner);
 }
 
+TEST_F(TestShellFixtureWithReal, CmdRunnerRealWriteSuccess) {
+
+	EXPECT_EQ(string(WRITESUCCESS), string(runner.write(VALID_LBA, MAGICVALUE)));
+}
+
+TEST_F(TestShellFixtureWithReal, CmdRunnerRealWriteFail) {
+
+	EXPECT_EQ(string(ERR), string(runner.write(INVALID_LBA, MAGICVALUE)));
+}
+
+TEST_F(TestShellFixtureWithReal, CmdRunnerRealReadWrite) {
+
+	RandomNumberGenerator rng;
+	string data = rng.generateRandomUnsignedIntString();
+
+	EXPECT_EQ(true, (WRITESUCCESS == runner.write(VALID_LBA, data) &&
+		data == runner.read(VALID_LBA)));
+}
+
+TEST_F(TestShellFixtureWithReal, CmdRunnerRealFullReadWrite) {
+
+	bool result = true;
+	RandomNumberGenerator rng;
+	string data;
+
+	for (int startLBA = MIN_LBA; startLBA <= MAX_LBA; startLBA++) {
+		data = rng.generateRandomUnsignedIntString();
+		if (WRITESUCCESS == runner.write(std::to_string(startLBA), data) &&
+			data == runner.read(std::to_string(startLBA)))
+			continue;
+
+		result = false;
+		break;
+	}
+
+	EXPECT_EQ(true, result);
+}
+
 TEST_F(TestShellFixtureWithReal, Erase) {
 	const string startIdx = "0";
 	const string range = "10";
