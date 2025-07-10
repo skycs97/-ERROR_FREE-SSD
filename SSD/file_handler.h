@@ -27,6 +27,7 @@ public:
 
 	bool createDirectory(const string& path);
 	bool createFile(const string& path);
+	bool writeData(const string& path, const string& data);
 	char* readFile(const string& path, int& size);
 	virtual bool isFileExistByMatchLength(const string& dir_path, const string& file_name, int len);
 private:

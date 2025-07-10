@@ -4,6 +4,11 @@
 
 #include <string>
 
+void OutputHandler::init()
+{
+	fileHandler->createFile(OUTPUT_FILENAME);
+}
+
 void OutputHandler::output(const string& output_string) {
 	fileHandler->write(OUTPUT_FILENAME, { output_string });
 }

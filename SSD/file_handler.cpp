@@ -130,7 +130,33 @@ bool FileHandler::createDirectory(const string& path)
 
 bool FileHandler::createFile(const string& path)
 {
-	return false;
+	std::ofstream outFile(path.c_str());
+	if (!outFile.is_open()) {
+		return false;
+	}
+
+	outFile << "";
+	outFile.close();
+	return true;
+}
+
+bool FileHandler::writeData(const string& path, const string& data)
+{
+	std::ofstream outFile(path.c_str());
+	if (!outFile.is_open()) {
+		return false;
+		throw std::runtime_error("Failed to open file: " + path);
+	}
+
+	outFile << data;
+
+	if (outFile.fail()) {
+		return false;
+		throw std::runtime_error("Failed to write to file: " + path);
+	}
+
+	outFile.close();
+	return true;
 }
 
 char* FileHandler::readFile(const string& path, int& size)
