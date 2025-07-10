@@ -124,9 +124,9 @@ void BufferManager::setEmptyBufferInfo(int buf_idx, const string& fname)
 
 void BufferManager::setEraseBufferInfo(int buf_idx, const string& fname)
 {
-	std::regex writeRegex(R"([1-5]_W_([0-9]*)_(0x[0-9A-Fa-f]+))");
+	std::regex eraseRegex(R"([1-5]_E_([0-9]*)_([0-9]+))");
 	std::smatch m;
-	std::regex_search(fname, m, writeRegex);
+	std::regex_search(fname, m, eraseRegex);
 	setBufferInfo(buf_idx,
 		CMD_ERASE,
 		std::atoi(m.str(1).c_str())/*LBA*/,
