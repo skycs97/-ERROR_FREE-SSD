@@ -168,6 +168,7 @@ bool BufferManager::read(int lba, string& outputData) {
 	outputData = internalBuffers[lba].data;
 	return true;
 }
+
 void BufferManager::updateBuffer() {
 	int eraseStartLBA = -1;
 	bool meetErase = false;
@@ -181,6 +182,9 @@ void BufferManager::updateBuffer() {
 				meetErase = true;
 				eraseStartLBA = internalBufferIdx;
 				write_lbas.clear();
+
+				if(isLastLBA(internalBufferIdx))
+					fillEraseBufferInfo(buf_idx, eraseStartLBA, 1);
 			}
 			else if (internalBuffer.cmd == CMD_WRITE) {
 				fillWriteBufferInfo(internalBufferIdx, buf_idx);
@@ -192,6 +196,7 @@ void BufferManager::updateBuffer() {
 				// erase 사이에 등장한 write는 따로 기록해 둡니다.
 				write_lbas.push_back(internalBufferIdx);
 			}
+
 			if (internalBuffer.cmd == INVALID_VALUE) {
 				// erase 가 끝나면, eraseBuffer를 기록하고, 그 사이에 지나친 write 들도 기록합니다.
 				int erase_count = internalBufferIdx - eraseStartLBA;
@@ -217,6 +222,7 @@ void BufferManager::updateBuffer() {
 			}
 		}
 	}
+	
 	valid_buf_cnt = buf_idx;
 	for (; buf_idx < BUFFER_SIZE; buf_idx++) {
 		// empty Buffer도 기록합니다.
@@ -245,6 +251,7 @@ void BufferManager::fillEmptyBufferInfo(int buf_idx)
 	string new_name = buffers[buf_idx].getFileName(buf_idx);
 	writeBuffer(old_name, new_name);
 }
+
 void BufferManager::fillWriteBufferInfo(int write_lba, int buf_idx)
 {
 	string old_name = buffers[buf_idx].getFileName(buf_idx);
@@ -253,6 +260,7 @@ void BufferManager::fillWriteBufferInfo(int write_lba, int buf_idx)
 	string new_name = buffers[buf_idx].getFileName(buf_idx);
 	writeBuffer(old_name, new_name);
 }
+
 void BufferManager::fillEraseBufferInfo(int buf_idx, int erase_start, int erase_count)
 {
 	string old_name = buffers[buf_idx].getFileName(buf_idx);
@@ -260,6 +268,7 @@ void BufferManager::fillEraseBufferInfo(int buf_idx, int erase_start, int erase_
 	string new_name = buffers[buf_idx].getFileName(buf_idx);
 	writeBuffer(old_name, new_name);
 }
+
 void BufferManager::addWriteCommand(int lba, const string& data) {
 	if (data == NAND_DATA_EMPTY) {
 		addEraseCommand(lba, 1);

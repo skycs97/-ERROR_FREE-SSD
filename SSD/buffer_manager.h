@@ -108,4 +108,5 @@ private:
 	void fillEmptyBufferInfo(int buffer_idx);
 	void fillWriteBufferInfo(int write_lba, int buffer_idx);
 	void fillEraseBufferInfo(int buffer_idx, int erase_start, int erase_count);
+	inline bool isLastLBA(int lba) { return lba == MAX_LBA; }
 };
