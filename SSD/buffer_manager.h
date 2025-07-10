@@ -11,7 +11,6 @@ using std::vector;
 
 struct BufferInfo
 {
-	string fname;
 	CMD_TYPE cmd;
 	int lba;
 	string written_data;
@@ -79,9 +78,16 @@ private:
 
 	void fillBufferInfo(string fname, int buf_idx);
 
+	void setEmptyBufferInfo(int buf_idx, const string& fname);
+
+	void setEraseBufferInfo(int buf_idx, const string& fname);
+
+	void setWriteBufferInfo(int buf_idx, const string& fname);
+
+	CMD_TYPE getBufferTypeFromFilenames(const string& fname);
+
 	void setBufferInfo(
 		int buf_idx,
-		string fname,
 		CMD_TYPE cmd,
 		int lba,
 		string written_data,
