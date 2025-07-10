@@ -26,16 +26,16 @@ void NandFlashMemoryImpl::init()
 vector<string> NandFlashMemoryImpl::read() {
 	char* read_buf = fileHandler->readFile(NAND_FILENAME);
 	vector<string> datas = convertToVectorStringFormat(read_buf);
+	removeLastSpaceChar(datas);
+
 	return datas;
 }
 
 string NandFlashMemoryImpl::write(vector<string>& datas) {
+	removeLastSpaceChar(datas);
+	
 	std::ostringstream oss;	
 	for (int i = MIN_LBA; i <= MAX_LBA; ++i) {
-		while (!datas.at(i).empty() && (datas.at(i).back() == '\n' || datas.at(i).back() == '\r')) {
-			datas[i].pop_back();
-		}
-
 		oss << std::setfill('0') << std::setw(2) << std::dec << i << '\t'
 			<< std::setfill('0') << std::setw(8) << std::hex << std::uppercase << datas.at(i)
 			<< '\n';
@@ -56,4 +56,14 @@ vector<string> NandFlashMemoryImpl::convertToVectorStringFormat(const char* data
 	}
 
 	return lines;
+}
+
+void NandFlashMemoryImpl::removeLastSpaceChar(vector<string>& datas)
+{
+	for (string& data : datas)
+	{
+		while (!data.empty() && (data.back() == '\n' || data.back() == '\r')) {
+			data.pop_back();
+		}
+	}
 }
