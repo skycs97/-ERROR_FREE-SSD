@@ -8,7 +8,7 @@ public:
 	void printHelp() const override;
 private:
 	WriteReadAgingCommand(const std::vector<std::string>& args);
-
+	static const int REPEAT_COUNT = 200;
 	friend class WriteReadAgingCommandFactory;
 };
 
