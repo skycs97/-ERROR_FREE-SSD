@@ -8,6 +8,10 @@ protected:
 	void SetUp() override {
 		nandData = getNandDataForTesting();
 
+		EXPECT_CALL(mockedFileHandler, isFileExistByMatchLength(_, _, _))
+			.Times(1)
+			.WillOnce(Return(true));
+
 		EXPECT_CALL(mockedFileHandler, read(NAND_FILENAME))
 			.WillRepeatedly(Return(nandData));
 

@@ -13,11 +13,8 @@ using std::vector;
 
 class FileHandler {
 public:
-	FileHandler();
+	FileHandler() = default;
 
-	void init();
-	virtual bool checkExistNandFile(const string& file_name);
-	virtual void createInitNandFile(const string& file_name);
 	virtual void write(const string& file_name, const vector<string>& output_string);
 	virtual vector<string> read(const string& file_name);
 	virtual void createEmptyFile(const string& file_path);
@@ -26,8 +23,8 @@ public:
 
 
 	bool createDirectory(const string& path);
-	bool createFile(const string& path);
-	bool writeData(const string& path, const string& data);
+	virtual bool createFile(const string& path);
+	virtual bool writeData(const string& path, const string& data);
 	char* readFile(const string& path, int& size);
 	virtual bool isFileExistByMatchLength(const string& dir_path, const string& file_name, int len);
 private:
