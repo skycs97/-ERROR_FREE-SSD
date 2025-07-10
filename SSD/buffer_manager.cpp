@@ -204,7 +204,7 @@ void BufferManager::updateBuffer() {
 				meetErase = false;
 			}
 
-			else if (internalBufferIdx == 99 || internalBufferIdx - eraseStartLBA == 9) {
+			if (internalBufferIdx == 99 || internalBufferIdx - eraseStartLBA == 9) {
 				// erase 가 끝나면, eraseBuffer를 기록하고, 그 사이에 지나친 write 들도 기록합니다.
 				int erase_count = internalBufferIdx - eraseStartLBA + 1;
 				fillEraseBufferInfo(buf_idx, eraseStartLBA, erase_count);
