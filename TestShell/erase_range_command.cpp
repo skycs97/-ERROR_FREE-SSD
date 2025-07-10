@@ -27,11 +27,15 @@ void EraseRangeCommand::run(const CommandRunner& cmdRunner) const
 void EraseRangeCommand::printResult(const string& result, const string& lba) const
 {
 	std::cout << "[EraseRange] ";
+
 	if (result == ERROR) {
-		std::cout << ERROR << std::endl << std::endl;
+		std::cout << ERROR << std::endl;
+	}
+	else if (result == ERASESUCCESS) {
+		std::cout << DONE << std::endl;
 	}
 	else {
-		std::cout << "Done" << std::endl << std::endl;
+		std::cout << FAIL << std::endl;
 	}
 }
 void EraseRangeCommand::printHelp() const
@@ -39,10 +43,10 @@ void EraseRangeCommand::printHelp() const
 	std::cout << "** Erase Range Command **\n";
 	std::cout << " - Erases data from the specified StartLBA to EndLBA SSD.\n\n";
 	std::cout << "Usage\n";
-	std::cout << " erase [StartLBA] [endLBA]\n";
+	std::cout << " erase_range [StartLBA] [endLBA]\n";
 	std::cout << "Example\n";
-	std::cout << " erase 0 9\n";
-	std::cout << " erase 85 99\n";
+	std::cout << " erase_range 0 9\n";
+	std::cout << " erase_range 85 99\n";
 }
 
 std::shared_ptr<Command> EraseRangeCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)

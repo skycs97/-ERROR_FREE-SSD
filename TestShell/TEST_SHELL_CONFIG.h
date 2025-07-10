@@ -61,3 +61,4 @@ const std::string ERROR = "ERROR";
 const std::string DONE = "DONE";
 const std::string FAIL = "FAIL";
 const std::string WRITESUCCESS = "";
+const std::string ERASESUCCESS = "";

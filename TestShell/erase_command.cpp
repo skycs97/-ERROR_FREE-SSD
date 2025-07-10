@@ -20,8 +20,13 @@ void EraseCommand::run(const CommandRunner& cmdRunner) const
 void EraseCommand::printResult(const string& result, const string& lba) const
 {
 	std::cout << "[Erase] ";
-	if (result != ERROR)
-		std::cout << "Done" << std::endl << std::endl;
+
+	if (result == ERASESUCCESS) {
+		std::cout << DONE << std::endl;
+	}
+	else {
+		std::cout << FAIL << std::endl;
+	}
 }
 void EraseCommand::printHelp() const
 {
