@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <string>
 #include <vector>
+#include <regex>
 #include <cstring>
 #include <Windows.h>
 #include <stdexcept>
@@ -26,7 +27,14 @@ public:
 
 class WriteBufferInfo : public BufferInfo {
 public:
+	static const std::regex fileNameRegex;
 	WriteBufferInfo(int lba, const string& data) :lba{ lba }, written_data(data) {}
+	WriteBufferInfo(const string& fname) {
+		std::smatch m;
+		std::regex_search(fname, m, WriteBufferInfo::fileNameRegex);
+		lba = std::atoi(m.str(1).c_str());
+		written_data = m.str(2);
+	}
 	string getFileName(int buf_idx) override;
 	void updateInternalBufferInfos(vector<InternalBufferInfo>) override;
 	string written_data;
@@ -35,7 +43,14 @@ public:
 
 class EraseBufferInfo : public BufferInfo {
 public:
+	static const std::regex fileNameRegex;
 	EraseBufferInfo(int lba, int size) : lba{ lba }, size(size) {}
+	EraseBufferInfo(const string& fname) {
+		std::smatch m;
+		std::regex_search(fname, m, EraseBufferInfo::fileNameRegex);
+		lba = std::atoi(m.str(1).c_str())/*LBA*/;
+		size = std::atoi(m.str(2).c_str())/*erase size*/;
+	}
 	string getFileName(int buf_idx) override;
 	void updateInternalBufferInfos(vector<InternalBufferInfo>) override;
 	int size;
@@ -80,6 +95,12 @@ public:
 	// 모든 버퍼의 내용을 nand에 기록합니다.
 	void flush();
 
+	void fillEmptyBuffers();
+
+	void writeAllBufferFiles(std::vector<std::string>& old_names);
+
+	void updateNandData(std::vector<std::string>& datas);
+
 	// empty가 아닌 버퍼의 개수를 리턴합니다.
 	int getUsedBufferCount();
 private:
@@ -105,18 +126,6 @@ private:
 
 	void fillBufferInfo(string fname, int buf_idx);
 
-	void parseEmptyBufferByFileName(int buf_idx, const string& fname);
-
-	void setEmptyBufferInfo(int buf_idx);
-
-	void parseEraseBufferByFileName(int buf_idx, const string& fname);
-
-	void setEraseBufferInfo(int buf_idx, int lba, int size);
-
-	void parseWriteBufferByFileName(int buf_idx, const string& fname);
-
-	void setWriteBufferInfo(int buf_idx, int lba, const std::string& written_data);
-
 	CMD_TYPE getBufferTypeFromFilenames(const string& fname);
 
 	// 버퍼가 5개가 가득 찬 경우 true를 리턴합니다.
@@ -129,9 +138,8 @@ private:
 
 	void updateBuffer();
 
+	vector<string> getOldFileNames();
+
 	void initInternalBuffers();
-	void fillEmptyBufferInfo(int buffer_idx);
-	void fillWriteBufferInfo(int write_lba, int buffer_idx);
-	void fillEraseBufferInfo(int buffer_idx, int erase_start, int erase_count);
 	inline bool isLastLBA(int lba) { return lba == MAX_LBA; }
 };

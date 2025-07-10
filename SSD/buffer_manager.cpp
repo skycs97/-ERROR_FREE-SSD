@@ -4,6 +4,9 @@
 #include <sstream>
 #include <iomanip>
 
+const std::regex WriteBufferInfo::fileNameRegex = std::regex{ R"([1-5]_W_([0-9]*)_(0x[0-9A-Fa-f]+))" };
+const std::regex EraseBufferInfo::fileNameRegex = std::regex{ R"([1-5]_E_([0-9]*)_([0-9]+))" };
+
 void WriteBufferInfo::updateInternalBufferInfos(vector<InternalBufferInfo> internalBufferInfos) {
 	internalBufferInfos[lba].cmd = CMD_WRITE;
 	internalBufferInfos[lba].data = written_data;
@@ -97,13 +100,10 @@ void BufferManager::updateInternalBufferState()
 }
 
 CMD_TYPE BufferManager::getBufferTypeFromFilenames(const string& fname) {
-	std::regex writeRegex(R"([1-5]_W_([0-9]*)_(0x[0-9A-Fa-f]+))");
-	std::regex eraseRegex(R"([1-5]_E_([0-9]*)_([0-9]+))");
-
-	if (std::regex_match(fname, writeRegex)) {
+	if (std::regex_match(fname, WriteBufferInfo::fileNameRegex)) {
 		return CMD_WRITE;
 	}
-	else if (std::regex_match(fname, eraseRegex)) {
+	else if (std::regex_match(fname, EraseBufferInfo::fileNameRegex)) {
 		return CMD_ERASE;
 	}
 	return INVALID_VALUE;
@@ -115,62 +115,19 @@ void BufferManager::fillBufferInfo(string fname, int buf_idx)
 
 	CMD_TYPE bufferType = getBufferTypeFromFilenames(fname);
 	if (bufferType == CMD_WRITE) {
-		parseWriteBufferByFileName(buf_idx, fname);
+		buffers[buf_idx] = new WriteBufferInfo(fname);
 		return;
 	}
 	if (bufferType == CMD_ERASE) {
-		parseEraseBufferByFileName(buf_idx, fname);
+		buffers[buf_idx] = new EraseBufferInfo(fname);
 		return;
 	}
 	if (bufferType == INVALID_VALUE) {
-		parseEmptyBufferByFileName(buf_idx, fname);
+		buffers[buf_idx] = new EmptyBufferInfo();
 		return;
 	}
 }
 
-void BufferManager::parseEmptyBufferByFileName(int buf_idx, const string& fname)
-{
-	setEmptyBufferInfo(buf_idx);
-}
-
-void BufferManager::setEmptyBufferInfo(int buf_idx)
-{
-	if (buf_idx < 0 || buf_idx >= BUFFER_SIZE) throw std::exception("invalid buffer_num.");
-	buffers[buf_idx] = new EmptyBufferInfo();
-}
-
-void BufferManager::parseEraseBufferByFileName(int buf_idx, const string& fname)
-{
-	std::regex eraseRegex(R"([1-5]_E_([0-9]*)_([0-9]+))");
-	std::smatch m;
-	std::regex_search(fname, m, eraseRegex);
-	int lba = std::atoi(m.str(1).c_str())/*LBA*/;
-	int size = std::atoi(m.str(2).c_str())/*erase size*/;
-	setEraseBufferInfo(buf_idx, lba, size);
-}
-
-void BufferManager::setEraseBufferInfo(int buf_idx, int lba, int size)
-{
-	if (buf_idx < 0 || buf_idx >= BUFFER_SIZE) throw std::exception("invalid buffer_num.");
-	buffers[buf_idx] = new EraseBufferInfo(lba, size);
-}
-
-void BufferManager::parseWriteBufferByFileName(int buf_idx, const string& fname)
-{
-	std::regex writeRegex(R"([1-5]_W_([0-9]*)_(0x[0-9A-Fa-f]+))");
-	std::smatch m;
-	std::regex_search(fname, m, writeRegex);
-	int lba = std::atoi(m.str(1).c_str());
-	const string& written_data = m.str(2);
-	
-	setWriteBufferInfo(buf_idx, lba, written_data);
-}
-
-void BufferManager::setWriteBufferInfo(int buf_idx, int lba, const std::string& written_data)
-{
-	if (buf_idx < 0 || buf_idx >= BUFFER_SIZE) throw std::exception("invalid buffer_num.");
-	buffers[buf_idx] = new WriteBufferInfo(lba, written_data);
-}
 bool BufferManager::isBufferFull() {
 	return getUsedBufferCount() == BUFFER_SIZE;
 }
@@ -185,7 +142,7 @@ void BufferManager::updateBuffer() {
 	int eraseStartLBA = -1;
 	bool meetErase = false;
 	vector<int> write_lbas;
-
+	vector<string> old_names = getOldFileNames();
 	int buf_idx = MIN_LBA;
 	for (int internalBufferIdx = MIN_LBA; internalBufferIdx <= MAX_LBA; internalBufferIdx++) {
 		InternalBufferInfo& internalBuffer = internalBuffers[internalBufferIdx];
@@ -199,7 +156,8 @@ void BufferManager::updateBuffer() {
 					fillEraseBufferInfo(buf_idx, eraseStartLBA, 1);
 			}
 			else if (internalBuffer.cmd == CMD_WRITE) {
-				fillWriteBufferInfo(internalBufferIdx, buf_idx);
+				string data = internalBuffer.data;
+				buffers[buf_idx] = new WriteBufferInfo(internalBufferIdx, data);
 				buf_idx++;
 			}
 		}
@@ -212,10 +170,11 @@ void BufferManager::updateBuffer() {
 			if (internalBuffer.cmd == INVALID_VALUE) {
 				// erase 가 끝나면, eraseBuffer를 기록하고, 그 사이에 지나친 write 들도 기록합니다.
 				int erase_count = internalBufferIdx - eraseStartLBA;
-				fillEraseBufferInfo(buf_idx, eraseStartLBA, erase_count);
+				buffers[buf_idx] = new EraseBufferInfo(eraseStartLBA, erase_count);
 				buf_idx++;
 				for (int write_lba : write_lbas) {
-					fillWriteBufferInfo(write_lba, buf_idx);
+					string data = internalBuffers[write_lba].data;
+					buffers[buf_idx] = new WriteBufferInfo(write_lba, data);
 					buf_idx++;
 				}
 				meetErase = false;
@@ -224,10 +183,11 @@ void BufferManager::updateBuffer() {
 			if (meetErase == true && (internalBufferIdx == MAX_LBA || internalBufferIdx - eraseStartLBA == 9)) {
 				// erase 가 끝나면, eraseBuffer를 기록하고, 그 사이에 지나친 write 들도 기록합니다.
 				int erase_count = internalBufferIdx - eraseStartLBA + 1;
-				fillEraseBufferInfo(buf_idx, eraseStartLBA, erase_count);
+				buffers[buf_idx] = new EraseBufferInfo(eraseStartLBA, erase_count);
 				buf_idx++;
 				for (int write_lba : write_lbas) {
-					fillWriteBufferInfo(write_lba, buf_idx);
+					string data = internalBuffers[write_lba].data;
+					buffers[buf_idx] = new WriteBufferInfo(write_lba, data);
 					buf_idx++;
 				}
 				meetErase = false;
@@ -236,34 +196,17 @@ void BufferManager::updateBuffer() {
 	}
 	
 	valid_buf_cnt = buf_idx;
-	for (; buf_idx < BUFFER_SIZE; buf_idx++) {
-		fillEmptyBufferInfo(buf_idx);
+	fillEmptyBuffers();
+	writeAllBufferFiles(old_names);
+}
+
+vector<string> BufferManager::getOldFileNames()
+{
+	vector<string> old_names;
+	for (int i = 0; i < BUFFER_SIZE; i++) {
+		old_names.push_back(buffers[i]->getFileName(i));
 	}
-}
-
-void BufferManager::fillEmptyBufferInfo(int buf_idx)
-{
-	string old_name = buffers[buf_idx]->getFileName(buf_idx);
-	setEmptyBufferInfo(buf_idx);
-	string new_name = buffers[buf_idx]->getFileName(buf_idx);
-	writeBufferFile(old_name, new_name);
-}
-
-void BufferManager::fillWriteBufferInfo(int write_lba, int buf_idx)
-{
-	string old_name = buffers[buf_idx]->getFileName(buf_idx);
-	string data = internalBuffers[write_lba].data;
-	setWriteBufferInfo(buf_idx, write_lba, data);
-	string new_name = buffers[buf_idx]->getFileName(buf_idx);
-	writeBufferFile(old_name, new_name);
-}
-
-void BufferManager::fillEraseBufferInfo(int buf_idx, int erase_start, int erase_count)
-{
-	string old_name = buffers[buf_idx]->getFileName(buf_idx);
-	setEraseBufferInfo(buf_idx, erase_start, erase_count);
-	string new_name = buffers[buf_idx]->getFileName(buf_idx);
-	writeBufferFile(old_name, new_name);
+	return old_names;
 }
 
 void BufferManager::addWriteCommand(int lba, const string& data) {
@@ -290,23 +233,39 @@ void BufferManager::addEraseCommand(int lba, int count) {
 
 void BufferManager::flush() {
 	vector<string> datas = nandFlashMemory->read();
-
-	// nand 에 쓸 데이터 업데이트
-	for (int index = 0; index < 100; index++) {
-		if (internalBuffers[index].cmd == INVALID_VALUE) continue;
-		datas[index] = internalBuffers[index].data;
-	}
-
-	// 내부 버퍼 초기화
+	updateNandData(datas);
 	initInternalBuffers();
 
-	// 외부 버퍼 초기화
-	int buf_cnt = getUsedBufferCount();
-	for (int buf_idx = 0; buf_idx < buf_cnt; buf_idx++) {
-		fillEmptyBufferInfo(buf_idx);
-	}
-	nandFlashMemory->write(datas);
+	vector<string> old_names = getOldFileNames();
 	valid_buf_cnt = 0;
+	fillEmptyBuffers();
+	writeAllBufferFiles(old_names);
+
+	nandFlashMemory->write(datas);
+}
+
+void BufferManager::fillEmptyBuffers()
+{
+	for (int buf_idx = getUsedBufferCount(); buf_idx < BUFFER_SIZE; buf_idx++) {
+		buffers[buf_idx] = new EmptyBufferInfo();
+	}
+}
+
+void BufferManager::writeAllBufferFiles(std::vector<std::string>& old_names)
+{
+	for (int i = 0; i < BUFFER_SIZE; i++) {
+		const string& new_name = buffers[i]->getFileName(i);
+		const string& old_name = old_names[i];
+		writeBufferFile(old_name, new_name);
+	}
+}
+
+void BufferManager::updateNandData(std::vector<std::string>& outData)
+{
+	for (int index = 0; index < 100; index++) {
+		if (internalBuffers[index].cmd == INVALID_VALUE) continue;
+		outData[index] = internalBuffers[index].data;
+	}
 }
 
 void BufferManager::initInternalBuffers()
