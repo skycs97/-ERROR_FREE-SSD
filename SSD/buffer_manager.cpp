@@ -188,11 +188,7 @@ void BufferManager::updateBuffer() {
 			}
 		}
 		else {
-			if (internalBuffer.cmd == CMD_WRITE) {
-				// erase 사이에 등장한 write는 따로 기록해 둡니다.
-				write_lbas.push_back(internalBufferIdx);
-			}
-			else if (internalBuffer.cmd == INVALID_VALUE) {
+			if (internalBuffer.cmd == INVALID_VALUE) {
 				// erase 가 끝나면, eraseBuffer를 기록하고, 그 사이에 지나친 write 들도 기록합니다.
 				int erase_count = internalBufferIdx - eraseStartLBA;
 				fillEraseBufferInfo(buf_idx, eraseStartLBA, erase_count);
@@ -203,8 +199,11 @@ void BufferManager::updateBuffer() {
 				}
 				meetErase = false;
 			}
-
-			if (internalBufferIdx == 99 || internalBufferIdx - eraseStartLBA == 9) {
+			else if (internalBufferIdx == 99 || internalBufferIdx - eraseStartLBA == 9) {
+				if (internalBuffer.cmd == CMD_WRITE) {
+					// erase 사이에 등장한 write는 따로 기록해 둡니다.
+					write_lbas.push_back(internalBufferIdx);
+				}
 				// erase 가 끝나면, eraseBuffer를 기록하고, 그 사이에 지나친 write 들도 기록합니다.
 				int erase_count = internalBufferIdx - eraseStartLBA + 1;
 				fillEraseBufferInfo(buf_idx, eraseStartLBA, erase_count);
