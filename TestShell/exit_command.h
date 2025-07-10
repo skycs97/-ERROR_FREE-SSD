@@ -5,7 +5,6 @@
 class ExitCommand : public Command {
 public:
 	void run(const CommandRunner& cmdRunner) const override;
-	void printHelp() const override;
 private:
 	ExitCommand(const std::vector<std::string>& args);
 
@@ -16,3 +15,8 @@ class ExitCommandFactory : public CommandFactory {
 public:
 	std::shared_ptr<Command> makeCommand(const string& cmdName, const std::vector<string>& args) override;
 };
+
+const std::string CMD_EXIT_HELP =
+	" - Exit Test Shell .\n"
+	"Usage\n"
+	" exit\n";

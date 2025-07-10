@@ -42,15 +42,6 @@ void PartialLBAWriteCommand::run(const CommandRunner& cmdRunner) const
 	printPass();
 }
 
-void PartialLBAWriteCommand::printHelp() const
-{
-	std::cout << "** Partial LBA Write Command **\n";
-	std::cout << " - Write a specific value to several LBAs and then read it to check the value.\n";
-	std::cout << "Usage\n";
-	std::cout << " 2_PartialLBAWrite\n";
-	std::cout << " 2_\n";
-}
-
 std::shared_ptr<Command> PartialLBAWriteCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
 	if (cmdName != CMD_2_PARTIAL_LBA_WRITE) return nullptr;

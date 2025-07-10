@@ -14,14 +14,6 @@ void ExitCommand::run(const CommandRunner& cmdRunner) const
 	exit(0);
 }
 
-void ExitCommand::printHelp() const
-{
-	std::cout << "** Exit Shell Command **\n";
-	std::cout << " - Exit Test Shell .\n";
-	std::cout << "Usage\n";
-	std::cout << " exit\n";
-}
-
 std::shared_ptr<Command> ExitCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
 	if (cmdName != CMD_EXIT) return nullptr;

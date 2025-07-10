@@ -18,7 +18,6 @@ public:
 	void printPass(void) const;
 
 	virtual void run(const CommandRunner& cmdRunner) const = 0;
-	virtual void printHelp(void) const = 0;
 protected:
 	int numOfArgs;
 	string cmdName;
