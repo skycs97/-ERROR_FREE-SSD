@@ -38,7 +38,7 @@ void EraseCommand::printResult(const string& result, const string& lba) const
 bool EraseCommand::checkLbaRange(int startLBAIndex, int range) const
 {
 	if (isValidLba(startLBAIndex) == false) { return false; }
-	if (isValidLba(range + startLBAIndex) == false) { return false; }
+	if (isValidLba(range + startLBAIndex -1) == false) { return false; }
 
 	return true;
 }
