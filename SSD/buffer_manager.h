@@ -50,7 +50,8 @@ private:
 	int valid_buf_cnt{ 0 };
 
 	// init step
-	bool existBufferFile(int bufIndex);
+	bool existEmptyBufferFile(int bufIndex);
+	bool existNonEmptyBufferFile(int bufIndex);
 	void createEmptyBufferFile(int bufIndex);
 	string getBufferFilePrefix(int bufIndex);
 	void updateBufferState(int bufIndex);
@@ -69,8 +70,8 @@ private:
 	inline bool isLastLBA(int lba) { return lba == MAX_LBA; }
 	void setInternalBufferWrite(int lba, const std::string& data);
 	void SetInternalBufferErase(int lba, int count);
-	void WriteUpdatedBufferFiles();
-	void writeEmptyBufferFiles();
+	void updateBufferFiles();
+	void updateBufferFilesAllEmpty();
 	void fillEmptyBuffers();
 	void writeAllBufferFiles(std::vector<std::string>& old_names);
 	void updateNandData(std::vector<std::string>& datas);
