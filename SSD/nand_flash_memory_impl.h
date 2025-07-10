@@ -17,4 +17,6 @@ private:
 	vector<string> convertToVectorStringFormat(const char* data);
 
 	void removeLastSpaceChar(vector<string>& datas);
+
+	string getRawDataFormatForNandWrite(vector<string>* datas);
 };
