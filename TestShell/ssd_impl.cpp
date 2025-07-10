@@ -2,45 +2,66 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <sstream>
 #include "ssd_impl.h"
 #include "TEST_SHELL_CONFIG.h"
 
-string SsdImpl::read(const string& index)
+string SsdImpl::read(const string& LBA)
 {
-	string cmd = ssdExcutable + " R " + index;
+    string cmd = makeReadCommand(LBA);
 
-	int processRet = system(cmd.c_str());
-
-    // 읽기 모드로 파일 열기
-    std::ifstream inputFile(ssdOutputPath);
-    std::string line;
-
-    if (inputFile.is_open() == false) {
-        return ERROR;
-    }
-    getline(inputFile, line);
-    inputFile.close();
-
-    return line;
+    return executeSsd(cmd);
 }
 
-string SsdImpl::write(const string& index, const string& data)
+string SsdImpl::write(const string& LBA, const string& data)
 {
-    string cmd = ssdExcutable + " W " + index + " " + data;
+    string cmd = makeWriteCommand(LBA, data);
 
-    int processRet = system(cmd.c_str());
+    return executeSsd(cmd);
+}
 
-    // 읽기 모드로 파일 열기
-    std::ifstream inputFile(ssdOutputPath);
-    std::string line;
+string SsdImpl::flush() {
+    string cmd = makeFlushCommand();
 
-    if (inputFile.is_open() == false) {
-        return ERROR;
-    }
-    getline(inputFile, line);
-    inputFile.close();
+    return executeSsd(cmd);
+}
 
-    return line;
+std::string SsdImpl::cmdJoin(std::vector<std::string> const& strings)
+{
+    std::string delim = " ";
+    std::stringstream ss;
+    std::copy(strings.begin(), strings.end(),
+        std::ostream_iterator<std::string>(ss, delim.c_str()));
+
+    return ss.str();
+}
+
+string SsdImpl::makeReadCommand(const string& LBA) {
+    vector<string> cmds;
+    cmds.push_back(ssdExcutable);
+    cmds.push_back("R");
+    cmds.push_back(LBA);
+
+    return cmdJoin(cmds);
+}
+
+string SsdImpl::makeWriteCommand(const string& LBA, const string& data) {
+    vector<string> cmds;
+
+    cmds.push_back(ssdExcutable);
+    cmds.push_back("W");
+    cmds.push_back(LBA);
+    cmds.push_back(data);
+
+    return cmdJoin(cmds);
+}
+string SsdImpl::makeFlushCommand() {
+    vector<string> cmds;
+
+    cmds.push_back(ssdExcutable);
+    cmds.push_back("F");
+
+    return cmdJoin(cmds);
 }
 
 string SsdImpl::erase(const string& startIndex, const string& range)
@@ -70,18 +91,23 @@ string SsdImpl::erase(const string& startIndex, const string& range)
 
 string SsdImpl::flush() {
     string cmd = ssdExcutable + " F";
+string SsdImpl::executeSsd(string ssdCmd) {
+    int processRet = system(ssdCmd.c_str());
 
-    int processRet = system(cmd.c_str());
+    return checkSsdResult();
+}
 
-    // 읽기 모드로 파일 열기
+string SsdImpl::checkSsdResult() {
     std::ifstream inputFile(ssdOutputPath);
     std::string line;
 
     if (inputFile.is_open() == false) {
         return ERROR;
     }
+
     getline(inputFile, line);
     inputFile.close();
 
     return line;
 }
+
