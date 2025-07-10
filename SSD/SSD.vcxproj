@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="buffer_info.cpp" />
     <ClCompile Include="buffer_manager.cpp" />
     <ClCompile Include="buffer_manager_test.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> %(AdditionalOptions)</AdditionalOptions>
@@ -166,7 +167,6 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="ssd_command.cpp" />
-    <ClCompile Include="ssd_command_test.cpp" />
     <ClCompile Include="write_command.cpp" />
     <ClCompile Include="write_command_test.cpp" />
     <ClCompile Include="ssd.cpp" />
@@ -198,6 +198,7 @@
     <ClInclude Include="flush_command.h" />
     <ClInclude Include="output_handler.h" />
     <ClInclude Include="ssd.h" />
+    <ClInclude Include="buffer_info.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="nand_flash_memory.h" />
