@@ -25,9 +25,7 @@ void NandFlashMemoryImpl::init()
 
 vector<string> NandFlashMemoryImpl::read() {
 	char* read_buf = fileHandler->readFile(NAND_FILENAME);
-	vector<string> datas = convertToLines(read_buf);
-	delete read_buf;
-
+	vector<string> datas = convertToVectorStringFormat(read_buf);
 	return datas;
 }
 
@@ -48,7 +46,7 @@ string NandFlashMemoryImpl::write(vector<string>& datas) {
 	return "";
 }
 
-vector<string> NandFlashMemoryImpl::convertToLines(const char* data) {
+vector<string> NandFlashMemoryImpl::convertToVectorStringFormat(const char* data) {
 	vector<string> lines;
 	std::istringstream iss(data);
 	string line;

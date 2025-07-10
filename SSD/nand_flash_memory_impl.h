@@ -14,5 +14,5 @@ public:
 private:
 	FileHandler* fileHandler;
 
-	vector<string> convertToLines(const char* data);
+	vector<string> convertToVectorStringFormat(const char* data);
 };

@@ -4,7 +4,7 @@
 #include "nand_flash_memory.h"
 #include "nand_flash_memory_impl.h"
 #include "buffer_manager.h"
-#include "file_handler.h"
+#include "file_handler_impl.h"
 
 using ::testing::Test;
 
@@ -12,7 +12,7 @@ class SSDCommandTestFixture : public Test {
 public:
 	SSDCommandTestFixture() {
 		// Create result IO instance
-		FileHandler* fileHandler = new FileHandler();
+		FileHandler* fileHandler = new FileHandlerImpl();
 		OutputHandler* outputHandler = new OutputHandler(fileHandler);
 
 		// Create nand IO instance

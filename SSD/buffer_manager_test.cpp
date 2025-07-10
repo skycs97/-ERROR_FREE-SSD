@@ -1,4 +1,5 @@
-﻿#include "gmock/gmock.h"
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include "gmock/gmock.h"
 #include "buffer_manager.h"
 #include "file_handler_mock.h"
 #include "nand_flash_memory_impl.h"
@@ -7,41 +8,34 @@ using namespace testing;
 class BufferManagerFixture : public Test {
 protected:
 	void SetUp() override {
-		nandData = getNandDataForTesting();
+		nandData = createMockNandData();
 
-		EXPECT_CALL(fileHandler, read(NAND_FILENAME))
+		EXPECT_CALL(fileHandler, readFile(NAND_FILENAME))
 			.WillRepeatedly(Return(nandData));
 	}
+
 public:
+	char* createMockNandData() {
+		std::ostringstream oss;
+		for (int i = MIN_LBA; i <= MAX_LBA; i++) {
+			oss << std::setw(2) << std::setfill('0') << std::dec << i << '\t'
+				<< "0x" << std::setw(8) << std::setfill('0') << std::hex << std::uppercase << 0
+				<< '\n';
+		}
+
+		std::string str = oss.str();
+
+		// 동적 메모리 할당 (null-terminated)
+		char* nandData = new char[str.size() + 1];
+		std::strcpy(nandData, str.c_str());
+
+		return nandData;
+	}
+
 	NiceMock<FileHandlerMock> fileHandler;
 	NandFlashMemoryImpl nand{ &fileHandler };
 	BufferManager manager{ &nand, &fileHandler };
-	vector<string> nandData;
-	/*
-	* 아래와 같은 값이 nand에 쓰여져 있다고 생각하고 값을 출력합니다.
-	* 0	0x00000001
-	* 1	0x00000002
-	* ...
-	* 99 0x0000063
-	*/
-	vector<string> getNandDataForTesting() {
-		vector<string> ret;
-		for (int i = 0; i < 100; i++) {
-			std::ostringstream oss;
-			// 10진수와 탭
-			oss << i << '\t'
-				// "0x" 접두사
-				<< "0x"
-				// 16진수, 소문자, 폭 8, '0' 채움
-				<< std::hex << std::nouppercase << std::setw(8) << std::setfill('0')
-				<< i;
-			// 다시 10진수 모드로 복원(다음 루프에서 안전하게 사용하기 위해)
-			oss << std::dec;
-
-			ret.push_back(oss.str());
-		}
-		return ret;
-	}
+	char* nandData;
 };
 
 TEST_F(BufferManagerFixture, WriteAndReadTest) {
@@ -199,10 +193,11 @@ TEST_F(BufferManagerFixture, FileNameTest2) {
 }
 
 TEST_F(BufferManagerFixture, InitEraseAndEraseTest) {
-	EXPECT_CALL(fileHandler, isExist(_, _, _))
+	EXPECT_CALL(fileHandler, isFileExistByMatchLength(_, _, _))
+		.WillOnce(Return(false))
 		.WillOnce(Return(true))
 		.WillRepeatedly(Return(false));
-	EXPECT_CALL(fileHandler, findFileUsingPrefix)
+	EXPECT_CALL(fileHandler, getFileUsingPrefix)
 		.WillOnce(Return(vector<string>{"1_E_0_3"}));
 	EXPECT_CALL(fileHandler, rename("buffer\\1_E_0_3", "buffer\\1_E_0_5"))
 		.Times(1);
@@ -212,10 +207,11 @@ TEST_F(BufferManagerFixture, InitEraseAndEraseTest) {
 }
 
 TEST_F(BufferManagerFixture, InitWriteAndEraseTest) {
-	EXPECT_CALL(fileHandler, isExist(_, _, _))
+	EXPECT_CALL(fileHandler, isFileExistByMatchLength(_, _, _))
+		.WillOnce(Return(false))
 		.WillOnce(Return(true))
 		.WillRepeatedly(Return(false));
-	EXPECT_CALL(fileHandler, findFileUsingPrefix)
+	EXPECT_CALL(fileHandler, getFileUsingPrefix)
 		.WillOnce(Return(vector<string>{"1_W_0_0x11112222"}));
 	EXPECT_CALL(fileHandler, rename("buffer\\1_W_0_0x11112222", "buffer\\1_E_0_5"))
 		.Times(1);
