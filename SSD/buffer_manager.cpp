@@ -51,7 +51,7 @@ void BufferManager::init() {
 	for (int buf_idx = 0; buf_idx < BUFFER_SIZE; buf_idx++)
 	{
 		if (existBufferFile(buf_idx)) updateBufferState(buf_idx);
-		else createBufferFile(buf_idx);
+		else createEmptyBufferFile(buf_idx);
 	}
 }
 
@@ -66,7 +66,7 @@ bool BufferManager::existBufferFile(int buf_idx)
 	return false;
 }
 
-void BufferManager::createBufferFile(int buf_idx)
+void BufferManager::createEmptyBufferFile(int buf_idx)
 {
 	string file_name = getBufferFilePrefix(buf_idx) + BUFFER_NAME_EMPTY;
 	string file_path = BUFFER_DIR_NAME "\\";
@@ -146,7 +146,7 @@ void BufferManager::updateBuffer() {
 	vector<string> old_names = getOldFileNames();
 
 	int buf_idx = 0;
-	for (int internalBufferIdx = 0; internalBufferIdx < 100; internalBufferIdx++) {
+	for (int internalBufferIdx = 0; internalBufferIdx <= MAX_LBA; internalBufferIdx++) {
 		InternalBufferInfo& internalBuffer = internalBuffers[internalBufferIdx];
 		if (meetErase == false) {
 			if (internalBuffer.cmd == CMD_ERASE) {
@@ -178,7 +178,7 @@ void BufferManager::updateBuffer() {
 				meetErase = false;
 			}
 
-			else if (internalBufferIdx == 99 || internalBufferIdx - eraseStartLBA == 9) {
+			else if (internalBufferIdx == MAX_LBA || internalBufferIdx - eraseStartLBA + 1 == MAX_ERASE_COUNT) {
 				// erase 가 끝나면, eraseBuffer를 기록하고, 그 사이에 지나친 write 들도 기록합니다.
 				int erase_count = internalBufferIdx - eraseStartLBA + 1;
 				buffers[buf_idx] = new EraseBufferInfo(eraseStartLBA, erase_count);
@@ -231,7 +231,7 @@ void BufferManager::addEraseCommand(int lba, int count) {
 void BufferManager::flush() {
 	vector<string> datas = nandFlashMemory->read();
 	updateNandData(datas);
-	initInternalBuffers();
+	flushInternalBuffers();
 
 	vector<string> old_names = getOldFileNames();
 	valid_buf_cnt = 0;
@@ -265,7 +265,7 @@ void BufferManager::updateNandData(std::vector<std::string>& outData)
 	}
 }
 
-void BufferManager::initInternalBuffers()
+void BufferManager::flushInternalBuffers()
 {
 	for (int index = 0; index <= MAX_LBA; index++) {
 		internalBuffers[index].cmd = INVALID_VALUE;
