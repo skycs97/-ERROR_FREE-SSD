@@ -13,7 +13,6 @@ using std::ifstream;
 
 class TestShell {
 public:
-	CommandRunner runner;
 
 	static TestShell& getShell() {
 		static TestShell instance;
@@ -23,19 +22,23 @@ public:
 	void runShell(int argc, char* argv[]);
 
 private:
+	void startShellLoop();
+
 	void printTestResult(const string& result);
 	void runShellScript(const string& input);
 
 	bool parseAndRunCommand(const string& input);
+	void runShellCommand(std::shared_ptr<Command> command);
 	bool isRunShellScript(int argc);
 	bool isEmptyInput(const string& input);
 	bool isFileOpenFail(const ifstream& inputFile);
 
 	string getUserInput();
 
-	TestShell() {};
+	TestShell();
 	TestShell& operator=(const TestShell& other) = delete;
 	TestShell(const TestShell& other) = delete;
 
+	CommandRunner runner;
 	CommandParser parser;
 };

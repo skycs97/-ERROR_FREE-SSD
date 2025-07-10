@@ -20,7 +20,7 @@ TEST(CommandParserTest, ReadWithWrongArgs) {
 	CommandParser cmdParser;
 	string inputCommand = "read 0 0";
 
-	EXPECT_THROW(cmdParser.parseAndMakeShellCommand(inputCommand), TestScriptFailExcpetion);
+	EXPECT_THROW(cmdParser.parseAndMakeShellCommand(inputCommand), std::invalid_argument);
 }
 
 TEST(CommandParserTest, Write) {
@@ -35,7 +35,7 @@ TEST(CommandParserTest, WriteWithWrongArgs) {
 	CommandParser cmdParser;
 	string inputCommand = "write 0 0 0";
 
-	EXPECT_THROW(cmdParser.parseAndMakeShellCommand(inputCommand), TestScriptFailExcpetion);
+	EXPECT_THROW(cmdParser.parseAndMakeShellCommand(inputCommand), std::invalid_argument);
 }
 
 TEST(CommandParserTest, Help) {
@@ -51,7 +51,7 @@ TEST(CommandParserTest, HelpWithWrongArgs) {
 	CommandParser cmdParser;
 	string inputCommand = "help 0";
 
-	EXPECT_THROW(cmdParser.parseAndMakeShellCommand(inputCommand), TestScriptFailExcpetion);
+	EXPECT_THROW(cmdParser.parseAndMakeShellCommand(inputCommand), std::invalid_argument);
 }
 
 TEST(CommandParserTest, Exit) {
@@ -66,12 +66,12 @@ TEST(CommandParserTest, ExitWithWrongArgs) {
 	CommandParser cmdParser;
 	string inputCommand = "exit 0";
 
-	EXPECT_THROW(cmdParser.parseAndMakeShellCommand(inputCommand), TestScriptFailExcpetion);
+	EXPECT_THROW(cmdParser.parseAndMakeShellCommand(inputCommand), std::invalid_argument);
 }
 
 TEST(CommandParserTest, InValidCommand) {
 	CommandParser cmdParser;
 	string inputCommand = "R 0";
-	EXPECT_THROW(cmdParser.parseAndMakeShellCommand(inputCommand), TestScriptFailExcpetion);
+	EXPECT_THROW(cmdParser.parseAndMakeShellCommand(inputCommand), std::invalid_argument);
 }
 #endif

@@ -22,13 +22,13 @@ void WriteReadAgingCommand::run(const CommandRunner& cmdRunner) const
 		string data = rng.generateRandomUnsignedIntString();
 
 		if (WRITESUCCESS != cmdRunner.write(std::to_string(MIN_LBA), data))
-			throw TestScriptFailExcpetion(FAIL);
+			throw CommandRunFailException(FAIL);
 
 		if (WRITESUCCESS != cmdRunner.write(std::to_string(MAX_LBA), data))
-			throw TestScriptFailExcpetion(FAIL);
+			throw CommandRunFailException(FAIL);
 
 		if (cmdRunner.read(std::to_string(MIN_LBA)) != cmdRunner.read(std::to_string(MAX_LBA)))
-			throw TestScriptFailExcpetion(FAIL);
+			throw CommandRunFailException(FAIL);
 	}
 
 	std::cout << "Pass" << std::endl;

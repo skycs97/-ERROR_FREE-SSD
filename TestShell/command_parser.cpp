@@ -19,9 +19,7 @@ std::shared_ptr<Command> CommandParser::parseAndMakeShellCommand(const std::stri
 	auto cmd = makeCommand(cmdName, args);
 
 	if (cmd == nullptr)
-		throw TestScriptFailExcpetion("Invalid command");;
-	if (cmd->getNumOfArgs() != args.size())		
-		throw TestScriptFailExcpetion("Invalid arguments");;
+		throw std::invalid_argument("Invalid command");
 
 	return cmd;
 }

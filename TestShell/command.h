@@ -22,9 +22,9 @@ protected:
 	string cmdName;
 };
 
-class TestScriptFailExcpetion : public std::exception {
+class CommandRunFailException : public std::exception {
 public:
-	TestScriptFailExcpetion(const std::string& msg) : message(msg) {};
+	CommandRunFailException(const std::string& msg) : message(msg) {};
 	const char* what() const noexcept override {
 		return message.c_str();
 	}
