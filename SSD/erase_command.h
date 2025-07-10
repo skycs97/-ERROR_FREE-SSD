@@ -19,7 +19,7 @@ public:
 	void erase(int lba, int size);
 
 private:
-
+	bool isInvalidNumber(const string& str);
 	bool isInvalidAddress();
 	bool isInvalidEraseCount();
 	bool isInvalidEraseRange();

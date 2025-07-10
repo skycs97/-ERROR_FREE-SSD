@@ -146,6 +146,7 @@
     <ClCompile Include="output_handler.cpp" />
     <ClCompile Include="output_handler_test.cpp" />
     <ClCompile Include="ssd_command.cpp" />
+    <ClCompile Include="ssd_command_test.cpp" />
     <ClCompile Include="write_command.cpp" />
     <ClCompile Include="write_command_test.cpp" />
     <ClCompile Include="ssd.cpp" />

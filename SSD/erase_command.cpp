@@ -1,12 +1,24 @@
+#include <string>
 #include "erase_command.h"
+
+using std::string;
+using std::stoi;
+
+bool EraseCommand::isInvalidNumber(const string& str) {
+	return (str.find_first_not_of("0123456789") != string::npos);
+}
 
 void EraseCommand::parseArg(int argc, const char* argv[])
 {
 	if (argc != ERASE_CORRECT_ARG_SIZE) throw std::invalid_argument("number of argument is incorrect");
-	startLBA = atoi(argv[ARG_IDX_ERASE_START_ADDR]);
-	count = atoi(argv[ARG_IDX_ERASE_COUNT]);
-	if (isInvalidAddress()) throw std::invalid_argument("Out of range");
 
+	if (isInvalidNumber(string(argv[ARG_IDX_ERASE_START_ADDR]))) throw std::invalid_argument("Not a number in address");
+	startLBA = stoi(argv[ARG_IDX_ERASE_START_ADDR]);
+
+	if (isInvalidNumber(string(argv[ARG_IDX_ERASE_COUNT]))) throw std::invalid_argument("Not a number in count");
+	count = stoi(argv[ARG_IDX_ERASE_COUNT]);
+
+	if (isInvalidAddress()) throw std::invalid_argument("Out of range");
 	if (isInvalidEraseCount()) throw std::invalid_argument("Invalid erase LBA count");
 	if (isInvalidEraseRange()) throw std::invalid_argument("The erase range exceeds the MAX_LBA");
 }

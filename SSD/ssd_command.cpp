@@ -8,8 +8,6 @@ using std::string;
 
 SSDCommand* SSDCommandFactory::createCommand(const string& cmdName, NandFlashMemory* nandFlashMemory, BufferManager* bufferManager)
 {
-
-
 	if (isReadCmd(cmdName)) return new ReadCommand(nandFlashMemory, bufferManager);
 	else if (isWriteCmd(cmdName)) return new WriteCommand(nandFlashMemory, bufferManager);
 	else if (isEraseCmd(cmdName)) return new EraseCommand(nandFlashMemory, bufferManager);
