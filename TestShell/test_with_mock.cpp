@@ -228,4 +228,18 @@ TEST_F(TestShellFixtureWithMock, CmdRunnerEraseRange) {
 
 		command->run(runner);
 }
+
+TEST_F(TestShellFixtureWithMock, EraseAndWriteAging) {
+	auto command = parser.parseAndMakeShellCommand("4_");
+
+	EXPECT_CALL(mockStorage, write(_, _))
+		.Times(2940)
+		.WillRepeatedly(Return(""));
+
+	EXPECT_CALL(mockStorage, erase(_, _))
+		.Times(1471)
+		.WillRepeatedly(Return(""));
+
+	command->run(runner);
+}
 #endif
