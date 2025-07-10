@@ -55,30 +55,30 @@ void BufferManager::updateInternalBufferState()
 {
 	for (int buf_idx = 0; buf_idx < BUFFER_SIZE; buf_idx++) {
 		if (buffers[buf_idx].cmd == CMD_WRITE) {
-			fillInternalBufferWrite(buf_idx);
+			int lba = buffers[buf_idx].lba;
+			const string& data = buffers[buf_idx].written_data;
+			fillInternalBufferWrite(lba, data);
 		}
 		else if (buffers[buf_idx].cmd == CMD_ERASE) {
-			fillInternalBufferErase(buf_idx);
+			int lba = buffers[buf_idx].lba;
+			int size = buffers[buf_idx].erase_size;
+			fillInternalBufferErase(lba, size);
 		}
 
 		if (buffers[buf_idx].cmd == INVALID_VALUE) break;
 	}
 }
 
-void BufferManager::fillInternalBufferErase(int buf_idx)
+void BufferManager::fillInternalBufferErase(int lba, int size)
 {
-	int lba = buffers[buf_idx].lba;
-	int size = buffers[buf_idx].erase_size;
 	for (int count = 0; count < size; count++) {
 		internalBuffers[lba + count].cmd = CMD_ERASE;
 		internalBuffers[lba + count].data = NAND_DATA_EMPTY;
 	}
 }
 
-void BufferManager::fillInternalBufferWrite(int buf_idx)
+void BufferManager::fillInternalBufferWrite(int lba, const string& data)
 {
-	int lba = buffers[buf_idx].lba;
-	const string& data = buffers[buf_idx].written_data;
 	internalBuffers[lba].cmd = CMD_WRITE;
 	internalBuffers[lba].data = data;
 }
@@ -102,18 +102,25 @@ void BufferManager::fillBufferInfo(string fname, int buf_idx)
 
 	CMD_TYPE bufferType = getBufferTypeFromFilenames(fname);
 	if (bufferType == CMD_WRITE) {
-		setWriteBufferInfo(buf_idx, fname);
+		parseWriteBufferByFileName(buf_idx, fname);
 		return;
 	}
 	if (bufferType == CMD_ERASE) {
-		setEraseBufferInfo(buf_idx, fname);
+		parseEraseBufferByFileName(buf_idx, fname);
 		return;
 	}
-	setEmptyBufferInfo(buf_idx, fname);
-	return;
+	if (bufferType == INVALID_VALUE) {
+		parseEmptyBufferByFileName(buf_idx, fname);
+		return;
+	}
 }
 
-void BufferManager::setEmptyBufferInfo(int buf_idx, const string& fname)
+void BufferManager::parseEmptyBufferByFileName(int buf_idx, const string& fname)
+{
+	setEmptyBufferInfo(buf_idx);
+}
+
+void BufferManager::setEmptyBufferInfo(int buf_idx)
 {
 	setBufferInfo(buf_idx,
 		INVALID_VALUE,
@@ -122,27 +129,41 @@ void BufferManager::setEmptyBufferInfo(int buf_idx, const string& fname)
 		INVALID_VALUE);
 }
 
-void BufferManager::setEraseBufferInfo(int buf_idx, const string& fname)
+void BufferManager::parseEraseBufferByFileName(int buf_idx, const string& fname)
 {
 	std::regex eraseRegex(R"([1-5]_E_([0-9]*)_([0-9]+))");
 	std::smatch m;
 	std::regex_search(fname, m, eraseRegex);
-	setBufferInfo(buf_idx,
-		CMD_ERASE,
-		std::atoi(m.str(1).c_str())/*LBA*/,
-		""/*data*/,
-		std::atoi(m.str(2).c_str())/*erase size*/);
+	int lba = std::atoi(m.str(1).c_str())/*LBA*/;
+	int size = std::atoi(m.str(2).c_str())/*erase size*/;
+	setEraseBufferInfo(buf_idx, lba, size);
 }
 
-void BufferManager::setWriteBufferInfo(int buf_idx, const string& fname)
+void BufferManager::setEraseBufferInfo(int buf_idx, int lba, int size)
+{
+	setBufferInfo(buf_idx,
+		CMD_ERASE,
+		lba,
+		""/*data*/,
+		size);
+}
+
+void BufferManager::parseWriteBufferByFileName(int buf_idx, const string& fname)
 {
 	std::regex writeRegex(R"([1-5]_W_([0-9]*)_(0x[0-9A-Fa-f]+))");
 	std::smatch m;
 	std::regex_search(fname, m, writeRegex);
+	int lba = std::atoi(m.str(1).c_str())/*LBA*/;
+	const string& written_data = m.str(2)/*data*/;
+	setWriteBufferInfo(buf_idx, lba, written_data);
+}
+
+void BufferManager::setWriteBufferInfo(int buf_idx, int lba, const std::string& written_data)
+{
 	setBufferInfo(buf_idx,
 		CMD_WRITE,
-		std::atoi(m.str(1).c_str())/*LBA*/,
-		m.str(2)/*data*/,
+		lba,
+		written_data/*data*/,
 		INVALID_VALUE/*erase size*/);
 }
 
@@ -247,26 +268,26 @@ string BufferInfo::getFileName(int buf_idx) {
 void BufferManager::fillEmptyBufferInfo(int buf_idx)
 {
 	string old_name = buffers[buf_idx].getFileName(buf_idx);
-	setBufferInfo(buf_idx, INVALID_VALUE, INVALID_VALUE, "", INVALID_VALUE);
+	setEmptyBufferInfo(buf_idx);
 	string new_name = buffers[buf_idx].getFileName(buf_idx);
-	writeBuffer(old_name, new_name);
+	writeBufferFile(old_name, new_name);
 }
 
 void BufferManager::fillWriteBufferInfo(int write_lba, int buf_idx)
 {
 	string old_name = buffers[buf_idx].getFileName(buf_idx);
 	string data = internalBuffers[write_lba].data;
-	setBufferInfo(buf_idx, CMD_WRITE, write_lba, data, INVALID_VALUE);
+	setWriteBufferInfo(buf_idx, write_lba, data);
 	string new_name = buffers[buf_idx].getFileName(buf_idx);
-	writeBuffer(old_name, new_name);
+	writeBufferFile(old_name, new_name);
 }
 
 void BufferManager::fillEraseBufferInfo(int buf_idx, int erase_start, int erase_count)
 {
 	string old_name = buffers[buf_idx].getFileName(buf_idx);
-	setBufferInfo(buf_idx, CMD_ERASE, erase_start, "", erase_count);
+	setEraseBufferInfo(buf_idx, erase_start, erase_count);
 	string new_name = buffers[buf_idx].getFileName(buf_idx);
-	writeBuffer(old_name, new_name);
+	writeBufferFile(old_name, new_name);
 }
 
 void BufferManager::addWriteCommand(int lba, const string& data) {
@@ -314,20 +335,23 @@ void BufferManager::flush() {
 
 void BufferManager::initInternalBuffers()
 {
-	for (int index = 0; index < 100; index++) {
-		internalBuffers[index].cmd = INVALID_VALUE;
-		internalBuffers[index].data = "";
+	for (int index = 0; index <= MAX_LBA; index++) {
+		fillInternalBufferEmpty(index);
 	}
 }
 
-void BufferManager::writeBuffer(const string& old_name, const string& new_name) {
+void BufferManager::fillInternalBufferEmpty(int index)
+{
+	internalBuffers[index].cmd = INVALID_VALUE;
+	internalBuffers[index].data = "";
+}
+
+void BufferManager::writeBufferFile(const string& old_name, const string& new_name) {
 	if (old_name == new_name){
 		return;
 	}
-	string old_path = BUFFER_DIR_NAME "\\";
-	old_path += old_name;
-	string new_path = BUFFER_DIR_NAME "\\";
-	new_path += new_name;
+	string old_path = BUFFER_DIR_NAME "\\" + old_name;
+	string new_path = BUFFER_DIR_NAME "\\" + new_name;
 	fileHandler->rename(old_path, new_path);
 }
 
