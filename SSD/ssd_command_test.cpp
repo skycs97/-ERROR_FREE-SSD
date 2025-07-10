@@ -8,9 +8,9 @@
 
 using ::testing::Test;
 
-class SSDCommandTextFixture : public Test {
+class SSDCommandTestFixture : public Test {
 public:
-	SSDCommandTextFixture() {
+	SSDCommandTestFixture() {
 		// Create result IO instance
 		FileHandler* fileHandler = new FileHandler();
 		OutputHandler* outputHandler = new OutputHandler(fileHandler);
@@ -33,7 +33,7 @@ public:
 	SSDCommandFactory* factory;
 };
 
-TEST_F(SSDCommandTextFixture, ReadCommandOutOfRangeTest) {
+TEST_F(SSDCommandTestFixture, ReadCommandOutOfRangeTest) {
 	// Arrange
 	const char* argv[] = {
 		"ssd.exe",
@@ -57,7 +57,7 @@ TEST_F(SSDCommandTextFixture, ReadCommandOutOfRangeTest) {
 	}
 }
 
-TEST_F(SSDCommandTextFixture, ReadCommandInvalidAddrTest) {
+TEST_F(SSDCommandTestFixture, ReadCommandInvalidAddrTest) {
 	// Arrange
 	const char* argv[] = {
 		"ssd.exe",
@@ -81,7 +81,7 @@ TEST_F(SSDCommandTextFixture, ReadCommandInvalidAddrTest) {
 	}
 }
 
-TEST_F(SSDCommandTextFixture, WriteCommandInvalidHexDataTest) {
+TEST_F(SSDCommandTestFixture, WriteCommandInvalidHexDataTest) {
 	// Arrange
 	const char* argv[] = {
 		"ssd.exe",
@@ -106,7 +106,7 @@ TEST_F(SSDCommandTextFixture, WriteCommandInvalidHexDataTest) {
 	}
 }
 
-TEST_F(SSDCommandTextFixture, EraseCommandInvalidCountTest) {
+TEST_F(SSDCommandTestFixture, EraseCommandInvalidCountTest) {
 	// Arrange
 	const char* argv[] = {
 		"ssd.exe",
@@ -131,7 +131,7 @@ TEST_F(SSDCommandTextFixture, EraseCommandInvalidCountTest) {
 	}
 }
 
-TEST_F(SSDCommandTextFixture, EraseCommandRangeOverTest) {
+TEST_F(SSDCommandTestFixture, EraseCommandRangeOverTest) {
 	// Arrange
 	const char* argv[] = {
 		"ssd.exe",
