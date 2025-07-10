@@ -6,6 +6,7 @@
 #include "nand_flash_memory_impl.h"
 #include "output_handler.h"
 #include "file_handler.h"
+#include "file_handler_impl.h"
 
 class SSD
 {

@@ -7,7 +7,6 @@
 void BufferManager::init() {
 	fileHandler->createDirectory(BUFFER_DIR_NAME);
 	
-
 	for (int buf_idx = 0; buf_idx < BUFFER_SIZE; buf_idx++)
 	{
 		if (existBufferFile(buf_idx)) updateBufferState(buf_idx);

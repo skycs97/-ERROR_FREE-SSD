@@ -12,9 +12,9 @@ public:
 	const char* VALID_LBA = "53";
 	const char* VALID_DATA = "0xAAAABBBB";
 	const char* INIT_DATA = "0x00000000";
-	const char* VALID_ARGV[ARGC] = { "ssd.exe", "W", VALID_LBA, VALID_DATA};
+	const char* VALID_ARGV[ARGC] = { "ssd.exe", "W", VALID_LBA, VALID_DATA };
 
-	FileHandlerMock mockedFileHandler;
+	NiceMock<FileHandlerMock> mockedFileHandler;
 	NandFlashMemoryMock nand;
 	BufferManager bufferManager{ &nand, &mockedFileHandler };
 	WriteCommand writeCommand{ &nand, &bufferManager };

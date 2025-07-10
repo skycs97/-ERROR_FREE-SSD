@@ -9,7 +9,7 @@ int main(void) {
 #include "ssd.h"
 
 int main(int argc, const char* argv[]) {
-	FileHandler* fileHandler = new FileHandler();
+	FileHandler* fileHandler = new FileHandlerImpl();
 	SSD* ssd = new SSD(fileHandler);
 	ssd->run(argc, argv);
 }

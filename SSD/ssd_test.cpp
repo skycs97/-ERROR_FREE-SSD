@@ -1,71 +1,60 @@
-﻿#include "gmock/gmock.h"
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include "gmock/gmock.h"
 #include "ssd.h"
 #include "file_handler_mock.h"
-#include "nand_flash_memory_mock.h"
-#include "nand_flash_memory_impl.h"
-#include "nand_flash_memory.h"
+
 using namespace testing;
 
 class SSDFixture : public Test {
 protected:
 	void SetUp() override {
-		nandData = getNandDataForTesting();
-		nandDataStringFormat = GetFullSameDataWithLBA("0x12341234");
-
 		EXPECT_CALL(mockedFileHandler, isFileExistByMatchLength(_, _, _))
 			.Times(1)
 			.WillOnce(Return(true));
 
-		EXPECT_CALL(mockedFileHandler, read(NAND_FILENAME))
-			.WillRepeatedly(Return(nandData));
-
+		EXPECT_CALL(mockedFileHandler, readFile(NAND_FILENAME))
+			.WillRepeatedly(Return(nullptr));
 	}
 public:
-	NiceMock<FileHandlerMock> mockedFileHandler;
-	NandFlashMemoryImpl nand{ &mockedFileHandler };
-	SSD ssd{ &mockedFileHandler };
-	vector<string> nandData;
-	string nandDataStringFormat;
-	/*
-	* 아래와 같은 값이 nand에 쓰여져 있다고 생각하고 값을 출력합니다.
-	* 0	0x00000001
-	* 1	0x00000002
-	* ...
-	* 99 0x0000063
-	*/
-	vector<string> getNandDataForTesting() {
-		vector<string> ret;
-		for (int i = 0; i < 100; i++) {
-			std::ostringstream oss;
-			// 10진수와 탭
-			oss << i << '\t'
-				// "0x" 접두사
-				<< "0x"
-				// 16진수, 소문자, 폭 8, '0' 채움
-				<< std::hex << std::nouppercase << std::setw(8) << std::setfill('0')
-				<< i;
-			// 다시 10진수 모드로 복원(다음 루프에서 안전하게 사용하기 위해)
-			oss << std::dec;
-
-			ret.push_back(oss.str());
-		}
-		return ret;
-	}
-	string getNandDataOf(const char* addr) {
-		int address = std::atoi(addr);
-		string ret = nandData.at(address);
-		int pos = ret.find("\t");
-		return ret.substr(pos + 1);
-	}
-
-	string GetFullSameDataWithLBA(string data)
-	{
+	char* createMockNandData(int lba, string data) {
 		std::ostringstream oss;
-		for (int i = MIN_LBA; i <= MAX_LBA; ++i) {
-			oss << std::setfill('0') << std::setw(2) << std::dec << i << '\t'
-				<< data << "\n";
+		for (int i = MIN_LBA; i <= MAX_LBA; i++) {
+			if (lba == i)
+			{
+				while (!data.empty() && (data.back() == '\n' || data.back() == '\r')) {
+					data.pop_back();
+				}
+				oss << std::setfill('0') << std::setw(2) << std::dec << i << '\t'
+					<< std::setfill('0') << std::setw(8) << std::hex << std::uppercase << data
+					<< '\n';
+			}
+			else
+			{
+				oss << std::setw(2) << std::setfill('0') << std::dec << i << '\t'
+					<< "0x" << std::setw(8) << std::setfill('0') << std::hex << std::uppercase << 0
+					<< '\n';
+			}
 		}
-		return oss.str();
+
+		std::string str = oss.str();
+
+		// 동적 메모리 할당 (null-terminated)
+		char* nandData = new char[str.size() + 1];
+		std::strcpy(nandData, str.c_str());
+
+		return nandData;
+	}
+
+	vector<string> convertToVectorStringFormat(const char* data) {
+		vector<string> lines;
+		std::istringstream iss(data);
+		string line;
+
+		while (std::getline(iss, line)) {
+			lines.push_back(line.substr(line.find('\t') + 1));
+		}
+
+		return lines;
 	}
 
 	const char* READ_ADDR = "1";
@@ -82,17 +71,25 @@ public:
 	const char* WRITE_COMMAND = "w";
 	const char* WRITE_SUCCESS = "";
 	const char* ERROR_MESSAGE = "ERROR";
+
+	NiceMock<FileHandlerMock> mockedFileHandler;
+	SSD ssd{ &mockedFileHandler };
+	char* nandData;
 };
 
 TEST_F(SSDFixture, run_with_r_1)
 {
 	int argc = 3;
 	const char* argv[] = { "ssd.exe", READ_COMMAND, READ_ADDR };
-	vector<string> expectedOutput = getNandDataForTesting();
-	//EXPECT_CALL(nand, write(expectedOutput))
-	//	.Times(1);
-	//EXPECT_CALL(mockedFileHandler, writeData(OUTPUT_FILENAME, nandDataStringFormat))
-	//	.Times(1);
+	nandData = createMockNandData(std::stoi(READ_ADDR), VALID_WRITE_VALUE);
+	vector<string> expectedOutput = convertToVectorStringFormat(nandData);
+
+	EXPECT_CALL(mockedFileHandler, readFile(NAND_FILENAME))
+		.Times(1)
+		.WillOnce(Return(nandData));
+
+	EXPECT_CALL(mockedFileHandler, writeData(OUTPUT_FILENAME, VALID_WRITE_VALUE))
+		.Times(1);
 
 	ssd.run(argc, argv);
 }
@@ -102,8 +99,8 @@ TEST_F(SSDFixture, run_with_r_110)
 	int argc = 3;
 	const char* argv[] = { "ssd.exe", READ_COMMAND, INVALID_READ_ADDR };
 
-	//EXPECT_CALL(mockedFileHandler, writeData(OUTPUT_FILENAME, nandDataStringFormat))
-	//	.Times(1);
+	EXPECT_CALL(mockedFileHandler, writeData(OUTPUT_FILENAME, ERROR_MESSAGE))
+		.Times(1);
 
 	ssd.run(argc, argv);
 }
@@ -114,12 +111,17 @@ TEST_F(SSDFixture, run_with_w_1_0x00001111)
 	int argc = 4;
 	const char* argv[] = { "ssd.exe", WRITE_COMMAND, WRITE_ADDR, VALID_WRITE_VALUE };
 
-	nandData[1] = VALID_NAND_DATA;
-	EXPECT_CALL(mockedFileHandler, write(NAND_FILENAME, nandData))
+	nandData = createMockNandData(0, NAND_DATA_EMPTY);
+	EXPECT_CALL(mockedFileHandler, readFile(NAND_FILENAME))
+		.Times(1)
+		.WillOnce(Return(nandData));
+
+	nandData = createMockNandData(std::stoi(WRITE_ADDR), VALID_WRITE_VALUE);
+	EXPECT_CALL(mockedFileHandler, writeData(NAND_FILENAME, nandData))
 		.Times(1);
 
-	vector<string> expectedOutput = { WRITE_SUCCESS };
-	EXPECT_CALL(mockedFileHandler, write(OUTPUT_FILENAME, expectedOutput))
+	string expectedOutput = { WRITE_SUCCESS };
+	EXPECT_CALL(mockedFileHandler, writeData(OUTPUT_FILENAME, expectedOutput))
 		.Times(1);
 
 	ssd.run(argc, argv);
@@ -129,8 +131,9 @@ TEST_F(SSDFixture, run_with_w_1_0x00001111)
 {
 	int argc = 4;
 	const char* argv[] = { "ssd.exe", WRITE_COMMAND, WRITE_ADDR, VALID_WRITE_VALUE };
+	nandData = createMockNandData(std::stoi(WRITE_ADDR), VALID_WRITE_VALUE);
 
-	EXPECT_CALL(mockedFileHandler, writeData(NAND_FILENAME, nandDataStringFormat))
+	EXPECT_CALL(mockedFileHandler, writeData(NAND_FILENAME, nandData))
 		.Times(0);
 
 	string expectedOutput = { WRITE_SUCCESS };
@@ -146,7 +149,8 @@ TEST_F(SSDFixture, run_with_w_1_0xzzzzFFFF)
 	int argc = 4;
 	const char* argv[] = { "ssd.exe", WRITE_COMMAND, WRITE_ADDR, INVALID_WRITE_VALUE };
 
-	EXPECT_CALL(mockedFileHandler, writeData(OUTPUT_FILENAME, nandDataStringFormat))
+	string expectedOutput = { ERROR_MESSAGE };
+	EXPECT_CALL(mockedFileHandler, writeData(OUTPUT_FILENAME, expectedOutput))
 		.Times(1);
 
 	ssd.run(argc, argv);
