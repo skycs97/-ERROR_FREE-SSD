@@ -4,7 +4,7 @@
 
 class Helper {
 public:
-	static std::string printAllHelp();
+	static void printAllHelp();
 	static std::string getCmdHelp(const std::string& cmdName);
 	static void printCmdHelp(const std::string& cmdName);
 	static void registerCmd(const std::string& cmdName, const std::string& helpStr);
