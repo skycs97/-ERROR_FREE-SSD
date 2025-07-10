@@ -53,21 +53,31 @@ TEST_F(NandFlashMemoryImplFixture, writeTest) {
 }
 
 TEST_F(NandFlashMemoryImplFixture, NandFile_Exist) {
-	EXPECT_CALL(mockedFileHandler, checkExistNandFile)
+	EXPECT_CALL(mockedFileHandler, isFileExistByMatchLength(_, _, _))
 		.Times(1)
 		.WillOnce(Return(true));
-	EXPECT_CALL(mockedFileHandler, createInitNandFile)
+
+	EXPECT_CALL(mockedFileHandler, createFile(_))
 		.Times(0);
 
-	mockedFileHandler.init();
+	EXPECT_CALL(mockedFileHandler, writeData(_, _))
+		.Times(0);
+
+	memory.init();
 }
 
 TEST_F(NandFlashMemoryImplFixture, NandFile_NoExist) {
-	EXPECT_CALL(mockedFileHandler, checkExistNandFile)
+	EXPECT_CALL(mockedFileHandler, isFileExistByMatchLength(_, _, _))
 		.Times(1)
 		.WillOnce(Return(false));
-	EXPECT_CALL(mockedFileHandler, createInitNandFile)
-		.Times(1);
 
-	mockedFileHandler.init();
+	EXPECT_CALL(mockedFileHandler, createFile(_))
+		.Times(1)
+		.WillOnce(Return(true));
+
+	EXPECT_CALL(mockedFileHandler, writeData(_, _))
+		.Times(1)
+		.WillOnce(Return(true));
+
+	memory.init();
 }
