@@ -21,7 +21,7 @@ void FullReadCommand::run(const CommandRunner& cmdRunner) const
 }
 void FullReadCommand::printResult(const string& result, const string& lba) const
 {
-	std::cout << "LBA " << std::setw(2) << std::setfill('0') << lba << " : ";
+	std::cout << "LBA " << std::right << std::setw(2) << std::setfill('0') << lba << " : ";
 	std::cout << result << std::endl;
 }
 
