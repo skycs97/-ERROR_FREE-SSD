@@ -9,27 +9,56 @@
 using std::string;
 using std::vector;
 
-struct BufferInfo
-{
+struct InternalBufferInfo {
 	CMD_TYPE cmd;
-	int lba;
-	string written_data;
-	int erase_size;
-
-	string getFileName(int buf_idx);
+	string data;
 };
+
+class BufferInfo
+{
+protected:
+	BufferInfo(int lba) : lba{ lba } {}
+public:
+	int lba;
+	virtual string getFileName(int buf_idx) = 0;
+	virtual vector<InternalBufferInfo> makeInternalBufferInfos() = 0;
+};
+
+class WriteBufferInfo : public BufferInfo {
+public:
+	WriteBufferInfo(int lba, const string& data) : BufferInfo(lba), written_data(data) {}
+	string getFileName(int buf_idx) override;
+	vector<InternalBufferInfo> makeInternalBufferInfos() override;
+	string written_data;
+};
+
+class EraseBufferInfo : public BufferInfo {
+public:
+	EraseBufferInfo(int lba, int size) : BufferInfo(lba), size(size) {}
+	string getFileName(int buf_idx) override;
+	vector<InternalBufferInfo> makeInternalBufferInfos() override;
+	int size;
+};
+
+class EmptyBufferInfo : public BufferInfo {
+public:
+	EmptyBufferInfo(int lba = INVALID_VALUE): BufferInfo(lba){}
+	string getFileName(int buf_idx) override;
+	vector<InternalBufferInfo> makeInternalBufferInfos() override;
+};
+
 
 class BufferManager {
 public:
-	struct InternalBufferInfo {
-		CMD_TYPE cmd;
-		string data;
-	};
 
 	BufferManager(NandFlashMemory* nandFlashMemory, FileHandler* fileHandler)
 		: nandFlashMemory{ nandFlashMemory }, fileHandler{ fileHandler } {
 
 		initInternalBuffers();
+
+		for (int i = 0; i < BUFFER_SIZE; i++) {
+			buffers[i] = new EmptyBufferInfo();
+		}
 	}
 
 	void init();
@@ -54,7 +83,7 @@ public:
 private:
 	NandFlashMemory* nandFlashMemory;
 	FileHandler* fileHandler;
-	vector<BufferInfo> buffers{ BUFFER_SIZE };
+	vector<BufferInfo*> buffers{ BUFFER_SIZE };
 	vector<InternalBufferInfo> internalBuffers{ 100 };
 	int valid_buf_cnt{ 0 };
 
@@ -72,10 +101,6 @@ private:
 
 	void updateInternalBufferState();
 
-	void fillInternalBufferErase(int lba, int size);
-
-	void fillInternalBufferWrite(int lba, const string& data);
-
 	void fillBufferInfo(string fname, int buf_idx);
 
 	void parseEmptyBufferByFileName(int buf_idx, const string& fname);
@@ -91,14 +116,6 @@ private:
 	void setWriteBufferInfo(int buf_idx, int lba, const std::string& written_data);
 
 	CMD_TYPE getBufferTypeFromFilenames(const string& fname);
-
-	void setBufferInfo(
-		int buf_idx,
-		CMD_TYPE cmd,
-		int lba,
-		string written_data,
-		int size
-	);
 
 	// 버퍼가 5개가 가득 찬 경우 true를 리턴합니다.
 	bool isBufferFull();
