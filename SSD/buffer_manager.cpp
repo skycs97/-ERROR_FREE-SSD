@@ -3,43 +3,46 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <iostream>
 
-vector<InternalBufferInfo> WriteBufferInfo::makeInternalBufferInfos() {
-	vector<InternalBufferInfo> ret;
-	ret.push_back({ CMD_WRITE ,written_data });
-	return ret;
+void WriteBufferInfo::updateInternalBufferInfos(vector<InternalBufferInfo> internalBufferInfos) {
+	internalBufferInfos[lba].cmd = CMD_WRITE;
+	internalBufferInfos[lba].data = written_data;
 }
 
-vector<InternalBufferInfo> EraseBufferInfo::makeInternalBufferInfos() {
-	vector<InternalBufferInfo> ret;
+void EraseBufferInfo::updateInternalBufferInfos(vector<InternalBufferInfo> internalBufferInfos) {
 	for (int count = 0; count < size; count++) {
-		ret.push_back({ CMD_ERASE ,NAND_DATA_EMPTY });
+		internalBufferInfos[lba+count].cmd = CMD_ERASE;
+		internalBufferInfos[lba+count].data = NAND_DATA_EMPTY;
 	}
-	return ret;
 }
 
-vector<InternalBufferInfo> EmptyBufferInfo::makeInternalBufferInfos() {
-	vector<InternalBufferInfo> ret;
-	ret.push_back({ INVALID_VALUE , ""});
-	return ret;
+void EmptyBufferInfo::updateInternalBufferInfos(vector<InternalBufferInfo> internalBufferInfos) {
+	// emptyBufferInfo는 InternalBufferInfo 에 아무런 영향을 주지 않습니다.
 }
 
 string WriteBufferInfo::getFileName(int buf_idx) {
 	std::ostringstream oss;
 	oss << buf_idx + 1 << "_W_" << lba << "_" << written_data;
-	return oss.str();
+	string fileName = oss.str();
+	std::cout << fileName;
+	return fileName;
 }
 
 string EraseBufferInfo::getFileName(int buf_idx) {
 	std::ostringstream oss;
 	oss << buf_idx + 1 << "_E_" << lba << "_" << size;
-	return oss.str();
+	string fileName = oss.str();
+	std::cout << fileName;
+	return fileName;
 }
 
 string EmptyBufferInfo::getFileName(int buf_idx) {
 	std::ostringstream oss;
 	oss << buf_idx + 1 << "_empty";
-	return oss.str();
+	string fileName = oss.str();
+	std::cout << fileName;
+	return fileName;
 }
 
 
@@ -93,11 +96,7 @@ void BufferManager::updateBufferState(int buf_idx)
 void BufferManager::updateInternalBufferState()
 {
 	for (int buf_idx = 0; buf_idx < BUFFER_SIZE; buf_idx++) {
-		vector<InternalBufferInfo> internalBufferInfos = buffers[buf_idx]->makeInternalBufferInfos();
-		int lba = buffers[buf_idx]->lba;
-		for (int i = 0; i < internalBufferInfos.size(); i++) {
-			internalBuffers[lba + i] = internalBufferInfos[i];
-		}
+		buffers[buf_idx]->updateInternalBufferInfos(internalBuffers);
 	}
 }
 
@@ -165,8 +164,8 @@ void BufferManager::parseWriteBufferByFileName(int buf_idx, const string& fname)
 	std::regex writeRegex(R"([1-5]_W_([0-9]*)_(0x[0-9A-Fa-f]+))");
 	std::smatch m;
 	std::regex_search(fname, m, writeRegex);
-	int lba = std::atoi(m.str(1).c_str())/*LBA*/;
-	const string& written_data = m.str(2)/*data*/;
+	int lba = std::atoi(m.str(1).c_str());
+	const string& written_data = m.str(2);
 	
 	setWriteBufferInfo(buf_idx, lba, written_data);
 }
@@ -242,7 +241,6 @@ void BufferManager::updateBuffer() {
 	
 	valid_buf_cnt = buf_idx;
 	for (; buf_idx < BUFFER_SIZE; buf_idx++) {
-		// empty Buffer도 기록합니다.
 		fillEmptyBufferInfo(buf_idx);
 	}
 }
@@ -318,14 +316,9 @@ void BufferManager::flush() {
 void BufferManager::initInternalBuffers()
 {
 	for (int index = 0; index <= MAX_LBA; index++) {
-		fillInternalBufferEmpty(index);
+		internalBuffers[index].cmd = INVALID_VALUE;
+		internalBuffers[index].data = "";
 	}
-}
-
-void BufferManager::fillInternalBufferEmpty(int index)
-{
-	internalBuffers[index].cmd = INVALID_VALUE;
-	internalBuffers[index].data = "";
 }
 
 void BufferManager::writeBufferFile(const string& old_name, const string& new_name) {
