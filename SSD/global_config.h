@@ -33,11 +33,6 @@
 #define BUFFER_ENABLE true
 #define BUFFER_DIR_NAME	"buffer"
 #define BUFFER_SIZE 5
-#define PREFIX_BUFFER_FILE1	"1_"
-#define PREFIX_BUFFER_FILE2	"2_"
-#define PREFIX_BUFFER_FILE3	"3_"
-#define PREFIX_BUFFER_FILE4	"4_"
-#define PREFIX_BUFFER_FILE5	"5_"
 #define BUFFER_NAME_EMPTY	"empty"
 
 typedef int CMD_TYPE;
