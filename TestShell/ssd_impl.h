@@ -18,6 +18,7 @@ private:
 
 	string makeReadCommand(const string& LBA);
 	string makeWriteCommand(const string& LBA, const string& data);
+	string makeEraseCommand(const string& startLBA, const string& range);
 	string makeFlushCommand();
 
 	std::string cmdJoin(std::vector<std::string> const& strings);

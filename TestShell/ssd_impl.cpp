@@ -20,6 +20,20 @@ string SsdImpl::write(const string& LBA, const string& data)
     return executeSsd(cmd);
 }
 
+string SsdImpl::erase(const string& startLBA, const string& range)
+{
+    int rangeNum = stoi(range);
+
+    if (rangeNum > MAX_ERASE_RANGE) {
+        return ERROR;
+    }
+
+    string cmd = makeEraseCommand(startLBA, range);
+    system(cmd.c_str());
+
+    return executeSsd(cmd);
+}
+
 string SsdImpl::flush() {
     string cmd = makeFlushCommand();
 
@@ -55,6 +69,18 @@ string SsdImpl::makeWriteCommand(const string& LBA, const string& data) {
 
     return cmdJoin(cmds);
 }
+
+string SsdImpl::makeEraseCommand(const string& startLBA, const string& range) {
+    vector<string> cmds;
+
+    cmds.push_back(ssdExcutable);
+    cmds.push_back("E");
+    cmds.push_back(startLBA);
+    cmds.push_back(range);
+
+    return cmdJoin(cmds);
+}
+
 string SsdImpl::makeFlushCommand() {
     vector<string> cmds;
 
@@ -64,33 +90,6 @@ string SsdImpl::makeFlushCommand() {
     return cmdJoin(cmds);
 }
 
-string SsdImpl::erase(const string& startIndex, const string& range)
-{
-    int rangeNum = stoi(range);
-    int startIndexNum = stoi(startIndex);
-    string cmd;
-
-    // 읽기 모드로 파일 열기
-    std::ifstream inputFile(ssdOutputPath);
-    std::string line;
-
-    if (inputFile.is_open() == false) {
-        return "Error";
-    }
-    if (rangeNum > MAX_ERASE_RANGE) {
-        return "Error";
-    }
-
-    cmd = ssdExcutable + " E " + std::to_string(startIndexNum) + " " + std::to_string(rangeNum);
-    system(cmd.c_str());
-
-    inputFile.close();
-
-    return line;
-}
-
-string SsdImpl::flush() {
-    string cmd = ssdExcutable + " F";
 string SsdImpl::executeSsd(string ssdCmd) {
     int processRet = system(ssdCmd.c_str());
 
