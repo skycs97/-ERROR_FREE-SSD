@@ -4,6 +4,45 @@
 #include <sstream>
 #include <iomanip>
 
+vector<InternalBufferInfo> WriteBufferInfo::makeInternalBufferInfos() {
+	vector<InternalBufferInfo> ret;
+	ret.push_back({ CMD_WRITE ,written_data });
+	return ret;
+}
+
+vector<InternalBufferInfo> EraseBufferInfo::makeInternalBufferInfos() {
+	vector<InternalBufferInfo> ret;
+	for (int count = 0; count < size; count++) {
+		ret.push_back({ CMD_ERASE ,NAND_DATA_EMPTY });
+	}
+	return ret;
+}
+
+vector<InternalBufferInfo> EmptyBufferInfo::makeInternalBufferInfos() {
+	vector<InternalBufferInfo> ret;
+	ret.push_back({ INVALID_VALUE , ""});
+	return ret;
+}
+
+string WriteBufferInfo::getFileName(int buf_idx) {
+	std::ostringstream oss;
+	oss << buf_idx + 1 << "_W_" << lba << "_" << written_data;
+	return oss.str();
+}
+
+string EraseBufferInfo::getFileName(int buf_idx) {
+	std::ostringstream oss;
+	oss << buf_idx + 1 << "_E_" << lba << "_" << size;
+	return oss.str();
+}
+
+string EmptyBufferInfo::getFileName(int buf_idx) {
+	std::ostringstream oss;
+	oss << buf_idx + 1 << "_empty";
+	return oss.str();
+}
+
+
 void BufferManager::init() {
 	fileHandler->createDirectory(BUFFER_DIR_NAME);
 	
@@ -54,33 +93,12 @@ void BufferManager::updateBufferState(int buf_idx)
 void BufferManager::updateInternalBufferState()
 {
 	for (int buf_idx = 0; buf_idx < BUFFER_SIZE; buf_idx++) {
-		if (buffers[buf_idx].cmd == CMD_WRITE) {
-			int lba = buffers[buf_idx].lba;
-			const string& data = buffers[buf_idx].written_data;
-			fillInternalBufferWrite(lba, data);
+		vector<InternalBufferInfo> internalBufferInfos = buffers[buf_idx]->makeInternalBufferInfos();
+		int lba = buffers[buf_idx]->lba;
+		for (int i = 0; i < internalBufferInfos.size(); i++) {
+			internalBuffers[lba + i] = internalBufferInfos[i];
 		}
-		else if (buffers[buf_idx].cmd == CMD_ERASE) {
-			int lba = buffers[buf_idx].lba;
-			int size = buffers[buf_idx].erase_size;
-			fillInternalBufferErase(lba, size);
-		}
-
-		if (buffers[buf_idx].cmd == INVALID_VALUE) break;
 	}
-}
-
-void BufferManager::fillInternalBufferErase(int lba, int size)
-{
-	for (int count = 0; count < size; count++) {
-		internalBuffers[lba + count].cmd = CMD_ERASE;
-		internalBuffers[lba + count].data = NAND_DATA_EMPTY;
-	}
-}
-
-void BufferManager::fillInternalBufferWrite(int lba, const string& data)
-{
-	internalBuffers[lba].cmd = CMD_WRITE;
-	internalBuffers[lba].data = data;
 }
 
 CMD_TYPE BufferManager::getBufferTypeFromFilenames(const string& fname) {
@@ -122,11 +140,8 @@ void BufferManager::parseEmptyBufferByFileName(int buf_idx, const string& fname)
 
 void BufferManager::setEmptyBufferInfo(int buf_idx)
 {
-	setBufferInfo(buf_idx,
-		INVALID_VALUE,
-		INVALID_VALUE,
-		"",
-		INVALID_VALUE);
+	if (buf_idx < 0 || buf_idx >= BUFFER_SIZE) throw std::exception("invalid buffer_num.");
+	buffers[buf_idx] = new EmptyBufferInfo();
 }
 
 void BufferManager::parseEraseBufferByFileName(int buf_idx, const string& fname)
@@ -141,11 +156,8 @@ void BufferManager::parseEraseBufferByFileName(int buf_idx, const string& fname)
 
 void BufferManager::setEraseBufferInfo(int buf_idx, int lba, int size)
 {
-	setBufferInfo(buf_idx,
-		CMD_ERASE,
-		lba,
-		""/*data*/,
-		size);
+	if (buf_idx < 0 || buf_idx >= BUFFER_SIZE) throw std::exception("invalid buffer_num.");
+	buffers[buf_idx] = new EraseBufferInfo(lba, size);
 }
 
 void BufferManager::parseWriteBufferByFileName(int buf_idx, const string& fname)
@@ -155,31 +167,15 @@ void BufferManager::parseWriteBufferByFileName(int buf_idx, const string& fname)
 	std::regex_search(fname, m, writeRegex);
 	int lba = std::atoi(m.str(1).c_str())/*LBA*/;
 	const string& written_data = m.str(2)/*data*/;
+	
 	setWriteBufferInfo(buf_idx, lba, written_data);
 }
 
 void BufferManager::setWriteBufferInfo(int buf_idx, int lba, const std::string& written_data)
 {
-	setBufferInfo(buf_idx,
-		CMD_WRITE,
-		lba,
-		written_data/*data*/,
-		INVALID_VALUE/*erase size*/);
-}
-
-void BufferManager::setBufferInfo(int buf_idx,
-	CMD_TYPE cmd,
-	int lba,
-	string written_data,
-	int size)
-{
 	if (buf_idx < 0 || buf_idx >= BUFFER_SIZE) throw std::exception("invalid buffer_num.");
-	buffers[buf_idx].cmd = cmd;
-	buffers[buf_idx].lba = lba;
-	buffers[buf_idx].written_data = written_data;
-	buffers[buf_idx].erase_size = size;
+	buffers[buf_idx] = new WriteBufferInfo(lba, written_data);
 }
-
 bool BufferManager::isBufferFull() {
 	return getUsedBufferCount() == BUFFER_SIZE;
 }
@@ -246,40 +242,26 @@ void BufferManager::updateBuffer() {
 	}
 }
 
-string BufferInfo::getFileName(int buf_idx) {
-	std::ostringstream oss;
-	if (cmd == INVALID_VALUE) {
-		oss << buf_idx + 1 << "_empty";
-	}
-	else if (cmd == CMD_WRITE) {
-		oss << buf_idx + 1 << "_W_" << lba << "_" << written_data;
-	}
-	else if (cmd == CMD_ERASE) {
-		oss << buf_idx + 1 << "_E_" << lba << "_" << erase_size;
-	}
-	return oss.str();
-}
-
 void BufferManager::fillEmptyBufferInfo(int buf_idx)
 {
-	string old_name = buffers[buf_idx].getFileName(buf_idx);
+	string old_name = buffers[buf_idx]->getFileName(buf_idx);
 	setEmptyBufferInfo(buf_idx);
-	string new_name = buffers[buf_idx].getFileName(buf_idx);
+	string new_name = buffers[buf_idx]->getFileName(buf_idx);
 	writeBufferFile(old_name, new_name);
 }
 void BufferManager::fillWriteBufferInfo(int write_lba, int buf_idx)
 {
-	string old_name = buffers[buf_idx].getFileName(buf_idx);
+	string old_name = buffers[buf_idx]->getFileName(buf_idx);
 	string data = internalBuffers[write_lba].data;
 	setWriteBufferInfo(buf_idx, write_lba, data);
-	string new_name = buffers[buf_idx].getFileName(buf_idx);
+	string new_name = buffers[buf_idx]->getFileName(buf_idx);
 	writeBufferFile(old_name, new_name);
 }
 void BufferManager::fillEraseBufferInfo(int buf_idx, int erase_start, int erase_count)
 {
-	string old_name = buffers[buf_idx].getFileName(buf_idx);
+	string old_name = buffers[buf_idx]->getFileName(buf_idx);
 	setEraseBufferInfo(buf_idx, erase_start, erase_count);
-	string new_name = buffers[buf_idx].getFileName(buf_idx);
+	string new_name = buffers[buf_idx]->getFileName(buf_idx);
 	writeBufferFile(old_name, new_name);
 }
 void BufferManager::addWriteCommand(int lba, const string& data) {
