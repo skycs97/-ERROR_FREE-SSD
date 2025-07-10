@@ -74,5 +74,8 @@ void EraseAndWriteAgingCommand::printHelp() const
 
 std::shared_ptr<Command> EraseAndWriteAgingCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
+	if (cmdName != CMD_4_ERASE_AND_WRITE_AGING) return nullptr;
+	if (args.size() != numOfArgs) return nullptr;
+
 	return std::make_shared<EraseAndWriteAgingCommand>(args);
 }

@@ -48,6 +48,8 @@ void FullWriteCommand::printHelp() const
 
 std::shared_ptr<Command> FullWriteCommandFactory::makeCommand(const string& cmdName, const std::vector<string>& args)
 {
+	if (cmdName != CMD_FULLWRITE) return nullptr;
 	if (args.size() != numOfArgs) return nullptr;
+
 	return std::shared_ptr<FullWriteCommand>(new FullWriteCommand(args));
 }
