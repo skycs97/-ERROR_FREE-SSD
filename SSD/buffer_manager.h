@@ -72,17 +72,23 @@ private:
 
 	void updateInternalBufferState();
 
-	void fillInternalBufferErase(int buffer_idx);
+	void fillInternalBufferErase(int lba, int size);
 
-	void fillInternalBufferWrite(int buffer_idx);
+	void fillInternalBufferWrite(int lba, const string& data);
 
 	void fillBufferInfo(string fname, int buf_idx);
 
-	void setEmptyBufferInfo(int buf_idx, const string& fname);
+	void parseEmptyBufferByFileName(int buf_idx, const string& fname);
 
-	void setEraseBufferInfo(int buf_idx, const string& fname);
+	void setEmptyBufferInfo(int buf_idx);
 
-	void setWriteBufferInfo(int buf_idx, const string& fname);
+	void parseEraseBufferByFileName(int buf_idx, const string& fname);
+
+	void setEraseBufferInfo(int buf_idx, int lba, int size);
+
+	void parseWriteBufferByFileName(int buf_idx, const string& fname);
+
+	void setWriteBufferInfo(int buf_idx, int lba, const std::string& written_data);
 
 	CMD_TYPE getBufferTypeFromFilenames(const string& fname);
 
@@ -98,13 +104,14 @@ private:
 	bool isBufferFull();
 
 	//fileHandler에 새로 버퍼를 기록합니다.
-	void writeBuffer(const string& old_name, const string& new_name);
+	void writeBufferFile(const string& old_name, const string& new_name);
 
 	void IncreaseBufferCnt();
 
 	void updateBuffer();
 
 	void initInternalBuffers();
+	void fillInternalBufferEmpty(int index);
 	void fillEmptyBufferInfo(int buffer_idx);
 	void fillWriteBufferInfo(int write_lba, int buffer_idx);
 	void fillEraseBufferInfo(int buffer_idx, int erase_start, int erase_count);
