@@ -25,7 +25,7 @@ string Command::getCmdName(void)
 void Command::printProcess(void) const
 {
 	std::cout << std::left << std::setw(25) << std::setfill(' ') << cmdName;
-	std::cout << "  ___   " << "Run..";
+	std::cout << "  ___   " << "Run...";
 }
 
 bool Command::isValidLba(int lba) const
