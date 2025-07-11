@@ -45,7 +45,7 @@ public:
 private:
 	NandFlashMemory* nandFlashMemory;
 	FileHandler* fileHandler;
-	vector<BufferInfo*> buffers{ BUFFER_SIZE };
+	vector<std::shared_ptr<BufferInfo>> buffers{ BUFFER_SIZE };
 	vector<InternalBufferInfo> internalBuffers{ 100 };
 	int validBufCount{ 0 };
 

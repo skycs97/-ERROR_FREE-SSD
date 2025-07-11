@@ -4,11 +4,11 @@
 
 class BufferInfoFactory {
 public:
-	BufferInfo* createBuffer(const string& fileName);
+	std::shared_ptr<BufferInfo> createBuffer(const string& fileName);
 
-	BufferInfo* createWriteBuffer(int LBA, const string& data);
-	BufferInfo* createEraseBuffer(int LBA, int size);
-	BufferInfo* createEmptyBuffer();
+	std::shared_ptr<BufferInfo> createWriteBuffer(int LBA, const string& data);
+	std::shared_ptr<BufferInfo> createEraseBuffer(int LBA, int size);
+	std::shared_ptr<BufferInfo> createEmptyBuffer();
 
 	static BufferInfoFactory& getInstance() {
 		static BufferInfoFactory instance;
