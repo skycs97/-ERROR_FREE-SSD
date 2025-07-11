@@ -66,7 +66,7 @@ void FileHandlerImpl::rename(const string& old_name, const string& new_name) con
 	}
 }
 
-bool FileHandlerImpl::isFileExistByMatchLength(const string& dir_path, const string& file_name, int len)
+bool FileHandlerImpl::isFileExistByMatchLength(const string& dir_path, const string& file_name, size_t len)
 {
 	WIN32_FIND_DATAA findFileData;
 	HANDLE hFind = FindFirstFileA(dir_path.c_str(), &findFileData);

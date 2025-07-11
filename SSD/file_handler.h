@@ -23,7 +23,7 @@ public:
 	virtual void rename(const string& old_name, const string& new_name) const = 0;
 	
 	// Directory에서 file 이름의 len 만큼만 비교하여 같은 파일이 존재하는지 여부 반환
-	virtual bool isFileExistByMatchLength(const string& dir_path, const string& file_name, int len) = 0;
+	virtual bool isFileExistByMatchLength(const string& dir_path, const string& file_name, size_t len) = 0;
 	
 	// Path에 있는 파일들 중에서 prefix가 포함되어 있는 파일명 반환
 	virtual vector<string> getFileUsingPrefix(const string& path, const string& prefix) = 0;
