@@ -1,4 +1,4 @@
-#include <regex>
+ï»¿#include <regex>
 #include <vector>
 #include <string>
 #include <sstream>
@@ -25,7 +25,7 @@ void EraseBufferInfo::updateInternalBufferInfos(vector<InternalBufferInfo>& inte
 }
 
 void EmptyBufferInfo::updateInternalBufferInfos(vector<InternalBufferInfo>& internalBufferInfos) {
-	// emptyBufferInfo´Â InternalBufferInfo ¿¡ ¾Æ¹«·± ¿µÇâÀ» ÁÖÁö ¾Ê½À´Ï´Ù.
+	// emptyBufferInfoëŠ” InternalBufferInfo ì— ì•„ë¬´ëŸ° ì˜í–¥ì„ ì£¼ì§€ ì•ŠìŠµë‹ˆë‹¤.
 }
 
 string WriteBufferInfo::getFileName() {
