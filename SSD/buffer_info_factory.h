@@ -4,11 +4,11 @@
 
 class BufferInfoFactory {
 public:
-	BufferInfo* createCommand(const string& fileName);
+	BufferInfo* createBuffer(const string& fileName);
 
-	BufferInfo* createWriteCommand(int LBA, const string& data);
-	BufferInfo* createEraseCommand(int LBA, int size);
-	BufferInfo* createEmptyCommand();
+	BufferInfo* createWriteBuffer(int LBA, const string& data);
+	BufferInfo* createEraseBuffer(int LBA, int size);
+	BufferInfo* createEmptyBuffer();
 
 	static BufferInfoFactory& getInstance() {
 		static BufferInfoFactory instance;
