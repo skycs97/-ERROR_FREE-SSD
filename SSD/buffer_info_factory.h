@@ -8,6 +8,7 @@ public:
 
 	BufferInfo* createWriteCommand(int LBA, const string& data);
 	BufferInfo* createEraseCommand(int LBA, int size);
+	BufferInfo* createEmptyCommand();
 
 	static BufferInfoFactory& getInstance() {
 		static BufferInfoFactory instance;

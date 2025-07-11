@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include "buffer_info.h"
 #include "nand_flash_memory_impl.h"
+#include "buffer_info_factory.h"
 
 using std::string;
 using std::vector;
@@ -19,7 +20,7 @@ public:
 		flushInternalBuffers();
 
 		for (int i = 0; i < BUFFER_SIZE; i++) {
-			buffers[i] = new EmptyBufferInfo();
+			buffers[i] = BufferInfoFactory::getInstance().createEmptyCommand();
 		}
 	}
 
@@ -39,7 +40,6 @@ public:
 	// 모든 버퍼의 내용을 nand에 기록합니다.
 	void flush();
 
-
 	// empty가 아닌 버퍼의 개수를 리턴합니다.
 	int getUsedBufferCount();
 private:
@@ -49,30 +49,38 @@ private:
 	vector<InternalBufferInfo> internalBuffers{ 100 };
 	int validBufCount{ 0 };
 
-	// init step
 	bool existEmptyBufferFile(int bufIndex);
 	bool existNonEmptyBufferFile(int bufIndex);
 	void createEmptyBufferFileAndUpdateState(int bufIndex);
-	string getBufferFilePrefix(int bufIndex);
 	void updateBufferState(int bufIndex);
-	void updateInternalBufferState();
+	string getBufferFilePrefix(int bufIndex);
 	void fillBufferInfo(string fname, int bufIndex);
 	void IncreaseBufferCnt();
+	void updateInternalBufferState();
 
+	bool IsDataInBuffer(int lba);
+	bool isDataEmpty(const string& data);
 	bool isBufferFull();
-	void flushInternalBuffers();
 
+	void setInternalBufferWrite(int lba, const std::string& data);
+	void SetInternalBufferErase(int lba, int count);
+
+	void updateBufferFiles();
+	void writeAllBufferFiles(std::vector<std::string>& old_names);
 	void writeBufferFile(const string& old_name, const string& new_name);
+	
+	void updateNandData(std::vector<std::string>& datas);
+	void flushInternalBuffers();
+	void updateBufferFilesAllEmpty();
+	void resetValidBufCount();
+
+	vector<string> getOldFileNames();
+
 	void updateBufferByInternalBuffer();
 	int createWriteBuffer(int bufIndex, int LBA, const string& data);
 	int createEraseBufferAndPassedWriteBuffer(int eraseStartLBA, int eraseCount, int bufIndex, std::vector<int>& writeLBAs);
-	vector<string> getOldFileNames();
 	inline bool isLastLBA(int lba) { return lba == MAX_LBA; }
-	void setInternalBufferWrite(int lba, const std::string& data);
-	void SetInternalBufferErase(int lba, int count);
-	void updateBufferFiles();
-	void updateBufferFilesAllEmpty();
+	
 	void fillEmptyBuffers();
-	void writeAllBufferFiles(std::vector<std::string>& old_names);
-	void updateNandData(std::vector<std::string>& datas);
+	
 };
