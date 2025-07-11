@@ -17,3 +17,6 @@ BufferInfo* BufferInfoFactory::createWriteCommand(int LBA, const string& data) {
 BufferInfo* BufferInfoFactory::createEraseCommand(int LBA, int size) {
 	return new EraseBufferInfo(LBA, size);
 }
+BufferInfo* BufferInfoFactory::createEmptyCommand() {
+	return new EmptyBufferInfo();
+}
