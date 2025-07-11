@@ -20,7 +20,7 @@ public:
 		flushInternalBuffers();
 
 		for (int i = 0; i < BUFFER_SIZE; i++) {
-			buffers[i] = BufferInfoFactory::getInstance().createEmptyCommand();
+			buffers[i] = BufferInfoFactory::getInstance().createEmptyBuffer();
 		}
 	}
 

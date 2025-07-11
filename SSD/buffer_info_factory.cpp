@@ -1,7 +1,7 @@
 #include "buffer_info_factory.h"
 #include <regex>
 
-BufferInfo* BufferInfoFactory::createCommand(const string& fname) {
+BufferInfo* BufferInfoFactory::createBuffer(const string& fname) {
 	if (std::regex_match(fname, WriteBufferInfo::fileNameRegex)) {
 		return new WriteBufferInfo(fname);
 	}
@@ -11,12 +11,12 @@ BufferInfo* BufferInfoFactory::createCommand(const string& fname) {
 	return new EmptyBufferInfo();
 }
 
-BufferInfo* BufferInfoFactory::createWriteCommand(int LBA, const string& data) {
+BufferInfo* BufferInfoFactory::createWriteBuffer(int LBA, const string& data) {
 	return new WriteBufferInfo(LBA, data);
 }
-BufferInfo* BufferInfoFactory::createEraseCommand(int LBA, int size) {
+BufferInfo* BufferInfoFactory::createEraseBuffer(int LBA, int size) {
 	return new EraseBufferInfo(LBA, size);
 }
-BufferInfo* BufferInfoFactory::createEmptyCommand() {
+BufferInfo* BufferInfoFactory::createEmptyBuffer() {
 	return new EmptyBufferInfo();
 }

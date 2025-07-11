@@ -64,7 +64,7 @@ string BufferManager::getBufferFilePrefix(int bufIndex)
 void BufferManager::fillBufferInfo(string fname, int bufIndex)
 {
 	if (bufIndex < 0 || bufIndex >= BUFFER_SIZE) throw std::exception("invalid buffer index.");
-	buffers[bufIndex] = BufferInfoFactory::getInstance().createCommand(fname);
+	buffers[bufIndex] = BufferInfoFactory::getInstance().createBuffer(fname);
 }
 
 void BufferManager::IncreaseBufferCnt()
@@ -246,14 +246,14 @@ void BufferManager::updateBufferByInternalBuffer() {
 
 int BufferManager::createWriteBuffer(int bufIndex, int LBA, const string& data)
 {
-	buffers[bufIndex++] = BufferInfoFactory::getInstance().createWriteCommand(LBA, data);
+	buffers[bufIndex++] = BufferInfoFactory::getInstance().createWriteBuffer(LBA, data);
 	return bufIndex;
 }
 
 int BufferManager::createEraseBufferAndPassedWriteBuffer(int eraseStartLBA, int eraseCount, int bufIndex, std::vector<int>& writeLBAs)
 {
 	// erase 가 끝나면, eraseBuffer를 기록하고, 그 사이에 지나친 write 들도 기록합니다.	
-	buffers[bufIndex++] = BufferInfoFactory::getInstance().createEraseCommand(eraseStartLBA, eraseCount);
+	buffers[bufIndex++] = BufferInfoFactory::getInstance().createEraseBuffer(eraseStartLBA, eraseCount);
 	for (int writeLBA : writeLBAs) {
 		string data = internalBuffers[writeLBA].data;
 		bufIndex = createWriteBuffer(bufIndex, writeLBA, data);
@@ -264,7 +264,7 @@ int BufferManager::createEraseBufferAndPassedWriteBuffer(int eraseStartLBA, int 
 void BufferManager::fillEmptyBuffers()
 {
 	for (int bufIndex = getUsedBufferCount(); bufIndex < BUFFER_SIZE; bufIndex++) {
-		buffers[bufIndex] = BufferInfoFactory::getInstance().createEmptyCommand();
+		buffers[bufIndex] = BufferInfoFactory::getInstance().createEmptyBuffer();
 	}
 }
 
