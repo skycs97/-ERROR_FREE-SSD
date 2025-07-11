@@ -2,6 +2,10 @@
 
 string RandomNumberGenerator::generateRandomUnsignedIntString() 
 {
+	std::random_device rd;
+	std::mt19937 generator(rd());
+	std::uniform_int_distribution<int> distribution(0, 0xFFFFFFFF);
+
 	return hexToString(distribution(generator));
 }
 
